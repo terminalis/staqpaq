@@ -1,0 +1,87 @@
+/* ===========================================================================
+   staqpaq — token system  (Presentation Binding :: ui-manifest.yaml)
+   The SINGLE source of color / type / spacing / shape. No raw hex in
+   components — everything resolves through these custom properties
+   (ui-manifest.yaml :: hard_rules.required). Values are the concrete blueprint-blue
+   palette used by the app.
+   =========================================================================== */
+:root {
+  /* --- color · blueprint blue + single luminous signal --------------------- */
+  --ink: #001233;          /* background — deep navy page ground */
+  --ink-2: #002082;        /* surface — raised panels, option chips, rail (tech dark blue) */
+  --ink-3: #0a2e9e;        /* surface-inset — selected fill, wells, readiness track */
+  --paper: #ced8f7;        /* text — blue-cream body + VT323 headlines (~9.7:1 on ink) */
+  --paper-dim: #8e9fd4;    /* text-muted — secondary text, tracked labels */
+  --paper-faint: #5a6cb0;  /* text-faint — hints, disabled, yaml comments (never essential) */
+  --signal: #3057e1;       /* primary — luminous blue: action, active marker, selection, fill */
+  --signal-deep: #1e3fb0;  /* primary-deep — pressed / deep-hover blue */
+  --steel: #4a6de5;        /* structure — ticket corners, strokes, stamp borders (blueprint lines) */
+  --sage: #5fb0e0;         /* positive — quiet cyan section-complete check */
+  --crit: #d7402f;         /* danger — critical missing-decision tags, destructive confirm */
+  --rule: rgba(140, 160, 220, 0.18);  /* hairline separators */
+
+  /* --- blueprint paper · deep-blue sheet, light linework ------------------- */
+  --paper-ground: #001a52;            /* deep-blue blueprint sheet (between --ink and --ink-2) */
+  --grid: rgba(206, 216, 247, 0.045);  /* paper — fine minor grid lines, faded so content leads (24px) */
+  --grid-major: rgba(206, 216, 247, 0.10);  /* paper — major grid lines, faded (120px) */
+  --grid-dot: rgba(206, 216, 247, 0.08);  /* paper — faint workspace dot-grid points (24px) */
+  --bp-line: rgba(214, 224, 255, 0.62);  /* drafting linework — walls, frames, dimension lines, ticks */
+  --vignette: rgba(0, 3, 16, 0.78);   /* paper — edge darkening (sheet under light) */
+  --panel-scrim: rgba(0, 18, 51, 0.5);  /* translucent navy panel (rail + title block) over the paper */
+
+  /* ink-on-signal text — the light text that sits on a filled luminous surface */
+  --on-signal: #eaf2ff;
+
+  /* modal scrim — deep navy overlay behind confirmation dialogs */
+  --scrim: rgba(0, 6, 26, 0.74);
+
+  /* --- type · dual single-weight monospace --------------------------------- */
+  --font-display: "VT323", ui-monospace, monospace;          /* numerals + headlines ONLY */
+  --font-mono: "Share Tech Mono", ui-monospace, monospace;   /* body, labels, code — everything else */
+
+  --fs-display: clamp(72px, 15vw, 168px);
+  --fs-h1: 58px;
+  --fs-h2: 40px;
+  --fs-metric: 30px;
+  --fs-body: 15px;
+  --fs-label: 12px;
+  --fs-eyebrow: 11px;
+
+  --lh-display: 0.84;
+  --lh-h1: 0.7;
+  --lh-h2: 1;
+  --lh-metric: 0.8;
+  --lh-body: 1.5;
+
+  --tr-display: 0.01em;
+  --tr-h2: 0.01em;
+  --tr-label: 0.16em;
+  --tr-eyebrow: 0.28em;
+
+  /* --- space · 4px-ish modular scale [2,4,8,14,22,30,60] -------------------- */
+  --sp-1: 2px;
+  --sp-2: 4px;
+  --sp-3: 8px;
+  --sp-4: 14px;
+  --sp-5: 22px;
+  --sp-6: 30px;
+  --sp-7: 60px;
+
+  --gut: 22px;          /* page gutter */
+  --maxw: 1180px;       /* max content width (composition.proportion) */
+  --rail: 300px;        /* fixed section rail */
+  --col: 860px;         /* main reading column cap */
+
+  /* --- shape · sharp, ticket-stub; depth by ink-fill, never shadow --------- */
+  --radius: 0;          /* no rounded corners anywhere */
+  --hairline: 1px;
+  --corner: 12px;       /* ticket-stub L-corner length */
+
+  /* --- motion -------------------------------------------------------------- */
+  --t-micro: 120ms;     /* hovers / selection */
+  --t-fill: 350ms;      /* readiness fill */
+  --beam-loop: 4.2s;    /* travelling luminous micro-beam */
+  --ease-micro: ease;
+  --t-reveal: 1500ms;   /* workspace-entry scanline curtain (lush) */
+  --ease-reveal: cubic-bezier(0.65, 0, 0.35, 1);  /* ease-in-out, echoes the entrance scan */
+}

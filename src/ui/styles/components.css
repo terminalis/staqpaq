@@ -1,0 +1,346 @@
+/* ===========================================================================
+   staqpaq — component layer  (global CSS for the bespoke light-DOM <sq-*> kit)
+   Light-DOM Lit components render their markup as children of the custom
+   element, so they are styled here by tag + class selectors. No raw hex.
+   =========================================================================== */
+
+/* --- iconography ----------------------------------------------------------- */
+sq-icon { display: inline-block; vertical-align: -0.14em; width: 1em; height: 1em; color: currentColor; }
+sq-icon svg { display: block; width: 100%; height: 100%; overflow: visible; }
+
+/* --- option rows · <sq-option> -------------------------------------------- */
+/* Bordered surface chips with an 11px box that fills rust when selected — NOT a
+   checkbox/radio, NOT an icon-card. (ui-manifest.yaml :: component_kit.customization) */
+/* UNSELECTED — a solid surface chip (not an outline), so a field of options reads
+   as solid blocks rather than busy linework */
+sq-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 8px 13px;
+  border: 1px solid var(--rule);
+  cursor: pointer;
+  background: var(--ink-2);
+  color: var(--paper);
+  position: relative;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 12px;
+  transition: border-color var(--t-micro), color var(--t-micro), transform 100ms, background var(--t-micro);
+}
+sq-option:hover { border-color: var(--paper); color: var(--paper); transform: translateY(-1px); }
+sq-option .lg { font-size: 14px; opacity: 0.85; }
+sq-option sq-icon.lg,
+sq-option .opt-icon-placeholder.lg { flex: 0 0 auto; }
+sq-option .opt-icon-placeholder {
+  display: inline-block;
+  box-sizing: border-box;
+  width: 1em;
+  height: 1em;
+  border: 1px solid currentColor;
+  background: transparent;
+}
+/* SELECTED — filled & brighter, with a subtle double-line "wall". Clearly the
+   marked element on the drawing. */
+sq-option[selected] {
+  border-color: var(--bp-line);
+  color: var(--on-signal);
+  background-color: var(--signal-deep);
+  box-shadow: inset 0 0 0 2px var(--signal-deep), inset 0 0 0 3px var(--bp-line);
+}
+sq-option[selected]:hover { transform: translateY(-1px); }
+
+/* GATED and single-select-MUTED share a recessed crosshatch+fade, but the label
+   stays LEGIBLE above the hatch (no strike-through). Gated adds the flag/tooltip
+   and is not clickable; muted is unlabelled and stays clickable (to switch). */
+sq-option[gated], sq-option[muted] {
+  color: var(--paper-dim);
+  border-color: var(--rule);
+  background-color: var(--ink);
+  background-image: repeating-linear-gradient(45deg, rgba(214, 224, 255, 0.13) 0 1px, transparent 1px 6px);
+}
+sq-option[gated] { cursor: not-allowed; }
+sq-option[gated]:hover { transform: none; color: var(--paper-faint); border-color: var(--rule); }
+sq-option[muted]:hover { transform: none; }
+sq-option .gflag {
+  position: absolute;
+  top: -9px;
+  right: -1px;
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  background: var(--ink);
+  border: 1px solid var(--steel);
+  color: var(--paper-dim);
+  padding: 1px 4px;
+  text-transform: uppercase;
+}
+sq-option .tip {
+  position: absolute;
+  bottom: calc(100% + 9px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 230px;
+  background: var(--ink-3);
+  border: 1px solid var(--steel);
+  color: var(--paper);
+  padding: 9px 11px;
+  font-size: 11.5px;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.14s;
+  z-index: 5;
+}
+sq-option .tip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--steel);
+}
+sq-option[gated]:hover .tip,
+sq-option[gated]:focus .tip,
+sq-option[gated]:focus-within .tip { opacity: 1; visibility: visible; }
+sq-option .tip b { color: var(--signal); font-weight: 400; }
+
+/* --- fields · <sq-field> --------------------------------------------------- */
+sq-field { display: block; padding: 18px 0; border-bottom: 1px solid var(--rule); }
+sq-field:last-of-type { border-bottom: 0; }
+sq-field .field-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+sq-field .field-label {
+  font-size: 14px;
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--paper);
+}
+sq-field .field-note { color: var(--paper-faint); font-size: 11px; margin: 0 0 12px; letter-spacing: 0.02em; }
+sq-field .opts { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* --- custom escape-hatch input --------------------------------------------- */
+/* A 'custom'-prefixed mono input for values outside the curated set. */
+.custom { display: flex; align-items: center; gap: 0; max-width: 360px; margin-top: 8px; }
+.custom .pfx {
+  padding: 8px 11px;
+  border: 1px solid var(--rule);
+  border-right: 0;
+  color: var(--signal);
+  background: var(--ink-2);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.custom input,
+.sq-text-input {
+  flex: 1;
+  min-height: 44px;
+  padding: 8px 11px;
+  border: 1px solid var(--rule);
+  background: var(--ink);
+  color: var(--paper);
+  letter-spacing: 0.02em;
+  font-family: var(--font-mono);
+  font-size: var(--fs-body);
+  min-width: 0;
+}
+.custom input::placeholder,
+.sq-text-input::placeholder { color: var(--paper-faint); }
+
+/* multi_select custom: a stacked list of free-text rows ("Other", more than one).
+   The trailing blank row is the "add another" affordance. */
+.custom-multi { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.custom-multi .custom { margin-top: 0; max-width: 400px; }
+.custom-remove {
+  flex: none;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid var(--rule);
+  border-left: 0;
+  background: var(--ink-2);
+  color: var(--paper-faint);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+}
+.custom-remove:hover { color: var(--signal); }
+
+/* color control — a "Select color" chip (swatch + label) styled exactly like an
+   option chip, followed by the live hex box */
+.sq-color { display: inline-flex; align-items: center; gap: 8px; }
+.sq-color-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 8px 13px;
+  border: 1px solid var(--rule);
+  background: var(--ink-2);
+  color: var(--paper);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: border-color var(--t-micro), color var(--t-micro), background var(--t-micro);
+}
+.sq-color-btn:hover { border-color: var(--steel); color: var(--paper); }
+.sq-color-btn .sw {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: 1px solid var(--steel);
+  background: none;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+.sq-color-btn .sw::-webkit-color-swatch-wrapper { padding: 0; }
+.sq-color-btn .sw::-webkit-color-swatch { border: 0; }
+.sq-color-btn .sw::-moz-color-swatch { border: 0; }
+
+/* --- readiness meter · <sq-readiness> -------------------------------------- */
+sq-readiness { display: block; max-width: 280px; }
+sq-readiness .lab { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--paper-dim); }
+sq-readiness .pct { font-family: var(--font-display); font-size: var(--fs-metric); color: var(--signal); line-height: 0.8; margin-top: 2px; }
+/* a measured dimension line: end ticks + baseline + a signal segment w/ arrowhead */
+sq-readiness .track {
+  height: 9px; margin-top: 11px; position: relative; overflow: visible;
+  background:
+    linear-gradient(var(--bp-line), var(--bp-line)) left center / 1px 9px no-repeat,
+    linear-gradient(var(--bp-line), var(--bp-line)) right center / 1px 9px no-repeat,
+    linear-gradient(var(--bp-line), var(--bp-line)) center / 100% 1px no-repeat;
+}
+sq-readiness .fill { position: absolute; top: 50%; left: 0; bottom: auto; height: 2px; transform: translateY(-50%); background: var(--signal); transition: width var(--t-fill) var(--ease-micro); }
+sq-readiness .fill::after { content: ""; position: absolute; top: 50%; right: -1px; transform: translate(100%, -50%); border: 4px solid transparent; border-left-color: var(--signal); border-right: 0; }
+sq-readiness .meta { font-size: 10px; color: var(--paper-faint); margin-top: 7px; letter-spacing: 0.04em; }
+
+/* --- per-section bars ------------------------------------------------------ */
+.scorebars { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 22px; }
+.sb { display: grid; grid-template-columns: 1fr 42px; gap: 10px; align-items: center; font-size: 12px; }
+.sb .nm { color: var(--paper-dim); letter-spacing: 0.04em; text-transform: uppercase; font-size: 10.5px; }
+.sb .vv { font-family: var(--font-display); font-size: 18px; color: var(--paper); text-align: right; line-height: 1; }
+.sb .tr {
+  grid-column: 1 / -1; height: 7px; position: relative; margin-top: -3px;
+  background:
+    linear-gradient(var(--bp-line), var(--bp-line)) left center / 1px 7px no-repeat,
+    linear-gradient(var(--bp-line), var(--bp-line)) right center / 1px 7px no-repeat,
+    linear-gradient(var(--bp-line), var(--bp-line)) center / 100% 1px no-repeat;
+}
+.sb .fl { position: absolute; top: 50%; left: 0; height: 2px; transform: translateY(-50%); background: var(--steel); transition: width var(--t-fill) var(--ease-micro); }
+
+/* --- yaml preview · <sq-yaml-preview> -------------------------------------- */
+/* Steel-bordered ink well; syntax tinted with the staqpaq palette ONLY —
+   keys steel / values paper / punctuation rust / comments faint. */
+sq-yaml-preview { display: block; }
+sq-yaml-preview .yamlbox { background: var(--ink); border: 1px solid var(--bp-line); box-shadow: inset 0 0 0 4px var(--ink), inset 0 0 0 5px rgba(214, 224, 255, 0.4); position: relative; }
+sq-yaml-preview .yh {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--rule);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+}
+sq-yaml-preview pre.yaml {
+  margin: 0;
+  padding: 14px 16px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.62;
+  overflow-x: auto;
+  color: var(--paper);
+  white-space: pre;
+}
+sq-yaml-preview pre.yaml .k { color: var(--steel); }
+sq-yaml-preview pre.yaml .v { color: var(--paper); }
+sq-yaml-preview pre.yaml .s { color: var(--signal); }
+sq-yaml-preview pre.yaml .c { color: var(--paper-faint); }
+
+/* --- file list ------------------------------------------------------------- */
+.filelist { display: flex; flex-direction: column; border: 1px solid var(--bp-line); }
+.filelist .f { display: flex; align-items: center; gap: 11px; padding: 9px 13px; border-bottom: 1px solid var(--rule); font-size: 12.5px; }
+.filelist .f:last-child { border-bottom: 0; }
+.filelist .f .nm { flex: 1; color: var(--paper); }
+.filelist .f .tag { font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--paper-faint); }
+.filelist .f .canon { color: var(--signal); border: 1px solid var(--signal); padding: 1px 5px; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; }
+
+/* --- ambient field · <sq-spatial-field> ------------------------------------ */
+/* Entrance-only ambient canvas. Sits behind content, non-interactive, below
+   text-legibility contrast so it never competes with content. */
+sq-spatial-field { position: absolute; inset: 0; display: block; pointer-events: none; z-index: 0; overflow: hidden; }
+sq-spatial-field canvas { width: 100%; height: 100%; display: block; }
+
+/* --- surface panels -------------------------------------------------------- */
+.panel { background: var(--ink-2); border: 1px solid var(--bp-line); }
+.panel-inset { background: var(--ink-3); }
+
+/* --- empty / loading / error presentation primitives ----------------------- */
+/* Visual-only, consistent with ux-design.yaml :: edge_states (optimistic / no
+   spinner; inline errors; modal confirmation shell). No behavior here. */
+.sq-empty {
+  border: 1px solid var(--bp-line);
+  /* a vacant plot — crossed out corner-to-corner */
+  background-image:
+    linear-gradient(to top right, transparent calc(50% - 0.5px), rgba(214, 224, 255, 0.16) calc(50% - 0.5px), rgba(214, 224, 255, 0.16) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+    linear-gradient(to bottom right, transparent calc(50% - 0.5px), rgba(214, 224, 255, 0.16) calc(50% - 0.5px), rgba(214, 224, 255, 0.16) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+  color: var(--paper-faint);
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  padding: 18px 16px;
+}
+.sq-error {
+  color: var(--crit);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.sq-toast {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--sage);
+  color: var(--sage);
+  background: var(--ink-2);
+  padding: 8px 12px;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* modal confirmation shell — destructive actions (reset; load-overwrite) */
+.sq-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--scrim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: var(--gut);
+}
+.sq-modal {
+  background: var(--ink-2);
+  border: 1px solid var(--bp-line);
+  /* inner offset line → a double-line drafting "wall" (4px ink gap, then 1px line) */
+  box-shadow: inset 0 0 0 4px var(--ink-2), inset 0 0 0 5px rgba(214, 224, 255, 0.4);
+  max-width: 460px;
+  width: 100%;
+  padding: 26px 24px 22px;
+  position: relative;
+}
+.sq-modal .m-title { font-family: var(--font-display); font-size: 30px; line-height: 0.9; margin: 0 0 10px; }
+.sq-modal .m-body { color: var(--paper-dim); font-size: 13.5px; line-height: 1.55; margin: 0 0 20px; }
+.sq-modal .m-actions { display: flex; gap: 10px; justify-content: flex-end; }

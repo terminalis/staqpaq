@@ -1,0 +1,46 @@
+# ============================================================================
+# staqpaq — .gitignore
+# Derived from the Runtime Binding: vanilla HTML/CSS/JS + Lit (light DOM),
+# native ESM, NO build step, NO TypeScript, ONE static repo, static hosting.
+# ============================================================================
+
+# --- Secrets / local env -----------------------------------------------------
+# .env.local is the untracked operator copy; .env.example STAYS committed.
+.env.local
+.env.*.local
+*.local.env
+
+# Common secret-bearing files (none are used today; ignored defensively).
+*.pem
+*.key
+*.p12
+*.pfx
+secrets.json
+.secrets/
+
+# --- Local build artifacts ---------------------
+/.agents
+/.claude
+/.codex
+node_modules/
+.eslintcache
+.cache/
+
+# --- Logs --------------------------------------------------------------------
+*.log
+npm-debug.log*
+
+# --- OS / editor noise -------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+*.swp
+*~
+.idea/
+.vscode/*
+!.vscode/extensions.json

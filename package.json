@@ -1,0 +1,19 @@
+{
+  "name": "staqpaq",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "description": "A client-only build-manifest generator that exports deterministic staqpaq artifacts from structured app-build selections.",
+  "scripts": {
+    "assert:core": "node scripts/assert-no-ui-logic.mjs && node scripts/assert-single-orchestrator.mjs && node scripts/assert-no-direct-db-access.mjs && node scripts/assert-inert-interactive-surface.mjs",
+    "audit": "node scripts/assert-local-presentation-assets.mjs && node scripts/assert-pwa-cache-layer.mjs && node scripts/assert-a11y-semantics.mjs",
+    "check": "npm run assert:core && npm run validate:catalogue && npm run test:capabilities && npm run test:derive && npm run test:export && npm run test:orchestrator",
+    "validate:catalogue": "node scripts/validate-catalogue.mjs",
+    "test:capabilities": "node scripts/test-capabilities.mjs",
+    "test:derive": "node scripts/test-derive.mjs",
+    "test:export": "node scripts/test-export.mjs",
+    "test:orchestrator": "node scripts/test-orchestrator-guards.mjs",
+    "serve": "npx serve ."
+  }
+}

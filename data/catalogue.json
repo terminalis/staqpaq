@@ -1,0 +1,4233 @@
+{
+  "version": "catalogue-1",
+  "note": "Static, version-controlled reference data (snag S1: authored product data, NOT a frozen behavioral spec — editable; adding options/providers is pure data). sections -> fields (kind/severity/applies_when/custom) -> curated options (with requires/precludes gating). The five MVP field kinds only: text, single_select, multi_select, boolean, color. Severity is two-tier: recommended | optional (advisory — nothing is enforced; export is never blocked). Categorical option lists are authored alphabetically by label (None/Other sentinels last); inherently ordinal lists (billing_interval, asset_status) keep their logical order. Gating condition: { path, anyOf:[keys] } | { path, present:true }; an option carries `requires` (gated unless ALL hold) and/or `precludes` (gated if ANY holds); each rule carries its own `reason`.",
+  "sections": [
+    {
+      "id": "identity",
+      "number": "01",
+      "title": "Identity & Scope",
+      "blurb": "What you're building, where it runs, who it's for, and how it makes money.",
+      "fields": [
+        {
+          "path": "project.name",
+          "note": "The product's name — labels the manifest and the exported pack.",
+          "label": "Project name",
+          "kind": "text",
+          "severity": "recommended",
+          "primary": true,
+          "placeholder": "e.g. Acme Analytics"
+        },
+        {
+          "path": "project.type",
+          "note": "The kind of product you're building. Pick the closest match, or add your own via Other.",
+          "label": "Product type",
+          "kind": "single_select",
+          "severity": "recommended",
+          "custom": true,
+          "options": [
+            {
+              "key": "content_site",
+              "label": "Content"
+            },
+            {
+              "key": "directory",
+              "label": "Directory"
+            },
+            {
+              "key": "ecommerce",
+              "label": "E-commerce"
+            },
+            {
+              "key": "marketplace",
+              "label": "Marketplace"
+            },
+            {
+              "key": "saas",
+              "label": "SaaS"
+            },
+            {
+              "key": "social",
+              "label": "Social"
+            },
+            {
+              "key": "tool",
+              "label": "Tool"
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "project.platforms",
+          "note": "Where the app runs. Pick every target you ship to — it drives later platform decisions.",
+          "label": "Target platforms",
+          "kind": "multi_select",
+          "severity": "recommended",
+          "options": [
+            {
+              "key": "android",
+              "label": "Android",
+              "icon": "simple-icons:android"
+            },
+            {
+              "key": "api_only",
+              "label": "API-only",
+              "icon": "mdi:api"
+            },
+            {
+              "key": "browser_extension",
+              "label": "Browser extension",
+              "icon": "mdi:puzzle-outline"
+            },
+            {
+              "key": "cli",
+              "label": "CLI",
+              "icon": "mdi:console"
+            },
+            {
+              "key": "discord",
+              "label": "Discord",
+              "icon": "simple-icons:discord"
+            },
+            {
+              "key": "ios",
+              "label": "iOS",
+              "icon": "simple-icons:apple"
+            },
+            {
+              "key": "linux",
+              "label": "Linux",
+              "icon": "simple-icons:linux"
+            },
+            {
+              "key": "macos",
+              "label": "macOS",
+              "icon": "simple-icons:apple"
+            },
+            {
+              "key": "pwa",
+              "label": "PWA",
+              "icon": "simple-icons:pwa"
+            },
+            {
+              "key": "slack",
+              "label": "Slack",
+              "icon": "simple-icons:slack"
+            },
+            {
+              "key": "web",
+              "label": "Web",
+              "icon": "simple-icons:googlechrome"
+            },
+            {
+              "key": "windows",
+              "label": "Windows",
+              "icon": "simple-icons:windows"
+            }
+          ]
+        },
+        {
+          "path": "project.audience",
+          "note": "Who the product is for. Pick all that apply.",
+          "label": "Target users",
+          "kind": "multi_select",
+          "severity": "recommended",
+          "custom": true,
+          "options": [
+            {
+              "key": "agencies",
+              "label": "Agencies"
+            },
+            {
+              "key": "businesses",
+              "label": "Businesses (B2B)"
+            },
+            {
+              "key": "consumers",
+              "label": "Consumers (B2C)"
+            },
+            {
+              "key": "creators",
+              "label": "Creators"
+            },
+            {
+              "key": "developers",
+              "label": "Developers"
+            },
+            {
+              "key": "educators",
+              "label": "Educators"
+            },
+            {
+              "key": "founders",
+              "label": "Founders"
+            },
+            {
+              "key": "internal",
+              "label": "Internal / in-house"
+            },
+            {
+              "key": "market_buyers_sellers",
+              "label": "Market buyers/sellers"
+            },
+            {
+              "key": "nonprofits",
+              "label": "Nonprofits"
+            },
+            {
+              "key": "students",
+              "label": "Students"
+            },
+            {
+              "key": "teams",
+              "label": "Teams"
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "business.revenue_model",
+          "note": "How the product makes money. A paid model unlocks the Payments section.",
+          "label": "Revenue model",
+          "kind": "single_select",
+          "severity": "recommended",
+          "options": [
+            {
+              "key": "advertising",
+              "label": "Advertising"
+            },
+            {
+              "key": "affiliate",
+              "label": "Affiliate"
+            },
+            {
+              "key": "commission",
+              "label": "Commission"
+            },
+            {
+              "key": "donation",
+              "label": "Donation"
+            },
+            {
+              "key": "free",
+              "label": "Free / none"
+            },
+            {
+              "key": "freemium",
+              "label": "Freemium",
+              "suggests": [
+                {
+                  "path": "surface.screens",
+                  "keys": [
+                    "pricing",
+                    "billing"
+                  ]
+                }
+              ]
+            },
+            {
+              "key": "internal_noncommercial",
+              "label": "Internal / non-commercial"
+            },
+            {
+              "key": "licensing",
+              "label": "Licensing",
+              "suggests": [
+                {
+                  "path": "surface.screens",
+                  "keys": [
+                    "pricing"
+                  ]
+                }
+              ]
+            },
+            {
+              "key": "one_time",
+              "label": "One-time purchase",
+              "suggests": [
+                {
+                  "path": "surface.screens",
+                  "keys": [
+                    "pricing",
+                    "checkout"
+                  ]
+                }
+              ]
+            },
+            {
+              "key": "seat_based",
+              "label": "Seat-based",
+              "suggests": [
+                {
+                  "path": "surface.screens",
+                  "keys": [
+                    "pricing",
+                    "billing"
+                  ]
+                }
+              ]
+            },
+            {
+              "key": "services",
+              "label": "Services"
+            },
+            {
+              "key": "sponsorship",
+              "label": "Sponsorship"
+            },
+            {
+              "key": "subscription",
+              "label": "Subscription",
+              "suggests": [
+                {
+                  "path": "surface.screens",
+                  "keys": [
+                    "pricing",
+                    "billing"
+                  ]
+                }
+              ]
+            },
+            {
+              "key": "usage_based",
+              "label": "Usage-based",
+              "suggests": [
+                {
+                  "path": "surface.screens",
+                  "keys": [
+                    "pricing",
+                    "billing"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "path": "business.billing_interval",
+          "note": "How often subscribers are billed. Only applies to recurring revenue models.",
+          "label": "Billing interval",
+          "kind": "single_select",
+          "severity": "recommended",
+          "applies_when": [
+            {
+              "path": "business.revenue_model",
+              "anyOf": [
+                "subscription",
+                "usage_based",
+                "freemium",
+                "seat_based"
+              ]
+            }
+          ],
+          "options": [
+            {
+              "key": "annual",
+              "label": "Annual"
+            },
+            {
+              "key": "metered_only",
+              "label": "Metered only"
+            },
+            {
+              "key": "monthly",
+              "label": "Monthly"
+            },
+            {
+              "key": "both",
+              "label": "Monthly + Annual"
+            }
+          ]
+        },
+        {
+          "path": "business.fulfilment",
+          "label": "Fulfilment",
+          "kind": "multi_select",
+          "severity": "recommended",
+          "custom": true,
+          "note": "What the customer receives. Pick all that apply, or add your own via Other.",
+          "options": [
+            {
+              "key": "account_access",
+              "label": "Account access"
+            },
+            {
+              "key": "additional_features",
+              "label": "Additional features"
+            },
+            {
+              "key": "api_access",
+              "label": "API access"
+            },
+            {
+              "key": "booking_reservation",
+              "label": "Booking / reservation"
+            },
+            {
+              "key": "community_access",
+              "label": "Community access"
+            },
+            {
+              "key": "course_access",
+              "label": "Course access"
+            },
+            {
+              "key": "credits",
+              "label": "Credits"
+            },
+            {
+              "key": "digital_download",
+              "label": "Digital download"
+            },
+            {
+              "key": "license_key",
+              "label": "License key"
+            },
+            {
+              "key": "marketplace_transaction",
+              "label": "Marketplace transaction"
+            },
+            {
+              "key": "membership_access",
+              "label": "Membership access"
+            },
+            {
+              "key": "physical_shipping",
+              "label": "Physical shipping"
+            },
+            {
+              "key": "premium_support",
+              "label": "Premium support"
+            },
+            {
+              "key": "service_delivery",
+              "label": "Service delivery"
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "frontend",
+      "number": "02",
+      "title": "Frontend & Architecture",
+      "blurb": "The framework, rendering model, and visual styling the UI is built on.",
+      "fields": [
+        {
+          "path": "frontend.framework",
+          "note": "The framework the UI is built on, or add your own via Other. It gates compatible styling and component kits.",
+          "label": "Framework",
+          "kind": "single_select",
+          "severity": "recommended",
+          "custom": true,
+          "options": [
+            {
+              "key": "alpine",
+              "label": "Alpine.js",
+              "icon": "logos:alpinejs-icon"
+            },
+            {
+              "key": "angular",
+              "label": "Angular",
+              "icon": "simple-icons:angular"
+            },
+            {
+              "key": "astro",
+              "label": "Astro",
+              "icon": "simple-icons:astro"
+            },
+            {
+              "key": "expo",
+              "label": "Expo",
+              "icon": "simple-icons:expo"
+            },
+            {
+              "key": "flutter",
+              "label": "Flutter",
+              "icon": "simple-icons:flutter"
+            },
+            {
+              "key": "htmx",
+              "label": "htmx",
+              "icon": "simple-icons:htmx"
+            },
+            {
+              "key": "kotlin",
+              "label": "Kotlin",
+              "icon": "simple-icons:kotlin"
+            },
+            {
+              "key": "lit",
+              "label": "Lit",
+              "icon": "simple-icons:lit"
+            },
+            {
+              "key": "nextjs",
+              "label": "Next.js",
+              "icon": "simple-icons:nextdotjs"
+            },
+            {
+              "key": "preact",
+              "label": "Preact",
+              "icon": "simple-icons:preact"
+            },
+            {
+              "key": "qwik",
+              "label": "Qwik",
+              "icon": "simple-icons:qwik"
+            },
+            {
+              "key": "react",
+              "label": "React (SPA)",
+              "icon": "simple-icons:react"
+            },
+            {
+              "key": "react_native",
+              "label": "React Native",
+              "icon": "simple-icons:react"
+            },
+            {
+              "key": "react_router",
+              "label": "React Router",
+              "icon": "simple-icons:reactrouter"
+            },
+            {
+              "key": "rust",
+              "label": "Rust",
+              "icon": "simple-icons:rust"
+            },
+            {
+              "key": "solid",
+              "label": "Solid",
+              "icon": "simple-icons:solid"
+            },
+            {
+              "key": "svelte",
+              "label": "Svelte / SvelteKit",
+              "icon": "simple-icons:svelte"
+            },
+            {
+              "key": "swift",
+              "label": "Swift",
+              "icon": "simple-icons:swift"
+            },
+            {
+              "key": "vue",
+              "label": "Vue / Nuxt",
+              "icon": "simple-icons:vuedotjs"
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "frontend.styling",
+          "note": "How the UI is styled. Options are filtered to what fits your framework.",
+          "label": "Styling approach",
+          "kind": "single_select",
+          "severity": "optional",
+          "custom": true,
+          "options": [
+            {
+              "key": "css_modules",
+              "label": "CSS Modules",
+              "precludes": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "react_native",
+                    "flutter"
+                  ],
+                  "reason": "Web CSS frameworks don't apply to a native mobile target — clear the React Native / Flutter framework to enable web styling."
+                }
+              ]
+            },
+            {
+              "key": "emotion",
+              "label": "Emotion",
+              "precludes": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "flutter"
+                  ],
+                  "reason": "Emotion is a CSS-in-JS library for the web DOM and React Native — not available on a Flutter target."
+                }
+              ]
+            },
+            {
+              "key": "nativewind",
+              "label": "NativeWind",
+              "requires": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "react_native",
+                    "expo"
+                  ],
+                  "reason": "NativeWind brings Tailwind to React Native — set a React Native or Expo framework."
+                }
+              ]
+            },
+            {
+              "key": "panda_css",
+              "label": "Panda CSS",
+              "icon": "logos:pandacss-icon",
+              "precludes": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "react_native",
+                    "flutter"
+                  ],
+                  "reason": "Panda CSS targets the web DOM ? clear the React Native / Flutter framework to enable web styling."
+                }
+              ]
+            },
+            {
+              "key": "plain_css",
+              "label": "Plain CSS",
+              "icon": "simple-icons:css",
+              "precludes": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "react_native",
+                    "flutter"
+                  ],
+                  "reason": "Web CSS frameworks don't apply to a native mobile target — clear the React Native / Flutter framework to enable web styling."
+                }
+              ]
+            },
+            {
+              "key": "sass",
+              "label": "Sass / SCSS",
+              "icon": "simple-icons:sass",
+              "precludes": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "react_native",
+                    "flutter"
+                  ],
+                  "reason": "Web CSS frameworks don't apply to a native mobile target — clear the React Native / Flutter framework to enable web styling."
+                }
+              ]
+            },
+            {
+              "key": "styled_components",
+              "label": "styled-components",
+              "icon": "simple-icons:styledcomponents",
+              "precludes": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "flutter"
+                  ],
+                  "reason": "styled-components targets the web DOM — not available on a Flutter target."
+                }
+              ]
+            },
+            {
+              "key": "styled_jsx",
+              "label": "styled-jsx",
+              "requires": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "nextjs",
+                    "react"
+                  ],
+                  "reason": "styled-jsx is used with React and Next.js ? set a compatible React framework."
+                }
+              ]
+            },
+            {
+              "key": "stylex",
+              "label": "StyleX",
+              "precludes": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "flutter"
+                  ],
+                  "reason": "StyleX targets JavaScript UI stacks, not Flutter."
+                }
+              ]
+            },
+            {
+              "key": "tailwind",
+              "label": "Tailwind CSS",
+              "icon": "simple-icons:tailwindcss",
+              "precludes": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "react_native",
+                    "flutter"
+                  ],
+                  "reason": "Web CSS frameworks don't apply to a native mobile target — clear the React Native / Flutter framework to enable web styling."
+                }
+              ]
+            },
+            {
+              "key": "tamagui",
+              "label": "Tamagui",
+              "requires": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "nextjs",
+                    "react",
+                    "react_router",
+                    "react_native",
+                    "expo"
+                  ],
+                  "reason": "Tamagui targets React and React Native — set a React or React Native framework."
+                }
+              ]
+            },
+            {
+              "key": "unocss",
+              "label": "UnoCSS",
+              "icon": "simple-icons:unocss",
+              "precludes": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "react_native",
+                    "flutter"
+                  ],
+                  "reason": "UnoCSS targets web build pipelines ? clear the React Native / Flutter framework to enable it."
+                }
+              ]
+            },
+            {
+              "key": "vanilla_extract",
+              "label": "vanilla-extract",
+              "icon": "simple-icons:vanillaextract",
+              "precludes": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "react_native",
+                    "flutter"
+                  ],
+                  "reason": "Web CSS frameworks don't apply to a native mobile target — clear the React Native / Flutter framework to enable web styling."
+                }
+              ]
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "frontend.component_library",
+          "note": "A pre-built component kit, if any. Options are filtered to what fits your framework.",
+          "label": "Component kit",
+          "kind": "single_select",
+          "severity": "optional",
+          "custom": true,
+          "options": [
+            {
+              "key": "angular_material",
+              "label": "Angular Material",
+              "requires": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "angular"
+                  ],
+                  "reason": "Angular Material requires Angular."
+                }
+              ]
+            },
+            {
+              "key": "ant_design",
+              "label": "Ant Design",
+              "icon": "simple-icons:antdesign",
+              "requires": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "nextjs",
+                    "react",
+                    "react_router"
+                  ],
+                  "reason": "Ant Design requires a React framework."
+                }
+              ]
+            },
+            {
+              "key": "ark_ui",
+              "label": "Ark UI",
+              "precludes": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "react_native",
+                    "expo",
+                    "flutter",
+                    "swift",
+                    "kotlin"
+                  ],
+                  "reason": "Ark UI targets web UI frameworks, not native mobile frameworks."
+                }
+              ]
+            },
+            {
+              "key": "bootstrap",
+              "label": "Bootstrap",
+              "icon": "simple-icons:bootstrap",
+              "precludes": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "react_native",
+                    "flutter"
+                  ],
+                  "reason": "Bootstrap targets web UI, not native mobile frameworks."
+                }
+              ]
+            },
+            {
+              "key": "chakra",
+              "label": "Chakra UI",
+              "icon": "simple-icons:chakraui",
+              "requires": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "nextjs",
+                    "react",
+                    "react_router"
+                  ],
+                  "reason": "Chakra UI requires a React framework."
+                }
+              ]
+            },
+            {
+              "key": "daisyui",
+              "label": "DaisyUI",
+              "icon": "simple-icons:daisyui",
+              "precludes": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "react_native",
+                    "flutter"
+                  ],
+                  "reason": "DaisyUI is a Tailwind CSS plugin for the web — not available on a native mobile target."
+                }
+              ]
+            },
+            {
+              "key": "flowbite",
+              "label": "Flowbite",
+              "precludes": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "react_native",
+                    "flutter"
+                  ],
+                  "reason": "Flowbite is a Tailwind CSS component library for the web — not available on a native mobile target."
+                }
+              ]
+            },
+            {
+              "key": "fluent_ui",
+              "label": "Fluent UI",
+              "requires": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "nextjs",
+                    "react",
+                    "react_router"
+                  ],
+                  "reason": "Fluent UI requires a React framework."
+                }
+              ]
+            },
+            {
+              "key": "gluestack",
+              "label": "gluestack-ui",
+              "requires": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "react_native",
+                    "expo"
+                  ],
+                  "reason": "gluestack-ui targets React Native and Expo ? set a React Native or Expo framework."
+                }
+              ]
+            },
+            {
+              "key": "headless",
+              "label": "Headless / none"
+            },
+            {
+              "key": "ionic",
+              "label": "Ionic",
+              "icon": "simple-icons:ionic",
+              "precludes": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "react_native",
+                    "flutter"
+                  ],
+                  "reason": "Ionic targets web/hybrid app stacks, not React Native or Flutter."
+                }
+              ]
+            },
+            {
+              "key": "mantine",
+              "label": "Mantine",
+              "icon": "simple-icons:mantine",
+              "requires": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "nextjs",
+                    "react",
+                    "react_router"
+                  ],
+                  "reason": "Mantine requires a React framework."
+                }
+              ]
+            },
+            {
+              "key": "mui",
+              "label": "Material UI",
+              "icon": "simple-icons:mui",
+              "requires": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "nextjs",
+                    "react",
+                    "react_router"
+                  ],
+                  "reason": "Material UI requires a React framework."
+                }
+              ]
+            },
+            {
+              "key": "quasar",
+              "label": "Quasar",
+              "icon": "simple-icons:quasar",
+              "requires": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "vue"
+                  ],
+                  "reason": "Quasar requires Vue."
+                }
+              ]
+            },
+            {
+              "key": "radix",
+              "label": "Radix UI",
+              "icon": "simple-icons:radixui",
+              "requires": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "nextjs",
+                    "react",
+                    "react_router",
+                    "astro"
+                  ],
+                  "reason": "Radix UI requires a React framework."
+                }
+              ]
+            },
+            {
+              "key": "react_aria",
+              "label": "React Aria",
+              "requires": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "nextjs",
+                    "react",
+                    "react_router"
+                  ],
+                  "reason": "React Aria requires a React framework."
+                }
+              ]
+            },
+            {
+              "key": "shadcn",
+              "label": "shadcn/ui",
+              "icon": "simple-icons:shadcnui",
+              "requires": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "nextjs",
+                    "react",
+                    "react_router",
+                    "astro"
+                  ],
+                  "reason": "shadcn/ui requires a React framework (Next.js, React, React Router, or Astro)."
+                }
+              ]
+            },
+            {
+              "key": "shoelace",
+              "label": "Shoelace / Web Awesome",
+              "precludes": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "react_native",
+                    "expo",
+                    "flutter",
+                    "swift",
+                    "kotlin"
+                  ],
+                  "reason": "Shoelace / Web Awesome is a framework-agnostic web-component library (built on Lit) — it targets the web DOM, not a native framework."
+                }
+              ]
+            },
+            {
+              "key": "tamagui",
+              "label": "Tamagui",
+              "requires": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "nextjs",
+                    "react",
+                    "react_router",
+                    "react_native",
+                    "expo"
+                  ],
+                  "reason": "Tamagui targets React and React Native — set a React or React Native framework."
+                }
+              ]
+            },
+            {
+              "key": "vuetify",
+              "label": "Vuetify",
+              "icon": "simple-icons:vuetify",
+              "requires": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "vue"
+                  ],
+                  "reason": "Vuetify requires Vue."
+                }
+              ]
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "frontend.native_shells",
+          "label": "Native shell",
+          "kind": "multi_select",
+          "severity": "optional",
+          "custom": true,
+          "note": "How a web frontend is wrapped for native distribution. Pick all that apply (e.g. Electron for desktop + Capacitor for mobile from one web codebase), or add your own via Other. Skip it if you're not shipping a native build.",
+          "options": [
+            {
+              "key": "capacitor",
+              "label": "Capacitor",
+              "icon": "simple-icons:capacitor",
+              "requires": [
+                {
+                  "path": "project.platforms",
+                  "anyOf": [
+                    "ios",
+                    "android"
+                  ],
+                  "reason": "Capacitor wraps a web app into a native mobile build — add an iOS or Android platform in Identity & Scope."
+                }
+              ],
+              "precludes": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "react_native",
+                    "expo",
+                    "flutter",
+                    "swift",
+                    "kotlin"
+                  ],
+                  "reason": "Capacitor wraps a web frontend — it doesn't apply to an already-native framework (React Native, Expo, Flutter, Swift, Kotlin)."
+                }
+              ]
+            },
+            {
+              "key": "cordova",
+              "label": "Cordova",
+              "icon": "simple-icons:apachecordova",
+              "requires": [
+                {
+                  "path": "project.platforms",
+                  "anyOf": [
+                    "ios",
+                    "android"
+                  ],
+                  "reason": "Cordova wraps a web app into a native mobile build — add an iOS or Android platform in Identity & Scope."
+                }
+              ],
+              "precludes": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "react_native",
+                    "expo",
+                    "flutter",
+                    "swift",
+                    "kotlin"
+                  ],
+                  "reason": "Cordova wraps a web frontend — it doesn't apply to an already-native framework (React Native, Expo, Flutter, Swift, Kotlin)."
+                }
+              ]
+            },
+            {
+              "key": "electron",
+              "label": "Electron",
+              "icon": "simple-icons:electron",
+              "requires": [
+                {
+                  "path": "project.platforms",
+                  "anyOf": [
+                    "macos",
+                    "windows",
+                    "linux"
+                  ],
+                  "reason": "Electron wraps a web app into a desktop build — add a macOS, Windows, or Linux platform in Identity & Scope."
+                }
+              ],
+              "precludes": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "react_native",
+                    "expo",
+                    "flutter",
+                    "swift",
+                    "kotlin"
+                  ],
+                  "reason": "Electron wraps a web frontend — it doesn't apply to an already-native framework (React Native, Expo, Flutter, Swift, Kotlin)."
+                }
+              ]
+            },
+            {
+              "key": "tauri",
+              "label": "Tauri",
+              "icon": "simple-icons:tauri",
+              "requires": [
+                {
+                  "path": "project.platforms",
+                  "anyOf": [
+                    "macos",
+                    "windows",
+                    "linux"
+                  ],
+                  "reason": "Tauri wraps a web app into a desktop build — add a macOS, Windows, or Linux platform in Identity & Scope."
+                }
+              ],
+              "precludes": [
+                {
+                  "path": "frontend.framework",
+                  "anyOf": [
+                    "react_native",
+                    "expo",
+                    "flutter",
+                    "swift",
+                    "kotlin"
+                  ],
+                  "reason": "Tauri wraps a web frontend — it doesn't apply to an already-native framework (React Native, Expo, Flutter, Swift, Kotlin)."
+                }
+              ]
+            },
+            {
+              "key": "none",
+              "label": "None",
+              "exclusive": true
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "data",
+      "number": "03",
+      "title": "Data & Storage",
+      "blurb": "Where the app keeps its data, where files live, and the services that run background and realtime work. Picking a database, storage, jobs, or realtime provider derives its env vars into the exported .env.example.",
+      "fields": [
+        {
+          "path": "database.provider",
+          "label": "Database provider",
+          "kind": "single_select",
+          "severity": "recommended",
+          "custom": true,
+          "note": "The platform or service that hosts your data — a DB host (Neon/PlanetScale/Turso), a bundled backend (Supabase/Firebase/Convex/Appwrite/PocketBase), or self-hosted. Selecting one derives its env vars into the exported .env.example.",
+          "options": [
+            {
+              "key": "appwrite",
+              "label": "Appwrite",
+              "icon": "simple-icons:appwrite"
+            },
+            {
+              "key": "cloudflare_d1",
+              "label": "Cloudflare D1",
+              "icon": "simple-icons:cloudflare"
+            },
+            {
+              "key": "cockroachdb",
+              "label": "CockroachDB",
+              "icon": "simple-icons:cockroachlabs"
+            },
+            {
+              "key": "convex",
+              "label": "Convex",
+              "icon": "simple-icons:convex"
+            },
+            {
+              "key": "dynamodb",
+              "label": "DynamoDB",
+              "icon": "simple-icons:amazondynamodb"
+            },
+            {
+              "key": "firebase",
+              "label": "Firebase",
+              "icon": "simple-icons:firebase",
+              "precludes": [
+                {
+                  "path": "database.provider",
+                  "anyOf": [
+                    "supabase"
+                  ],
+                  "reason": "Precluded by Supabase as the backend. Clear Supabase to re-enable Firebase."
+                }
+              ]
+            },
+            {
+              "key": "mongodb_atlas",
+              "label": "MongoDB Atlas",
+              "icon": "simple-icons:mongodb"
+            },
+            {
+              "key": "neon",
+              "label": "Neon",
+              "icon": "simple-icons:neon"
+            },
+            {
+              "key": "planetscale",
+              "label": "PlanetScale",
+              "icon": "simple-icons:planetscale"
+            },
+            {
+              "key": "pocketbase",
+              "label": "PocketBase",
+              "icon": "simple-icons:pocketbase"
+            },
+            {
+              "key": "prisma_postgres",
+              "label": "Prisma Postgres",
+              "icon": "simple-icons:prisma"
+            },
+            {
+              "key": "self_hosted",
+              "label": "Self-hosted"
+            },
+            {
+              "key": "supabase",
+              "label": "Supabase",
+              "icon": "simple-icons:supabase",
+              "iconColor": "var(--sage)"
+            },
+            {
+              "key": "turso",
+              "label": "Turso",
+              "icon": "simple-icons:turso"
+            },
+            {
+              "key": "none",
+              "label": "None"
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "backend.storage",
+          "label": "File storage",
+          "kind": "single_select",
+          "severity": "optional",
+          "custom": true,
+          "note": "Where uploaded files and media are stored. Selecting a cloud provider derives its env vars into the exported .env.example.",
+          "options": [
+            {
+              "key": "appwrite_storage",
+              "label": "Appwrite Storage",
+              "icon": "simple-icons:appwrite",
+              "requires": [
+                {
+                  "path": "database.provider",
+                  "anyOf": [
+                    "appwrite"
+                  ],
+                  "reason": "Requires Appwrite as the backend."
+                }
+              ]
+            },
+            {
+              "key": "s3",
+              "label": "AWS S3",
+              "icon": "simple-icons:amazons3"
+            },
+            {
+              "key": "azure_blob",
+              "label": "Azure Blob Storage",
+              "icon": "simple-icons:microsoftazure"
+            },
+            {
+              "key": "backblaze_b2",
+              "label": "Backblaze B2",
+              "icon": "simple-icons:backblaze"
+            },
+            {
+              "key": "r2",
+              "label": "Cloudflare R2",
+              "icon": "simple-icons:cloudflare"
+            },
+            {
+              "key": "cloudinary",
+              "label": "Cloudinary",
+              "icon": "simple-icons:cloudinary"
+            },
+            {
+              "key": "convex_storage",
+              "label": "Convex Storage",
+              "icon": "simple-icons:convex",
+              "requires": [
+                {
+                  "path": "database.provider",
+                  "anyOf": [
+                    "convex"
+                  ],
+                  "reason": "Requires Convex as the backend."
+                }
+              ]
+            },
+            {
+              "key": "firebase_storage",
+              "label": "Firebase Storage",
+              "icon": "simple-icons:firebase"
+            },
+            {
+              "key": "gcs",
+              "label": "Google Cloud Storage",
+              "icon": "simple-icons:googlecloud"
+            },
+            {
+              "key": "indexeddb",
+              "label": "IndexedDB"
+            },
+            {
+              "key": "localstorage",
+              "label": "localStorage"
+            },
+            {
+              "key": "minio",
+              "label": "MinIO",
+              "icon": "simple-icons:minio"
+            },
+            {
+              "key": "pocketbase_storage",
+              "label": "PocketBase Storage",
+              "icon": "simple-icons:pocketbase",
+              "requires": [
+                {
+                  "path": "database.provider",
+                  "anyOf": [
+                    "pocketbase"
+                  ],
+                  "reason": "Requires PocketBase as the backend."
+                }
+              ]
+            },
+            {
+              "key": "supabase_storage",
+              "label": "Supabase Storage",
+              "icon": "simple-icons:supabase"
+            },
+            {
+              "key": "uploadthing",
+              "label": "UploadThing"
+            },
+            {
+              "key": "vercel_blob",
+              "label": "Vercel Blob",
+              "icon": "simple-icons:vercel"
+            },
+            {
+              "key": "none",
+              "label": "None"
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "backend.jobs",
+          "label": "Background work",
+          "kind": "multi_select",
+          "severity": "optional",
+          "custom": true,
+          "note": "The platform(s) you run background, scheduled, or async work on. Pick all that apply, or add your own via Other.",
+          "options": [
+            {
+              "key": "appwrite",
+              "label": "Appwrite",
+              "icon": "simple-icons:appwrite",
+              "requires": [
+                {
+                  "path": "database.provider",
+                  "anyOf": [
+                    "appwrite"
+                  ],
+                  "reason": "Appwrite Functions run on the Appwrite backend."
+                }
+              ]
+            },
+            {
+              "key": "aws",
+              "label": "AWS",
+              "icon": "simple-icons:amazonaws"
+            },
+            {
+              "key": "bullmq",
+              "label": "BullMQ"
+            },
+            {
+              "key": "cloudflare",
+              "label": "Cloudflare",
+              "icon": "simple-icons:cloudflare"
+            },
+            {
+              "key": "convex",
+              "label": "Convex",
+              "icon": "simple-icons:convex",
+              "requires": [
+                {
+                  "path": "database.provider",
+                  "anyOf": [
+                    "convex"
+                  ],
+                  "reason": "Convex Functions run on the Convex backend."
+                }
+              ]
+            },
+            {
+              "key": "firebase",
+              "label": "Firebase",
+              "icon": "simple-icons:firebase"
+            },
+            {
+              "key": "github_actions",
+              "label": "GitHub Actions",
+              "icon": "simple-icons:githubactions"
+            },
+            {
+              "key": "inngest",
+              "label": "Inngest"
+            },
+            {
+              "key": "netlify",
+              "label": "Netlify",
+              "icon": "simple-icons:netlify"
+            },
+            {
+              "key": "supabase",
+              "label": "Supabase",
+              "icon": "simple-icons:supabase"
+            },
+            {
+              "key": "temporal",
+              "label": "Temporal"
+            },
+            {
+              "key": "trigger_dev",
+              "label": "Trigger.dev"
+            },
+            {
+              "key": "upstash",
+              "label": "Upstash",
+              "icon": "simple-icons:upstash"
+            },
+            {
+              "key": "vercel",
+              "label": "Vercel",
+              "icon": "simple-icons:vercel"
+            },
+            {
+              "key": "none",
+              "label": "None",
+              "exclusive": true
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "backend.realtime",
+          "label": "Realtime sync",
+          "kind": "single_select",
+          "severity": "optional",
+          "custom": true,
+          "note": "The realtime / live-sync service (websockets, presence, collaboration). Many bundled backends include one; pick a dedicated service if your data layer doesn't, or add your own via Other.",
+          "options": [
+            {
+              "key": "ably",
+              "label": "Ably"
+            },
+            {
+              "key": "appwrite_realtime",
+              "label": "Appwrite Realtime",
+              "icon": "simple-icons:appwrite",
+              "requires": [
+                {
+                  "path": "database.provider",
+                  "anyOf": [
+                    "appwrite"
+                  ],
+                  "reason": "Requires Appwrite as the backend."
+                }
+              ]
+            },
+            {
+              "key": "centrifugo",
+              "label": "Centrifugo"
+            },
+            {
+              "key": "firebase_realtime",
+              "label": "Firebase Realtime",
+              "icon": "simple-icons:firebase"
+            },
+            {
+              "key": "hocuspocus",
+              "label": "Hocuspocus"
+            },
+            {
+              "key": "liveblocks",
+              "label": "Liveblocks"
+            },
+            {
+              "key": "partykit",
+              "label": "PartyKit"
+            },
+            {
+              "key": "pocketbase_realtime",
+              "label": "PocketBase Realtime",
+              "icon": "simple-icons:pocketbase",
+              "requires": [
+                {
+                  "path": "database.provider",
+                  "anyOf": [
+                    "pocketbase"
+                  ],
+                  "reason": "Requires PocketBase as the backend."
+                }
+              ]
+            },
+            {
+              "key": "pubnub",
+              "label": "PubNub"
+            },
+            {
+              "key": "pusher",
+              "label": "Pusher",
+              "icon": "simple-icons:pusher"
+            },
+            {
+              "key": "socket_io",
+              "label": "Socket.IO",
+              "icon": "simple-icons:socketdotio"
+            },
+            {
+              "key": "supabase_realtime",
+              "label": "Supabase Realtime",
+              "icon": "simple-icons:supabase"
+            },
+            {
+              "key": "none",
+              "label": "None"
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "auth",
+      "number": "04",
+      "title": "Auth & Users",
+      "blurb": "Who can sign in, how identity is verified, and how user accounts are structured.",
+      "fields": [
+        {
+          "path": "auth.provider",
+          "note": "The service that handles sign-in and identity. Some pair with your backend; add your own via Other.",
+          "label": "Auth provider",
+          "kind": "single_select",
+          "severity": "recommended",
+          "custom": true,
+          "suggests": [
+            {
+              "path": "surface.screens",
+              "keys": [
+                "auth"
+              ]
+            }
+          ],
+          "options": [
+            {
+              "key": "appwrite_auth",
+              "label": "Appwrite Auth",
+              "icon": "simple-icons:appwrite",
+              "requires": [
+                {
+                  "path": "database.provider",
+                  "anyOf": [
+                    "appwrite"
+                  ],
+                  "reason": "Appwrite Auth pairs with the Appwrite backend."
+                }
+              ]
+            },
+            {
+              "key": "nextauth",
+              "label": "Auth.js (NextAuth)"
+            },
+            {
+              "key": "auth0",
+              "label": "Auth0",
+              "icon": "simple-icons:auth0"
+            },
+            {
+              "key": "better_auth",
+              "label": "Better Auth",
+              "icon": "simple-icons:betterauth"
+            },
+            {
+              "key": "clerk",
+              "label": "Clerk",
+              "icon": "simple-icons:clerk"
+            },
+            {
+              "key": "cognito",
+              "label": "Cognito",
+              "icon": "logos:aws-cognito"
+            },
+            {
+              "key": "convex_auth",
+              "label": "Convex Auth",
+              "icon": "simple-icons:convex",
+              "requires": [
+                {
+                  "path": "database.provider",
+                  "anyOf": [
+                    "convex"
+                  ],
+                  "reason": "Convex Auth pairs with the Convex backend."
+                }
+              ]
+            },
+            {
+              "key": "descope",
+              "label": "Descope"
+            },
+            {
+              "key": "firebase_auth",
+              "label": "Firebase Auth",
+              "icon": "simple-icons:firebase"
+            },
+            {
+              "key": "keycloak",
+              "label": "Keycloak",
+              "icon": "simple-icons:keycloak"
+            },
+            {
+              "key": "entra_id",
+              "label": "Microsoft Entra ID",
+              "icon": "simple-icons:microsoft"
+            },
+            {
+              "key": "okta",
+              "label": "Okta",
+              "icon": "simple-icons:okta"
+            },
+            {
+              "key": "ory",
+              "label": "Ory",
+              "icon": "simple-icons:ory"
+            },
+            {
+              "key": "pocketbase_auth",
+              "label": "PocketBase Auth",
+              "icon": "simple-icons:pocketbase",
+              "requires": [
+                {
+                  "path": "database.provider",
+                  "anyOf": [
+                    "pocketbase"
+                  ],
+                  "reason": "PocketBase Auth pairs with the PocketBase backend."
+                }
+              ]
+            },
+            {
+              "key": "stytch",
+              "label": "Stytch",
+              "icon": "logos:stytch"
+            },
+            {
+              "key": "supabase_auth",
+              "label": "Supabase Auth",
+              "icon": "simple-icons:supabase"
+            },
+            {
+              "key": "workos",
+              "label": "WorkOS",
+              "icon": "logos:workos-icon"
+            },
+            {
+              "key": "none",
+              "label": "None"
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "auth.methods",
+          "note": "How users sign in. Pick every method you'll support.",
+          "label": "Sign-in methods",
+          "kind": "multi_select",
+          "severity": "recommended",
+          "options": [
+            {
+              "key": "apple_oauth",
+              "label": "Apple OAuth"
+            },
+            {
+              "key": "email_otp",
+              "label": "Email OTP"
+            },
+            {
+              "key": "email_password",
+              "label": "Email + password"
+            },
+            {
+              "key": "sso",
+              "label": "Enterprise SSO"
+            },
+            {
+              "key": "github_oauth",
+              "label": "GitHub OAuth"
+            },
+            {
+              "key": "google_oauth",
+              "label": "Google OAuth"
+            },
+            {
+              "key": "magic_link",
+              "label": "Magic link"
+            },
+            {
+              "key": "mfa",
+              "label": "MFA"
+            },
+            {
+              "key": "microsoft_oauth",
+              "label": "Microsoft OAuth"
+            },
+            {
+              "key": "passkeys",
+              "label": "Passkeys"
+            },
+            {
+              "key": "sms_otp",
+              "label": "SMS OTP"
+            },
+            {
+              "key": "oauth",
+              "label": "Social OAuth"
+            },
+            {
+              "key": "none",
+              "label": "None",
+              "exclusive": true
+            }
+          ]
+        },
+        {
+          "path": "auth.account_model",
+          "note": "How accounts are structured — individuals, teams, organizations, and so on.",
+          "label": "Account model",
+          "kind": "single_select",
+          "severity": "optional",
+          "options": [
+            {
+              "key": "admin_only",
+              "label": "Admin-only"
+            },
+            {
+              "key": "buyer_seller",
+              "label": "Buyer/seller"
+            },
+            {
+              "key": "individuals",
+              "label": "Individuals"
+            },
+            {
+              "key": "organizations",
+              "label": "Organizations"
+            },
+            {
+              "key": "parent_child",
+              "label": "Parent/child"
+            },
+            {
+              "key": "teams",
+              "label": "Teams"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "payments",
+      "number": "05",
+      "title": "Payments",
+      "blurb": "Billing, checkout, and monetization tooling. Options unlock once the product has a monetized revenue model.",
+      "fields": [
+        {
+          "path": "payments.provider",
+          "note": "The processor or billing platform used for paid, sponsored, licensed, or transaction-based revenue. Add your own via Other.",
+          "label": "Payment provider",
+          "kind": "single_select",
+          "severity": "recommended",
+          "custom": true,
+          "suggests": [
+            {
+              "path": "surface.screens",
+              "keys": [
+                "checkout",
+                "billing"
+              ]
+            }
+          ],
+          "options": [
+            {
+              "key": "adyen",
+              "label": "Adyen",
+              "icon": "simple-icons:adyen",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "apple_iap",
+              "label": "Apple In-App Purchase",
+              "icon": "simple-icons:apple",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "braintree",
+              "label": "Braintree",
+              "icon": "simple-icons:braintree",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "chargebee",
+              "label": "Chargebee",
+              "icon": "logos:chargebee-icon",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "gocardless",
+              "label": "GoCardless",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "google_play_billing",
+              "label": "Google Play Billing",
+              "icon": "simple-icons:googleplay",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "lemonsqueezy",
+              "label": "Lemon Squeezy",
+              "icon": "simple-icons:lemonsqueezy",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "mollie",
+              "label": "Mollie",
+              "icon": "hugeicons:mollie",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "paddle",
+              "label": "Paddle",
+              "icon": "simple-icons:paddle",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "paypal",
+              "label": "PayPal",
+              "icon": "simple-icons:paypal",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "polar",
+              "label": "Polar",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "razorpay",
+              "label": "Razorpay",
+              "icon": "simple-icons:razorpay",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "recurly",
+              "label": "Recurly",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "revenuecat",
+              "label": "RevenueCat",
+              "icon": "simple-icons:revenuecat",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "shopify",
+              "label": "Shopify",
+              "icon": "simple-icons:shopify",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "square",
+              "label": "Square",
+              "icon": "simple-icons:square",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "stripe",
+              "label": "Stripe",
+              "icon": "simple-icons:stripe",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "none",
+              "label": "None"
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "payments.flows",
+          "note": "The billing journeys you need. Pick all that apply.",
+          "label": "Payment flows",
+          "kind": "multi_select",
+          "severity": "optional",
+          "options": [
+            {
+              "key": "checkout",
+              "label": "Checkout",
+              "suggests": [
+                {
+                  "path": "surface.screens",
+                  "keys": [
+                    "checkout"
+                  ]
+                }
+              ],
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "customer_portal",
+              "label": "Customer portal",
+              "suggests": [
+                {
+                  "path": "surface.screens",
+                  "keys": [
+                    "billing"
+                  ]
+                }
+              ],
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "embedded_checkout",
+              "label": "Embedded checkout",
+              "suggests": [
+                {
+                  "path": "surface.screens",
+                  "keys": [
+                    "checkout"
+                  ]
+                }
+              ],
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "invoicing",
+              "label": "Invoicing",
+              "suggests": [
+                {
+                  "path": "surface.screens",
+                  "keys": [
+                    "billing"
+                  ]
+                }
+              ],
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "marketplace_payouts",
+              "label": "Marketplace payouts",
+              "suggests": [
+                {
+                  "path": "surface.screens",
+                  "keys": [
+                    "billing"
+                  ]
+                }
+              ],
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "payment_links",
+              "label": "Payment links",
+              "suggests": [
+                {
+                  "path": "surface.screens",
+                  "keys": [
+                    "checkout"
+                  ]
+                }
+              ],
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "quote_to_invoice",
+              "label": "Quote to invoice",
+              "suggests": [
+                {
+                  "path": "surface.screens",
+                  "keys": [
+                    "billing"
+                  ]
+                }
+              ],
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "subscription_management",
+              "label": "Subscription management",
+              "suggests": [
+                {
+                  "path": "surface.screens",
+                  "keys": [
+                    "billing"
+                  ]
+                }
+              ],
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "usage_billing",
+              "label": "Usage billing",
+              "suggests": [
+                {
+                  "path": "surface.screens",
+                  "keys": [
+                    "billing"
+                  ]
+                }
+              ],
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "path": "payments.features",
+          "note": "Billing extras like trials, refunds, taxes, and promo codes. Pick all that apply.",
+          "label": "Payment features",
+          "kind": "multi_select",
+          "severity": "optional",
+          "options": [
+            {
+              "key": "failed_payment_recovery",
+              "label": "Failed payment recovery",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "gift_cards",
+              "label": "Gift cards",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "promo_codes",
+              "label": "Promo codes",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "refunds",
+              "label": "Refunds",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "split_payments",
+              "label": "Split payments",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "taxes",
+              "label": "Taxes",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "trials",
+              "label": "Trials",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ai",
+      "number": "06",
+      "title": "AI Integration",
+      "blurb": "Optional AI features and the providers that power them.",
+      "fields": [
+        {
+          "path": "ai.features",
+          "note": "The AI capabilities the product offers, if any. Pick all that apply, or None.",
+          "label": "AI features",
+          "kind": "multi_select",
+          "severity": "recommended",
+          "custom": true,
+          "options": [
+            {
+              "key": "agents",
+              "label": "Agents"
+            },
+            {
+              "key": "byok",
+              "label": "BYOK"
+            },
+            {
+              "key": "chat",
+              "label": "Chat"
+            },
+            {
+              "key": "classification",
+              "label": "Classification"
+            },
+            {
+              "key": "document_extraction",
+              "label": "Document extraction"
+            },
+            {
+              "key": "embeddings",
+              "label": "Embeddings"
+            },
+            {
+              "key": "fine_tuning",
+              "label": "Fine-tuning"
+            },
+            {
+              "key": "guardrails",
+              "label": "Guardrails"
+            },
+            {
+              "key": "image_generation",
+              "label": "Image generation"
+            },
+            {
+              "key": "moderation",
+              "label": "Moderation"
+            },
+            {
+              "key": "rag",
+              "label": "RAG"
+            },
+            {
+              "key": "recommendations",
+              "label": "Recommendations"
+            },
+            {
+              "key": "speech_to_text",
+              "label": "Speech-to-text"
+            },
+            {
+              "key": "summarize",
+              "label": "Summarization"
+            },
+            {
+              "key": "text_to_speech",
+              "label": "Text-to-speech"
+            },
+            {
+              "key": "tool_calling",
+              "label": "Tool calling"
+            },
+            {
+              "key": "usage_limits",
+              "label": "Usage limits"
+            },
+            {
+              "key": "vector_search",
+              "label": "Vector search"
+            },
+            {
+              "key": "vision",
+              "label": "Vision"
+            },
+            {
+              "key": "none",
+              "label": "None",
+              "exclusive": true
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "ai.providers",
+          "note": "The model providers behind your AI features. Pick all that apply, or add your own via Other.",
+          "label": "AI providers",
+          "kind": "multi_select",
+          "severity": "optional",
+          "custom": true,
+          "options": [
+            {
+              "key": "anthropic",
+              "label": "Anthropic",
+              "icon": "simple-icons:anthropic"
+            },
+            {
+              "key": "aws_bedrock",
+              "label": "AWS Bedrock",
+              "icon": "simple-icons:amazonaws"
+            },
+            {
+              "key": "azure_openai",
+              "label": "Azure OpenAI",
+              "icon": "simple-icons:microsoftazure"
+            },
+            {
+              "key": "cerebras",
+              "label": "Cerebras"
+            },
+            {
+              "key": "cohere",
+              "label": "Cohere"
+            },
+            {
+              "key": "deepseek",
+              "label": "DeepSeek",
+              "icon": "simple-icons:deepseek"
+            },
+            {
+              "key": "elevenlabs",
+              "label": "ElevenLabs",
+              "icon": "simple-icons:elevenlabs"
+            },
+            {
+              "key": "fireworks",
+              "label": "Fireworks AI"
+            },
+            {
+              "key": "google",
+              "label": "Google Gemini",
+              "icon": "simple-icons:google"
+            },
+            {
+              "key": "groq",
+              "label": "Groq"
+            },
+            {
+              "key": "huggingface",
+              "label": "Hugging Face",
+              "icon": "simple-icons:huggingface"
+            },
+            {
+              "key": "mistral",
+              "label": "Mistral",
+              "icon": "simple-icons:mistralai"
+            },
+            {
+              "key": "openai",
+              "label": "OpenAI",
+              "icon": "simple-icons:openai"
+            },
+            {
+              "key": "openrouter",
+              "label": "OpenRouter",
+              "icon": "simple-icons:openrouter"
+            },
+            {
+              "key": "perplexity",
+              "label": "Perplexity",
+              "icon": "simple-icons:perplexity"
+            },
+            {
+              "key": "replicate",
+              "label": "Replicate",
+              "icon": "simple-icons:replicate"
+            },
+            {
+              "key": "together",
+              "label": "Together AI"
+            },
+            {
+              "key": "vertex_ai",
+              "label": "Vertex AI",
+              "icon": "simple-icons:googlecloud"
+            },
+            {
+              "key": "voyage",
+              "label": "Voyage AI"
+            },
+            {
+              "key": "xai",
+              "label": "xAI"
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "notifications",
+      "number": "07",
+      "title": "Notifications & Messaging",
+      "blurb": "How the product reaches users out-of-band.",
+      "fields": [
+        {
+          "path": "notifications.channels",
+          "note": "How the product reaches users out-of-band. Pick all that apply, or None.",
+          "label": "Channels",
+          "kind": "multi_select",
+          "severity": "recommended",
+          "options": [
+            {
+              "key": "discord",
+              "label": "Discord"
+            },
+            {
+              "key": "email",
+              "label": "Email",
+              "suggests": [
+                {
+                  "path": "surface.screens",
+                  "keys": [
+                    "settings"
+                  ]
+                }
+              ]
+            },
+            {
+              "key": "in_app",
+              "label": "In-app",
+              "suggests": [
+                {
+                  "path": "surface.screens",
+                  "keys": [
+                    "settings"
+                  ]
+                }
+              ]
+            },
+            {
+              "key": "push",
+              "label": "Push",
+              "suggests": [
+                {
+                  "path": "surface.screens",
+                  "keys": [
+                    "settings"
+                  ]
+                }
+              ]
+            },
+            {
+              "key": "slack",
+              "label": "Slack"
+            },
+            {
+              "key": "sms",
+              "label": "SMS",
+              "suggests": [
+                {
+                  "path": "surface.screens",
+                  "keys": [
+                    "settings"
+                  ]
+                }
+              ]
+            },
+            {
+              "key": "teams",
+              "label": "Teams"
+            },
+            {
+              "key": "voice",
+              "label": "Voice"
+            },
+            {
+              "key": "webhooks",
+              "label": "Webhooks"
+            },
+            {
+              "key": "whatsapp",
+              "label": "WhatsApp"
+            },
+            {
+              "key": "none",
+              "label": "None",
+              "exclusive": true
+            }
+          ]
+        },
+        {
+          "path": "notifications.transactional_email",
+          "note": "The service for transactional email — receipts, password resets. Add your own via Other.",
+          "label": "Transactional email",
+          "kind": "single_select",
+          "severity": "optional",
+          "custom": true,
+          "options": [
+            {
+              "key": "ses",
+              "label": "AWS SES",
+              "icon": "simple-icons:amazonaws"
+            },
+            {
+              "key": "customerio",
+              "label": "Customer.io"
+            },
+            {
+              "key": "loops",
+              "label": "Loops",
+              "icon": "simple-icons:loops"
+            },
+            {
+              "key": "mailgun",
+              "label": "Mailgun",
+              "icon": "simple-icons:mailgun"
+            },
+            {
+              "key": "postmark",
+              "label": "Postmark"
+            },
+            {
+              "key": "resend",
+              "label": "Resend",
+              "icon": "simple-icons:resend"
+            },
+            {
+              "key": "sendgrid",
+              "label": "SendGrid",
+              "icon": "logos:sendgrid-icon"
+            },
+            {
+              "key": "none",
+              "label": "None"
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "notifications.marketing_email",
+          "note": "The platform for marketing and lifecycle email. Add your own via Other.",
+          "label": "Marketing email",
+          "kind": "single_select",
+          "severity": "optional",
+          "custom": true,
+          "options": [
+            {
+              "key": "brevo",
+              "label": "Brevo",
+              "icon": "simple-icons:brevo"
+            },
+            {
+              "key": "customerio",
+              "label": "Customer.io"
+            },
+            {
+              "key": "klaviyo",
+              "label": "Klaviyo"
+            },
+            {
+              "key": "loops",
+              "label": "Loops",
+              "icon": "simple-icons:loops"
+            },
+            {
+              "key": "mailchimp",
+              "label": "Mailchimp",
+              "icon": "simple-icons:mailchimp"
+            },
+            {
+              "key": "sendgrid",
+              "label": "SendGrid",
+              "icon": "logos:sendgrid-icon"
+            },
+            {
+              "key": "none",
+              "label": "None"
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "notifications.sms",
+          "note": "The provider for outbound SMS, if you send any. Add your own via Other.",
+          "label": "SMS provider",
+          "kind": "single_select",
+          "severity": "optional",
+          "custom": true,
+          "options": [
+            {
+              "key": "bird",
+              "label": "Bird"
+            },
+            {
+              "key": "plivo",
+              "label": "Plivo"
+            },
+            {
+              "key": "sinch",
+              "label": "Sinch"
+            },
+            {
+              "key": "telnyx",
+              "label": "Telnyx"
+            },
+            {
+              "key": "twilio",
+              "label": "Twilio",
+              "icon": "simple-icons:twilio"
+            },
+            {
+              "key": "vonage",
+              "label": "Vonage",
+              "icon": "simple-icons:vonage"
+            },
+            {
+              "key": "none",
+              "label": "None"
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "notifications.push",
+          "note": "The service that delivers push notifications. Add your own via Other.",
+          "label": "Push provider",
+          "kind": "single_select",
+          "severity": "optional",
+          "custom": true,
+          "options": [
+            {
+              "key": "expo",
+              "label": "Expo Notifications",
+              "icon": "simple-icons:expo"
+            },
+            {
+              "key": "fcm",
+              "label": "Firebase Cloud Messaging",
+              "icon": "simple-icons:firebase"
+            },
+            {
+              "key": "onesignal",
+              "label": "OneSignal",
+              "icon": "logos:onesignal"
+            },
+            {
+              "key": "none",
+              "label": "None"
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "deployment",
+      "number": "08",
+      "title": "Deployment & Monitoring",
+      "blurb": "Where the app is hosted, how it ships, and how it's observed.",
+      "fields": [
+        {
+          "path": "deployment.host",
+          "note": "Where the app is hosted. Add your own via Other.",
+          "label": "Hosting",
+          "kind": "single_select",
+          "severity": "recommended",
+          "custom": true,
+          "options": [
+            {
+              "key": "aws",
+              "label": "AWS",
+              "icon": "simple-icons:amazonaws"
+            },
+            {
+              "key": "azure",
+              "label": "Azure",
+              "icon": "simple-icons:microsoftazure"
+            },
+            {
+              "key": "cloudflare",
+              "label": "Cloudflare Pages",
+              "icon": "simple-icons:cloudflare"
+            },
+            {
+              "key": "cloudflare_workers",
+              "label": "Cloudflare Workers",
+              "icon": "simple-icons:cloudflare"
+            },
+            {
+              "key": "digitalocean",
+              "label": "DigitalOcean",
+              "icon": "simple-icons:digitalocean"
+            },
+            {
+              "key": "firebase_hosting",
+              "label": "Firebase Hosting",
+              "icon": "simple-icons:firebase"
+            },
+            {
+              "key": "fly",
+              "label": "Fly.io",
+              "icon": "simple-icons:flydotio"
+            },
+            {
+              "key": "gcp",
+              "label": "GCP",
+              "icon": "simple-icons:googlecloud"
+            },
+            {
+              "key": "github_pages",
+              "label": "GitHub Pages",
+              "icon": "simple-icons:githubpages"
+            },
+            {
+              "key": "heroku",
+              "label": "Heroku",
+              "icon": "simple-icons:heroku"
+            },
+            {
+              "key": "hetzner",
+              "label": "Hetzner",
+              "icon": "simple-icons:hetzner"
+            },
+            {
+              "key": "koyeb",
+              "label": "Koyeb",
+              "icon": "simple-icons:koyeb"
+            },
+            {
+              "key": "netlify",
+              "label": "Netlify",
+              "icon": "simple-icons:netlify"
+            },
+            {
+              "key": "railway",
+              "label": "Railway",
+              "icon": "simple-icons:railway"
+            },
+            {
+              "key": "render",
+              "label": "Render",
+              "icon": "simple-icons:render"
+            },
+            {
+              "key": "self_hosted",
+              "label": "Self-hosted"
+            },
+            {
+              "key": "vercel",
+              "label": "Vercel",
+              "icon": "simple-icons:vercel"
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "deployment.ci",
+          "note": "The pipeline that builds and ships the app. Add your own via Other.",
+          "label": "CI / CD",
+          "kind": "single_select",
+          "severity": "optional",
+          "custom": true,
+          "options": [
+            {
+              "key": "azure_devops",
+              "label": "Azure DevOps",
+              "icon": "simple-icons:azuredevops"
+            },
+            {
+              "key": "bitbucket_pipelines",
+              "label": "Bitbucket Pipelines",
+              "icon": "simple-icons:bitbucket"
+            },
+            {
+              "key": "buildkite",
+              "label": "Buildkite",
+              "icon": "simple-icons:buildkite"
+            },
+            {
+              "key": "circleci",
+              "label": "CircleCI",
+              "icon": "simple-icons:circleci"
+            },
+            {
+              "key": "github_actions",
+              "label": "GitHub Actions",
+              "icon": "simple-icons:githubactions"
+            },
+            {
+              "key": "gitlab_ci",
+              "label": "GitLab CI",
+              "icon": "simple-icons:gitlab"
+            },
+            {
+              "key": "jenkins",
+              "label": "Jenkins",
+              "icon": "simple-icons:jenkins"
+            },
+            {
+              "key": "none",
+              "label": "None"
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "monitoring.observability",
+          "note": "Logging, error-tracking, and uptime tools. Pick all that apply, or None.",
+          "label": "Logging & monitoring",
+          "kind": "multi_select",
+          "severity": "optional",
+          "custom": true,
+          "options": [
+            {
+              "key": "axiom",
+              "label": "Axiom"
+            },
+            {
+              "key": "betterstack",
+              "label": "Better Stack",
+              "icon": "simple-icons:betterstack"
+            },
+            {
+              "key": "bugsnag",
+              "label": "Bugsnag",
+              "icon": "logos:bugsnag"
+            },
+            {
+              "key": "checkly",
+              "label": "Checkly"
+            },
+            {
+              "key": "datadog",
+              "label": "Datadog",
+              "icon": "simple-icons:datadog"
+            },
+            {
+              "key": "highlight",
+              "label": "Highlight"
+            },
+            {
+              "key": "logrocket",
+              "label": "LogRocket"
+            },
+            {
+              "key": "newrelic",
+              "label": "New Relic",
+              "icon": "simple-icons:newrelic"
+            },
+            {
+              "key": "pingdom",
+              "label": "Pingdom",
+              "icon": "simple-icons:pingdom"
+            },
+            {
+              "key": "sentry",
+              "label": "Sentry",
+              "icon": "simple-icons:sentry"
+            },
+            {
+              "key": "uptimerobot",
+              "label": "UptimeRobot"
+            },
+            {
+              "key": "none",
+              "label": "None",
+              "exclusive": true
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "monitoring.analytics",
+          "note": "The product-analytics platform, if any. Add your own via Other.",
+          "label": "Analytics provider",
+          "kind": "single_select",
+          "severity": "optional",
+          "custom": true,
+          "options": [
+            {
+              "key": "amplitude",
+              "label": "Amplitude",
+              "icon": "logos:amplitude-icon"
+            },
+            {
+              "key": "fathom",
+              "label": "Fathom",
+              "icon": "simple-icons:fathom"
+            },
+            {
+              "key": "ga4",
+              "label": "Google Analytics",
+              "icon": "simple-icons:googleanalytics"
+            },
+            {
+              "key": "heap",
+              "label": "Heap",
+              "icon": "logos:heap-icon"
+            },
+            {
+              "key": "hotjar",
+              "label": "Hotjar",
+              "icon": "simple-icons:hotjar"
+            },
+            {
+              "key": "clarity",
+              "label": "Microsoft Clarity"
+            },
+            {
+              "key": "mixpanel",
+              "label": "Mixpanel",
+              "icon": "simple-icons:mixpanel"
+            },
+            {
+              "key": "plausible",
+              "label": "Plausible",
+              "icon": "simple-icons:plausibleanalytics"
+            },
+            {
+              "key": "posthog",
+              "label": "PostHog",
+              "icon": "simple-icons:posthog"
+            },
+            {
+              "key": "none",
+              "label": "None"
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "content",
+      "number": "09",
+      "title": "Documentation & Support",
+      "blurb": "Documentation tooling and the platforms that power customer support.",
+      "fields": [
+        {
+          "path": "support.docs",
+          "label": "Documentation",
+          "kind": "single_select",
+          "severity": "recommended",
+          "custom": true,
+          "note": "Documentation tooling / site generator. Selecting Other reveals an optional free-text field you don't have to fill in.",
+          "options": [
+            {
+              "key": "docusaurus",
+              "label": "Docusaurus",
+              "icon": "simple-icons:docusaurus"
+            },
+            {
+              "key": "gitbook",
+              "label": "GitBook",
+              "icon": "simple-icons:gitbook"
+            },
+            {
+              "key": "internal",
+              "label": "Internal / in-repo"
+            },
+            {
+              "key": "mintlify",
+              "label": "Mintlify",
+              "icon": "simple-icons:mintlify"
+            },
+            {
+              "key": "mkdocs",
+              "label": "MkDocs"
+            },
+            {
+              "key": "nextra",
+              "label": "Nextra",
+              "icon": "simple-icons:nextra"
+            },
+            {
+              "key": "readme",
+              "label": "ReadMe",
+              "icon": "simple-icons:readme"
+            },
+            {
+              "key": "redoc",
+              "label": "Redocly / Redoc"
+            },
+            {
+              "key": "starlight",
+              "label": "Starlight"
+            },
+            {
+              "key": "vitepress",
+              "label": "VitePress",
+              "icon": "simple-icons:vitepress"
+            },
+            {
+              "key": "none",
+              "label": "None"
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "support.provider",
+          "label": "Support tools",
+          "kind": "single_select",
+          "severity": "optional",
+          "custom": true,
+          "suggests": [
+            {
+              "path": "surface.screens",
+              "keys": [
+                "help"
+              ]
+            }
+          ],
+          "note": "The customer-support / help-desk platform the product uses. Selecting Other reveals an optional free-text field you don't have to fill in.",
+          "options": [
+            {
+              "key": "crisp",
+              "label": "Crisp"
+            },
+            {
+              "key": "freshdesk",
+              "label": "Freshdesk"
+            },
+            {
+              "key": "front",
+              "label": "Front"
+            },
+            {
+              "key": "gorgias",
+              "label": "Gorgias"
+            },
+            {
+              "key": "help_scout",
+              "label": "Help Scout",
+              "icon": "simple-icons:helpscout"
+            },
+            {
+              "key": "hubspot",
+              "label": "HubSpot",
+              "icon": "simple-icons:hubspot"
+            },
+            {
+              "key": "intercom",
+              "label": "Intercom",
+              "icon": "simple-icons:intercom"
+            },
+            {
+              "key": "plain",
+              "label": "Plain"
+            },
+            {
+              "key": "zendesk",
+              "label": "Zendesk",
+              "icon": "simple-icons:zendesk"
+            },
+            {
+              "key": "none",
+              "label": "None"
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "design",
+      "number": "10",
+      "title": "Visual Foundations",
+      "blurb": "The static visual foundations: typography, theme, palette, and icons.",
+      "fields": [
+        {
+          "path": "design.theme.color",
+          "note": "Your brand's primary accent colour — seeds the palette.",
+          "label": "Theme color",
+          "kind": "color",
+          "severity": "recommended"
+        },
+        {
+          "path": "design.theme.mode",
+          "note": "The default colour scheme: light, dark, or follow the system.",
+          "label": "Theme mode",
+          "kind": "single_select",
+          "severity": "optional",
+          "options": [
+            {
+              "key": "light",
+              "label": "Light"
+            },
+            {
+              "key": "dark",
+              "label": "Dark"
+            },
+            {
+              "key": "system",
+              "label": "System"
+            }
+          ]
+        },
+        {
+          "path": "design.palette",
+          "note": "The overall palette mood, guiding how the accent is applied.",
+          "label": "Palette style",
+          "kind": "single_select",
+          "severity": "optional",
+          "options": [
+            {
+              "key": "bold",
+              "label": "Bold"
+            },
+            {
+              "key": "clean_saas",
+              "label": "Clean SaaS"
+            },
+            {
+              "key": "dark_first",
+              "label": "Dark-first"
+            },
+            {
+              "key": "editorial",
+              "label": "Editorial"
+            },
+            {
+              "key": "enterprise",
+              "label": "Enterprise"
+            },
+            {
+              "key": "high_contrast",
+              "label": "High contrast"
+            },
+            {
+              "key": "luxury",
+              "label": "Luxury"
+            },
+            {
+              "key": "minimal",
+              "label": "Minimal"
+            },
+            {
+              "key": "monochrome",
+              "label": "Monochrome"
+            },
+            {
+              "key": "pastel",
+              "label": "Pastel"
+            },
+            {
+              "key": "playful",
+              "label": "Playful"
+            }
+          ]
+        },
+        {
+          "path": "design.typography.primary",
+          "label": "Primary font",
+          "kind": "single_select",
+          "severity": "optional",
+          "custom": true,
+          "note": "Heading / display typeface from Google Fonts, or add your own via Other. Picking one suggests a complementary secondary.",
+          "pairs_to": "design.typography.secondary",
+          "options": [
+            {
+              "key": "archivo",
+              "label": "Archivo",
+              "pairs_with": "roboto_slab"
+            },
+            {
+              "key": "bitter",
+              "label": "Bitter",
+              "pairs_with": "pt_sans"
+            },
+            {
+              "key": "dm_serif_display",
+              "label": "DM Serif Display",
+              "pairs_with": "dm_sans"
+            },
+            {
+              "key": "lora",
+              "label": "Lora",
+              "pairs_with": "open_sans"
+            },
+            {
+              "key": "montserrat",
+              "label": "Montserrat",
+              "pairs_with": "merriweather"
+            },
+            {
+              "key": "nunito",
+              "label": "Nunito",
+              "pairs_with": "pt_serif"
+            },
+            {
+              "key": "oswald",
+              "label": "Oswald",
+              "pairs_with": "lato"
+            },
+            {
+              "key": "playfair_display",
+              "label": "Playfair Display",
+              "pairs_with": "source_sans_3"
+            },
+            {
+              "key": "poppins",
+              "label": "Poppins",
+              "pairs_with": "inter"
+            },
+            {
+              "key": "raleway",
+              "label": "Raleway",
+              "pairs_with": "roboto"
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "design.typography.secondary",
+          "label": "Secondary font",
+          "kind": "single_select",
+          "severity": "optional",
+          "custom": true,
+          "note": "Body / supporting typeface. Auto-suggested from the primary; override any time, including via Other.",
+          "options": [
+            {
+              "key": "dm_sans",
+              "label": "DM Sans"
+            },
+            {
+              "key": "inter",
+              "label": "Inter"
+            },
+            {
+              "key": "lato",
+              "label": "Lato"
+            },
+            {
+              "key": "merriweather",
+              "label": "Merriweather"
+            },
+            {
+              "key": "open_sans",
+              "label": "Open Sans"
+            },
+            {
+              "key": "pt_sans",
+              "label": "PT Sans"
+            },
+            {
+              "key": "pt_serif",
+              "label": "PT Serif"
+            },
+            {
+              "key": "roboto",
+              "label": "Roboto"
+            },
+            {
+              "key": "roboto_slab",
+              "label": "Roboto Slab"
+            },
+            {
+              "key": "source_sans_3",
+              "label": "Source Sans 3"
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "design.icons",
+          "note": "The icon set for interface and product icons. Add your own via Custom.",
+          "label": "Icons",
+          "kind": "single_select",
+          "severity": "optional",
+          "custom": true,
+          "options": [
+            {
+              "key": "bootstrap_icons",
+              "label": "Bootstrap Icons",
+              "icon": "simple-icons:bootstrap"
+            },
+            {
+              "key": "carbon_icons",
+              "label": "Carbon Icons"
+            },
+            {
+              "key": "fluent_icons",
+              "label": "Fluent Icons",
+              "icon": "simple-icons:microsoft"
+            },
+            {
+              "key": "font_awesome",
+              "label": "Font Awesome",
+              "icon": "simple-icons:fontawesome"
+            },
+            {
+              "key": "heroicons",
+              "label": "Heroicons"
+            },
+            {
+              "key": "iconify",
+              "label": "Iconify",
+              "icon": "simple-icons:iconify"
+            },
+            {
+              "key": "lucide",
+              "label": "Lucide",
+              "icon": "simple-icons:lucide"
+            },
+            {
+              "key": "material_symbols",
+              "label": "Material Symbols"
+            },
+            {
+              "key": "phosphor",
+              "label": "Phosphor",
+              "icon": "simple-icons:phosphoricons"
+            },
+            {
+              "key": "radix",
+              "label": "Radix Icons",
+              "icon": "simple-icons:radixui"
+            },
+            {
+              "key": "remix_icon",
+              "label": "Remix Icon"
+            },
+            {
+              "key": "simple_icons",
+              "label": "Simple Icons",
+              "icon": "simple-icons:simpleicons"
+            },
+            {
+              "key": "tabler",
+              "label": "Tabler Icons"
+            },
+            {
+              "key": "other",
+              "label": "Custom"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "surface",
+      "number": "11",
+      "title": "Surfaces",
+      "blurb": "What core screens and flows are part of the proposed product experience.",
+      "fields": [
+        {
+          "path": "surface.screens",
+          "label": "Core screens & flows",
+          "kind": "multi_select",
+          "severity": "recommended",
+          "custom": true,
+          "note": "The product's primary screens and flows. Pick all that apply, or add your own via Other.",
+          "options": [
+            {
+              "key": "dashboard",
+              "label": "Admin dashboard"
+            },
+            {
+              "key": "billing",
+              "label": "Billing & subscriptions"
+            },
+            {
+              "key": "checkout",
+              "label": "Checkout / cart"
+            },
+            {
+              "key": "details",
+              "label": "Details"
+            },
+            {
+              "key": "editor",
+              "label": "Editor"
+            },
+            {
+              "key": "help",
+              "label": "Help / FAQ"
+            },
+            {
+              "key": "inbox",
+              "label": "Inbox"
+            },
+            {
+              "key": "landing",
+              "label": "Landing page"
+            },
+            {
+              "key": "onboarding",
+              "label": "Onboarding"
+            },
+            {
+              "key": "pricing",
+              "label": "Pricing"
+            },
+            {
+              "key": "profile",
+              "label": "Profile / account"
+            },
+            {
+              "key": "reports",
+              "label": "Reports"
+            },
+            {
+              "key": "search",
+              "label": "Search"
+            },
+            {
+              "key": "settings",
+              "label": "Settings"
+            },
+            {
+              "key": "auth",
+              "label": "Sign in / sign up"
+            },
+            {
+              "key": "team_invites",
+              "label": "Team invites"
+            },
+            {
+              "key": "other",
+              "label": "Add more"
+            }
+          ]
+        },
+        {
+          "path": "surface.policy_pages",
+          "note": "The legal and policy pages the product needs. Pick all that apply, or None.",
+          "label": "Policy Pages",
+          "kind": "multi_select",
+          "severity": "recommended",
+          "options": [
+            {
+              "key": "acceptable_use_policy",
+              "label": "Acceptable Use Policy"
+            },
+            {
+              "key": "accessibility_statement",
+              "label": "Accessibility statement"
+            },
+            {
+              "key": "advertising_disclosure",
+              "label": "Advertising disclosure"
+            },
+            {
+              "key": "affiliate_disclosure",
+              "label": "Affiliate disclosure"
+            },
+            {
+              "key": "cookie_consent_banner",
+              "label": "Cookie consent banner"
+            },
+            {
+              "key": "cookie_policy",
+              "label": "Cookie policy"
+            },
+            {
+              "key": "data_processing_agreement",
+              "label": "Data Processing Agreement"
+            },
+            {
+              "key": "eula",
+              "label": "EULA"
+            },
+            {
+              "key": "impressum",
+              "label": "Imprint / Impressum"
+            },
+            {
+              "key": "privacy_policy",
+              "label": "Privacy policy"
+            },
+            {
+              "key": "refund_cancellation",
+              "label": "Refund / Cancellation policy"
+            },
+            {
+              "key": "terms_of_service",
+              "label": "Terms of service"
+            },
+            {
+              "key": "none",
+              "label": "None",
+              "exclusive": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "assets",
+      "number": "12",
+      "title": "Assets",
+      "blurb": "Your brand-asset inventory and where the product sources stock media. The brand checklist is tracked only — it never enters staqpaq.yaml; the required-asset list is derived from product type and platforms, and ticking the checklist marks which of those files you already have.",
+      "fields": [
+        {
+          "path": "assets.brand_checklist",
+          "label": "Brand checklist",
+          "kind": "multi_select",
+          "severity": "recommended",
+          "status_only": true,
+          "note": "Which brand-asset files you already have. Tracked only — never written to staqpaq.yaml, but it marks each implied file in asset-checklist.md as have or still-needed. Leave one unchecked if you've yet to make it.",
+          "options": [
+            {
+              "key": "app_icon",
+              "label": "App icon",
+              "requires": [
+                {
+                  "path": "project.platforms",
+                  "anyOf": [
+                    "ios",
+                    "android",
+                    "pwa",
+                    "macos",
+                    "windows",
+                    "linux"
+                  ],
+                  "reason": "An app icon applies to installable targets (iOS, Android, a PWA, or a macOS/Windows/Linux desktop app) — add one in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "favicon",
+              "label": "Favicon"
+            },
+            {
+              "key": "logo",
+              "label": "Logo SVG"
+            },
+            {
+              "key": "social_image",
+              "label": "Social / OG image"
+            },
+            {
+              "key": "splash",
+              "label": "Splash screen",
+              "requires": [
+                {
+                  "path": "project.platforms",
+                  "anyOf": [
+                    "ios",
+                    "android"
+                  ],
+                  "reason": "A splash screen applies to mobile app targets — add iOS or Android in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "wordmark",
+              "label": "Wordmark"
+            }
+          ]
+        },
+        {
+          "path": "assets.stock",
+          "label": "Stock assets",
+          "kind": "multi_select",
+          "severity": "optional",
+          "custom": true,
+          "note": "Stock photo and video sources the product draws on. Selecting Other reveals an optional free-text field you don't have to fill in.",
+          "options": [
+            {
+              "key": "adobe_stock",
+              "label": "Adobe Stock"
+            },
+            {
+              "key": "freepik",
+              "label": "Freepik",
+              "icon": "simple-icons:freepik"
+            },
+            {
+              "key": "getty",
+              "label": "Getty Images"
+            },
+            {
+              "key": "noun_project",
+              "label": "Noun Project",
+              "icon": "simple-icons:nounproject"
+            },
+            {
+              "key": "pexels",
+              "label": "Pexels",
+              "icon": "simple-icons:pexels"
+            },
+            {
+              "key": "pixabay",
+              "label": "Pixabay",
+              "icon": "simple-icons:pixabay"
+            },
+            {
+              "key": "shutterstock",
+              "label": "Shutterstock",
+              "icon": "simple-icons:shutterstock"
+            },
+            {
+              "key": "unsplash",
+              "label": "Unsplash",
+              "icon": "simple-icons:unsplash"
+            },
+            {
+              "key": "none",
+              "label": "None",
+              "exclusive": true
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

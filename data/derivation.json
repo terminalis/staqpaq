@@ -1,0 +1,1576 @@
+{
+  "version": "derivation-1",
+  "note": "Static reference data driving derive_requirements. `env_vars` and `implications` are keyed by `path:option_key` (a SELECTED provider). `assets` is a list of rules whose `when` conditions (same shape as catalogue gating: { path, anyOf:[keys] } | { path, present:true }) decide which brand-asset files the selections imply. Design-system choices intentionally key NO asset rule. Custom values are opaque and contribute nothing here (snag S1).",
+  "env_vars": {
+    "database.provider:appwrite": [
+      {
+        "key": "APPWRITE_ENDPOINT",
+        "from_provider": "Appwrite"
+      },
+      {
+        "key": "APPWRITE_PROJECT_ID",
+        "from_provider": "Appwrite"
+      },
+      {
+        "key": "APPWRITE_API_KEY",
+        "from_provider": "Appwrite"
+      }
+    ],
+    "database.provider:convex": [
+      {
+        "key": "CONVEX_DEPLOYMENT",
+        "from_provider": "Convex"
+      },
+      {
+        "key": "CONVEX_URL",
+        "from_provider": "Convex"
+      }
+    ],
+    "database.provider:supabase": [
+      {
+        "key": "SUPABASE_URL",
+        "from_provider": "Supabase"
+      },
+      {
+        "key": "SUPABASE_PUBLISHABLE_KEY",
+        "from_provider": "Supabase"
+      }
+    ],
+    "database.provider:planetscale": [
+      {
+        "key": "DATABASE_URL",
+        "from_provider": "PlanetScale"
+      }
+    ],
+    "database.provider:firebase": [
+      {
+        "key": "FIREBASE_API_KEY",
+        "from_provider": "Firebase"
+      },
+      {
+        "key": "FIREBASE_PROJECT_ID",
+        "from_provider": "Firebase"
+      },
+      {
+        "key": "FIREBASE_APP_ID",
+        "from_provider": "Firebase"
+      }
+    ],
+    "database.provider:neon": [
+      {
+        "key": "DATABASE_URL",
+        "from_provider": "Neon"
+      }
+    ],
+    "database.provider:pocketbase": [
+      {
+        "key": "POCKETBASE_URL",
+        "from_provider": "PocketBase"
+      }
+    ],
+    "database.provider:self_hosted": [
+      {
+        "key": "DATABASE_URL",
+        "from_provider": "Self-hosted"
+      }
+    ],
+    "database.provider:turso": [
+      {
+        "key": "TURSO_DATABASE_URL",
+        "from_provider": "Turso"
+      },
+      {
+        "key": "TURSO_AUTH_TOKEN",
+        "from_provider": "Turso"
+      }
+    ],
+    "backend.storage:s3": [
+      {
+        "key": "AWS_ACCESS_KEY_ID",
+        "from_provider": "AWS S3"
+      },
+      {
+        "key": "AWS_SECRET_ACCESS_KEY",
+        "from_provider": "AWS S3"
+      },
+      {
+        "key": "S3_BUCKET",
+        "from_provider": "AWS S3"
+      }
+    ],
+    "backend.storage:supabase_storage": [
+      {
+        "key": "SUPABASE_URL",
+        "from_provider": "Supabase Storage"
+      },
+      {
+        "key": "SUPABASE_PUBLISHABLE_KEY",
+        "from_provider": "Supabase Storage"
+      }
+    ],
+    "backend.storage:r2": [
+      {
+        "key": "R2_ACCOUNT_ID",
+        "from_provider": "Cloudflare R2"
+      },
+      {
+        "key": "R2_ACCESS_KEY_ID",
+        "from_provider": "Cloudflare R2"
+      },
+      {
+        "key": "R2_SECRET_ACCESS_KEY",
+        "from_provider": "Cloudflare R2"
+      },
+      {
+        "key": "R2_BUCKET",
+        "from_provider": "Cloudflare R2"
+      }
+    ],
+    "backend.storage:uploadthing": [
+      {
+        "key": "UPLOADTHING_SECRET",
+        "from_provider": "UploadThing"
+      },
+      {
+        "key": "UPLOADTHING_APP_ID",
+        "from_provider": "UploadThing"
+      }
+    ],
+    "backend.storage:firebase_storage": [
+      {
+        "key": "FIREBASE_API_KEY",
+        "from_provider": "Firebase Storage"
+      },
+      {
+        "key": "FIREBASE_PROJECT_ID",
+        "from_provider": "Firebase Storage"
+      },
+      {
+        "key": "FIREBASE_STORAGE_BUCKET",
+        "from_provider": "Firebase Storage"
+      }
+    ],
+    "backend.storage:cloudinary": [
+      {
+        "key": "CLOUDINARY_CLOUD_NAME",
+        "from_provider": "Cloudinary"
+      },
+      {
+        "key": "CLOUDINARY_API_KEY",
+        "from_provider": "Cloudinary"
+      },
+      {
+        "key": "CLOUDINARY_API_SECRET",
+        "from_provider": "Cloudinary"
+      }
+    ],
+    "backend.storage:appwrite_storage": [
+      {
+        "key": "APPWRITE_ENDPOINT",
+        "from_provider": "Appwrite Storage"
+      },
+      {
+        "key": "APPWRITE_PROJECT_ID",
+        "from_provider": "Appwrite Storage"
+      },
+      {
+        "key": "APPWRITE_API_KEY",
+        "from_provider": "Appwrite Storage"
+      }
+    ],
+    "backend.storage:convex_storage": [
+      {
+        "key": "CONVEX_URL",
+        "from_provider": "Convex Storage"
+      }
+    ],
+    "backend.storage:pocketbase_storage": [
+      {
+        "key": "POCKETBASE_URL",
+        "from_provider": "PocketBase Storage"
+      }
+    ],
+    "backend.jobs:inngest": [
+      {
+        "key": "INNGEST_EVENT_KEY",
+        "from_provider": "Inngest"
+      },
+      {
+        "key": "INNGEST_SIGNING_KEY",
+        "from_provider": "Inngest"
+      }
+    ],
+    "backend.jobs:upstash": [
+      {
+        "key": "QSTASH_TOKEN",
+        "from_provider": "Upstash"
+      },
+      {
+        "key": "QSTASH_URL",
+        "from_provider": "Upstash"
+      }
+    ],
+    "backend.jobs:trigger_dev": [
+      {
+        "key": "TRIGGER_SECRET_KEY",
+        "from_provider": "Trigger.dev"
+      }
+    ],
+    "backend.jobs:temporal": [
+      {
+        "key": "TEMPORAL_ADDRESS",
+        "from_provider": "Temporal"
+      },
+      {
+        "key": "TEMPORAL_NAMESPACE",
+        "from_provider": "Temporal"
+      }
+    ],
+    "backend.jobs:aws": [
+      {
+        "key": "AWS_ACCESS_KEY_ID",
+        "from_provider": "AWS"
+      },
+      {
+        "key": "AWS_SECRET_ACCESS_KEY",
+        "from_provider": "AWS"
+      },
+      {
+        "key": "AWS_REGION",
+        "from_provider": "AWS"
+      }
+    ],
+    "backend.jobs:cloudflare": [
+      {
+        "key": "CLOUDFLARE_ACCOUNT_ID",
+        "from_provider": "Cloudflare"
+      },
+      {
+        "key": "CLOUDFLARE_API_TOKEN",
+        "from_provider": "Cloudflare"
+      }
+    ],
+    "backend.jobs:bullmq": [
+      {
+        "key": "REDIS_URL",
+        "from_provider": "BullMQ"
+      }
+    ],
+    "backend.jobs:supabase": [
+      {
+        "key": "SUPABASE_URL",
+        "from_provider": "Supabase"
+      },
+      {
+        "key": "SUPABASE_PUBLISHABLE_KEY",
+        "from_provider": "Supabase"
+      }
+    ],
+    "backend.jobs:firebase": [
+      {
+        "key": "FIREBASE_API_KEY",
+        "from_provider": "Firebase"
+      },
+      {
+        "key": "FIREBASE_PROJECT_ID",
+        "from_provider": "Firebase"
+      }
+    ],
+    "backend.jobs:convex": [
+      {
+        "key": "CONVEX_URL",
+        "from_provider": "Convex"
+      }
+    ],
+    "backend.jobs:appwrite": [
+      {
+        "key": "APPWRITE_ENDPOINT",
+        "from_provider": "Appwrite"
+      },
+      {
+        "key": "APPWRITE_PROJECT_ID",
+        "from_provider": "Appwrite"
+      },
+      {
+        "key": "APPWRITE_API_KEY",
+        "from_provider": "Appwrite"
+      }
+    ],
+    "backend.realtime:pusher": [
+      {
+        "key": "PUSHER_APP_ID",
+        "from_provider": "Pusher"
+      },
+      {
+        "key": "PUSHER_KEY",
+        "from_provider": "Pusher"
+      },
+      {
+        "key": "PUSHER_SECRET",
+        "from_provider": "Pusher"
+      },
+      {
+        "key": "PUSHER_CLUSTER",
+        "from_provider": "Pusher"
+      }
+    ],
+    "backend.realtime:ably": [
+      {
+        "key": "ABLY_API_KEY",
+        "from_provider": "Ably"
+      }
+    ],
+    "backend.realtime:liveblocks": [
+      {
+        "key": "LIVEBLOCKS_SECRET_KEY",
+        "from_provider": "Liveblocks"
+      }
+    ],
+    "backend.realtime:appwrite_realtime": [
+      {
+        "key": "APPWRITE_ENDPOINT",
+        "from_provider": "Appwrite Realtime"
+      },
+      {
+        "key": "APPWRITE_PROJECT_ID",
+        "from_provider": "Appwrite Realtime"
+      }
+    ],
+    "backend.realtime:firebase_realtime": [
+      {
+        "key": "FIREBASE_API_KEY",
+        "from_provider": "Firebase Realtime"
+      },
+      {
+        "key": "FIREBASE_PROJECT_ID",
+        "from_provider": "Firebase Realtime"
+      }
+    ],
+    "backend.realtime:pocketbase_realtime": [
+      {
+        "key": "POCKETBASE_URL",
+        "from_provider": "PocketBase Realtime"
+      }
+    ],
+    "backend.realtime:supabase_realtime": [
+      {
+        "key": "SUPABASE_URL",
+        "from_provider": "Supabase Realtime"
+      },
+      {
+        "key": "SUPABASE_PUBLISHABLE_KEY",
+        "from_provider": "Supabase Realtime"
+      }
+    ],
+    "auth.provider:clerk": [
+      {
+        "key": "CLERK_PUBLISHABLE_KEY",
+        "from_provider": "Clerk"
+      },
+      {
+        "key": "CLERK_SECRET_KEY",
+        "from_provider": "Clerk"
+      }
+    ],
+    "auth.provider:auth0": [
+      {
+        "key": "AUTH0_DOMAIN",
+        "from_provider": "Auth0"
+      },
+      {
+        "key": "AUTH0_CLIENT_ID",
+        "from_provider": "Auth0"
+      },
+      {
+        "key": "AUTH0_CLIENT_SECRET",
+        "from_provider": "Auth0"
+      }
+    ],
+    "auth.provider:supabase_auth": [
+      {
+        "key": "SUPABASE_URL",
+        "from_provider": "Supabase Auth"
+      },
+      {
+        "key": "SUPABASE_PUBLISHABLE_KEY",
+        "from_provider": "Supabase Auth"
+      }
+    ],
+    "auth.provider:nextauth": [
+      {
+        "key": "NEXTAUTH_URL",
+        "from_provider": "Auth.js"
+      },
+      {
+        "key": "NEXTAUTH_SECRET",
+        "from_provider": "Auth.js"
+      }
+    ],
+    "auth.provider:firebase_auth": [
+      {
+        "key": "FIREBASE_API_KEY",
+        "from_provider": "Firebase Auth"
+      },
+      {
+        "key": "FIREBASE_PROJECT_ID",
+        "from_provider": "Firebase Auth"
+      }
+    ],
+    "auth.provider:workos": [
+      {
+        "key": "WORKOS_API_KEY",
+        "from_provider": "WorkOS"
+      },
+      {
+        "key": "WORKOS_CLIENT_ID",
+        "from_provider": "WorkOS"
+      }
+    ],
+    "auth.provider:cognito": [
+      {
+        "key": "COGNITO_USER_POOL_ID",
+        "from_provider": "Cognito"
+      },
+      {
+        "key": "COGNITO_CLIENT_ID",
+        "from_provider": "Cognito"
+      },
+      {
+        "key": "COGNITO_REGION",
+        "from_provider": "Cognito"
+      }
+    ],
+    "auth.provider:better_auth": [
+      {
+        "key": "BETTER_AUTH_SECRET",
+        "from_provider": "Better Auth"
+      },
+      {
+        "key": "BETTER_AUTH_URL",
+        "from_provider": "Better Auth"
+      }
+    ],
+    "auth.provider:appwrite_auth": [
+      {
+        "key": "APPWRITE_ENDPOINT",
+        "from_provider": "Appwrite Auth"
+      },
+      {
+        "key": "APPWRITE_PROJECT_ID",
+        "from_provider": "Appwrite Auth"
+      }
+    ],
+    "auth.provider:convex_auth": [
+      {
+        "key": "CONVEX_URL",
+        "from_provider": "Convex Auth"
+      }
+    ],
+    "auth.provider:pocketbase_auth": [
+      {
+        "key": "POCKETBASE_URL",
+        "from_provider": "PocketBase Auth"
+      }
+    ],
+    "payments.provider:stripe": [
+      {
+        "key": "STRIPE_SECRET_KEY",
+        "from_provider": "Stripe"
+      },
+      {
+        "key": "STRIPE_PUBLISHABLE_KEY",
+        "from_provider": "Stripe"
+      },
+      {
+        "key": "STRIPE_WEBHOOK_SECRET",
+        "from_provider": "Stripe"
+      }
+    ],
+    "payments.provider:paddle": [
+      {
+        "key": "PADDLE_API_KEY",
+        "from_provider": "Paddle"
+      },
+      {
+        "key": "PADDLE_WEBHOOK_SECRET",
+        "from_provider": "Paddle"
+      }
+    ],
+    "payments.provider:lemonsqueezy": [
+      {
+        "key": "LEMONSQUEEZY_API_KEY",
+        "from_provider": "Lemon Squeezy"
+      },
+      {
+        "key": "LEMONSQUEEZY_STORE_ID",
+        "from_provider": "Lemon Squeezy"
+      }
+    ],
+    "payments.provider:polar": [
+      {
+        "key": "POLAR_ACCESS_TOKEN",
+        "from_provider": "Polar"
+      }
+    ],
+    "payments.provider:paypal": [
+      {
+        "key": "PAYPAL_CLIENT_ID",
+        "from_provider": "PayPal"
+      },
+      {
+        "key": "PAYPAL_CLIENT_SECRET",
+        "from_provider": "PayPal"
+      }
+    ],
+    "payments.provider:square": [
+      {
+        "key": "SQUARE_ACCESS_TOKEN",
+        "from_provider": "Square"
+      },
+      {
+        "key": "SQUARE_APPLICATION_ID",
+        "from_provider": "Square"
+      }
+    ],
+    "payments.provider:adyen": [
+      {
+        "key": "ADYEN_API_KEY",
+        "from_provider": "Adyen"
+      },
+      {
+        "key": "ADYEN_MERCHANT_ACCOUNT",
+        "from_provider": "Adyen"
+      }
+    ],
+    "payments.provider:shopify": [
+      {
+        "key": "SHOPIFY_API_KEY",
+        "from_provider": "Shopify"
+      },
+      {
+        "key": "SHOPIFY_API_SECRET",
+        "from_provider": "Shopify"
+      }
+    ],
+    "payments.provider:revenuecat": [
+      {
+        "key": "REVENUECAT_API_KEY",
+        "from_provider": "RevenueCat"
+      }
+    ],
+    "payments.provider:apple_iap": [
+      {
+        "key": "APP_STORE_SHARED_SECRET",
+        "from_provider": "Apple In-App Purchase"
+      },
+      {
+        "key": "APP_STORE_CONNECT_KEY_ID",
+        "from_provider": "Apple In-App Purchase"
+      },
+      {
+        "key": "APP_STORE_CONNECT_ISSUER_ID",
+        "from_provider": "Apple In-App Purchase"
+      }
+    ],
+    "payments.provider:google_play_billing": [
+      {
+        "key": "GOOGLE_PLAY_PACKAGE_NAME",
+        "from_provider": "Google Play Billing"
+      },
+      {
+        "key": "GOOGLE_PLAY_SERVICE_ACCOUNT_JSON",
+        "from_provider": "Google Play Billing"
+      }
+    ],
+    "notifications.transactional_email:resend": [
+      {
+        "key": "RESEND_API_KEY",
+        "from_provider": "Resend"
+      }
+    ],
+    "notifications.transactional_email:postmark": [
+      {
+        "key": "POSTMARK_SERVER_TOKEN",
+        "from_provider": "Postmark"
+      }
+    ],
+    "notifications.transactional_email:sendgrid": [
+      {
+        "key": "SENDGRID_API_KEY",
+        "from_provider": "SendGrid"
+      }
+    ],
+    "notifications.transactional_email:ses": [
+      {
+        "key": "AWS_ACCESS_KEY_ID",
+        "from_provider": "AWS SES"
+      },
+      {
+        "key": "AWS_SECRET_ACCESS_KEY",
+        "from_provider": "AWS SES"
+      },
+      {
+        "key": "SES_REGION",
+        "from_provider": "AWS SES"
+      }
+    ],
+    "notifications.transactional_email:mailgun": [
+      {
+        "key": "MAILGUN_API_KEY",
+        "from_provider": "Mailgun"
+      },
+      {
+        "key": "MAILGUN_DOMAIN",
+        "from_provider": "Mailgun"
+      }
+    ],
+    "notifications.transactional_email:loops": [
+      {
+        "key": "LOOPS_API_KEY",
+        "from_provider": "Loops"
+      }
+    ],
+    "notifications.transactional_email:customerio": [
+      {
+        "key": "CUSTOMERIO_SITE_ID",
+        "from_provider": "Customer.io"
+      },
+      {
+        "key": "CUSTOMERIO_API_KEY",
+        "from_provider": "Customer.io"
+      }
+    ],
+    "notifications.marketing_email:brevo": [
+      {
+        "key": "BREVO_API_KEY",
+        "from_provider": "Brevo"
+      }
+    ],
+    "notifications.marketing_email:customerio": [
+      {
+        "key": "CUSTOMERIO_SITE_ID",
+        "from_provider": "Customer.io"
+      },
+      {
+        "key": "CUSTOMERIO_API_KEY",
+        "from_provider": "Customer.io"
+      }
+    ],
+    "notifications.marketing_email:klaviyo": [
+      {
+        "key": "KLAVIYO_API_KEY",
+        "from_provider": "Klaviyo"
+      }
+    ],
+    "notifications.marketing_email:loops": [
+      {
+        "key": "LOOPS_API_KEY",
+        "from_provider": "Loops"
+      }
+    ],
+    "notifications.marketing_email:mailchimp": [
+      {
+        "key": "MAILCHIMP_API_KEY",
+        "from_provider": "Mailchimp"
+      },
+      {
+        "key": "MAILCHIMP_SERVER_PREFIX",
+        "from_provider": "Mailchimp"
+      }
+    ],
+    "notifications.marketing_email:sendgrid": [
+      {
+        "key": "SENDGRID_API_KEY",
+        "from_provider": "SendGrid"
+      }
+    ],
+    "notifications.sms:twilio": [
+      {
+        "key": "TWILIO_ACCOUNT_SID",
+        "from_provider": "Twilio"
+      },
+      {
+        "key": "TWILIO_AUTH_TOKEN",
+        "from_provider": "Twilio"
+      }
+    ],
+    "notifications.sms:vonage": [
+      {
+        "key": "VONAGE_API_KEY",
+        "from_provider": "Vonage"
+      },
+      {
+        "key": "VONAGE_API_SECRET",
+        "from_provider": "Vonage"
+      }
+    ],
+    "notifications.push:onesignal": [
+      {
+        "key": "ONESIGNAL_APP_ID",
+        "from_provider": "OneSignal"
+      },
+      {
+        "key": "ONESIGNAL_API_KEY",
+        "from_provider": "OneSignal"
+      }
+    ],
+    "notifications.push:fcm": [
+      {
+        "key": "FIREBASE_PROJECT_ID",
+        "from_provider": "Firebase Cloud Messaging"
+      },
+      {
+        "key": "FIREBASE_SERVICE_ACCOUNT_JSON",
+        "from_provider": "Firebase Cloud Messaging"
+      }
+    ],
+    "notifications.push:expo": [
+      {
+        "key": "EXPO_ACCESS_TOKEN",
+        "from_provider": "Expo Notifications"
+      }
+    ],
+    "support.provider:intercom": [
+      {
+        "key": "INTERCOM_APP_ID",
+        "from_provider": "Intercom"
+      },
+      {
+        "key": "INTERCOM_ACCESS_TOKEN",
+        "from_provider": "Intercom"
+      }
+    ],
+    "support.provider:zendesk": [
+      {
+        "key": "ZENDESK_SUBDOMAIN",
+        "from_provider": "Zendesk"
+      },
+      {
+        "key": "ZENDESK_EMAIL",
+        "from_provider": "Zendesk"
+      },
+      {
+        "key": "ZENDESK_API_TOKEN",
+        "from_provider": "Zendesk"
+      }
+    ],
+    "support.provider:freshdesk": [
+      {
+        "key": "FRESHDESK_DOMAIN",
+        "from_provider": "Freshdesk"
+      },
+      {
+        "key": "FRESHDESK_API_KEY",
+        "from_provider": "Freshdesk"
+      }
+    ],
+    "support.provider:crisp": [
+      {
+        "key": "CRISP_WEBSITE_ID",
+        "from_provider": "Crisp"
+      },
+      {
+        "key": "CRISP_IDENTIFIER",
+        "from_provider": "Crisp"
+      },
+      {
+        "key": "CRISP_KEY",
+        "from_provider": "Crisp"
+      }
+    ],
+    "support.provider:plain": [
+      {
+        "key": "PLAIN_API_KEY",
+        "from_provider": "Plain"
+      }
+    ],
+    "ai.providers:anthropic": [
+      {
+        "key": "ANTHROPIC_API_KEY",
+        "from_provider": "Anthropic"
+      }
+    ],
+    "ai.providers:openai": [
+      {
+        "key": "OPENAI_API_KEY",
+        "from_provider": "OpenAI"
+      }
+    ],
+    "ai.providers:google": [
+      {
+        "key": "GOOGLE_GENERATIVE_AI_API_KEY",
+        "from_provider": "Google Gemini"
+      }
+    ],
+    "ai.providers:mistral": [
+      {
+        "key": "MISTRAL_API_KEY",
+        "from_provider": "Mistral"
+      }
+    ],
+    "ai.providers:openrouter": [
+      {
+        "key": "OPENROUTER_API_KEY",
+        "from_provider": "OpenRouter"
+      }
+    ],
+    "ai.providers:replicate": [
+      {
+        "key": "REPLICATE_API_TOKEN",
+        "from_provider": "Replicate"
+      }
+    ],
+    "ai.providers:together": [
+      {
+        "key": "TOGETHER_API_KEY",
+        "from_provider": "Together AI"
+      }
+    ],
+    "ai.providers:groq": [
+      {
+        "key": "GROQ_API_KEY",
+        "from_provider": "Groq"
+      }
+    ],
+    "ai.providers:huggingface": [
+      {
+        "key": "HUGGINGFACE_API_KEY",
+        "from_provider": "Hugging Face"
+      }
+    ],
+    "ai.providers:elevenlabs": [
+      {
+        "key": "ELEVENLABS_API_KEY",
+        "from_provider": "ElevenLabs"
+      }
+    ],
+    "ai.providers:xai": [
+      {
+        "key": "XAI_API_KEY",
+        "from_provider": "xAI"
+      }
+    ],
+    "monitoring.analytics:posthog": [
+      {
+        "key": "POSTHOG_KEY",
+        "from_provider": "PostHog"
+      },
+      {
+        "key": "POSTHOG_HOST",
+        "from_provider": "PostHog"
+      }
+    ],
+    "monitoring.analytics:plausible": [
+      {
+        "key": "PLAUSIBLE_DOMAIN",
+        "from_provider": "Plausible"
+      }
+    ],
+    "monitoring.analytics:ga4": [
+      {
+        "key": "GA_MEASUREMENT_ID",
+        "from_provider": "Google Analytics 4"
+      }
+    ],
+    "monitoring.analytics:mixpanel": [
+      {
+        "key": "MIXPANEL_TOKEN",
+        "from_provider": "Mixpanel"
+      }
+    ],
+    "monitoring.analytics:amplitude": [
+      {
+        "key": "AMPLITUDE_API_KEY",
+        "from_provider": "Amplitude"
+      }
+    ],
+    "monitoring.analytics:heap": [
+      {
+        "key": "HEAP_APP_ID",
+        "from_provider": "Heap"
+      }
+    ],
+    "monitoring.analytics:hotjar": [
+      {
+        "key": "HOTJAR_SITE_ID",
+        "from_provider": "Hotjar"
+      }
+    ],
+    "monitoring.analytics:clarity": [
+      {
+        "key": "CLARITY_PROJECT_ID",
+        "from_provider": "Microsoft Clarity"
+      }
+    ],
+    "monitoring.analytics:fathom": [
+      {
+        "key": "FATHOM_SITE_ID",
+        "from_provider": "Fathom"
+      }
+    ],
+    "monitoring.observability:sentry": [
+      {
+        "key": "SENTRY_DSN",
+        "from_provider": "Sentry"
+      },
+      {
+        "key": "SENTRY_AUTH_TOKEN",
+        "from_provider": "Sentry"
+      }
+    ],
+    "monitoring.observability:datadog": [
+      {
+        "key": "DD_API_KEY",
+        "from_provider": "Datadog"
+      }
+    ],
+    "monitoring.observability:axiom": [
+      {
+        "key": "AXIOM_TOKEN",
+        "from_provider": "Axiom"
+      },
+      {
+        "key": "AXIOM_DATASET",
+        "from_provider": "Axiom"
+      }
+    ],
+    "monitoring.observability:betterstack": [
+      {
+        "key": "BETTERSTACK_SOURCE_TOKEN",
+        "from_provider": "Better Stack"
+      }
+    ],
+    "monitoring.observability:bugsnag": [
+      {
+        "key": "BUGSNAG_API_KEY",
+        "from_provider": "Bugsnag"
+      }
+    ],
+    "monitoring.observability:checkly": [
+      {
+        "key": "CHECKLY_API_KEY",
+        "from_provider": "Checkly"
+      },
+      {
+        "key": "CHECKLY_ACCOUNT_ID",
+        "from_provider": "Checkly"
+      }
+    ],
+    "monitoring.observability:highlight": [
+      {
+        "key": "HIGHLIGHT_PROJECT_ID",
+        "from_provider": "Highlight"
+      }
+    ],
+    "monitoring.observability:logrocket": [
+      {
+        "key": "LOGROCKET_APP_ID",
+        "from_provider": "LogRocket"
+      }
+    ],
+    "monitoring.observability:newrelic": [
+      {
+        "key": "NEW_RELIC_LICENSE_KEY",
+        "from_provider": "New Relic"
+      }
+    ],
+    "monitoring.observability:pingdom": [
+      {
+        "key": "PINGDOM_API_TOKEN",
+        "from_provider": "Pingdom"
+      }
+    ],
+    "monitoring.observability:uptimerobot": [
+      {
+        "key": "UPTIMEROBOT_API_KEY",
+        "from_provider": "UptimeRobot"
+      }
+    ],
+    "assets.stock:unsplash": [
+      {
+        "key": "UNSPLASH_ACCESS_KEY",
+        "from_provider": "Unsplash"
+      }
+    ],
+    "assets.stock:pexels": [
+      {
+        "key": "PEXELS_API_KEY",
+        "from_provider": "Pexels"
+      }
+    ],
+    "assets.stock:pixabay": [
+      {
+        "key": "PIXABAY_API_KEY",
+        "from_provider": "Pixabay"
+      }
+    ],
+    "assets.stock:freepik": [
+      {
+        "key": "FREEPIK_API_KEY",
+        "from_provider": "Freepik"
+      }
+    ],
+    "assets.stock:shutterstock": [
+      {
+        "key": "SHUTTERSTOCK_CLIENT_ID",
+        "from_provider": "Shutterstock"
+      },
+      {
+        "key": "SHUTTERSTOCK_CLIENT_SECRET",
+        "from_provider": "Shutterstock"
+      }
+    ],
+    "assets.stock:adobe_stock": [
+      {
+        "key": "ADOBE_STOCK_API_KEY",
+        "from_provider": "Adobe Stock"
+      }
+    ],
+    "assets.stock:getty": [
+      {
+        "key": "GETTY_API_KEY",
+        "from_provider": "Getty Images"
+      },
+      {
+        "key": "GETTY_API_SECRET",
+        "from_provider": "Getty Images"
+      }
+    ],
+    "notifications.sms:bird": [
+      {
+        "key": "BIRD_API_KEY",
+        "from_provider": "Bird"
+      }
+    ],
+    "database.provider:mongodb_atlas": [
+      {
+        "key": "DATABASE_URL",
+        "from_provider": "MongoDB Atlas"
+      }
+    ],
+    "database.provider:cockroachdb": [
+      {
+        "key": "DATABASE_URL",
+        "from_provider": "CockroachDB"
+      }
+    ],
+    "database.provider:cloudflare_d1": [
+      {
+        "key": "CLOUDFLARE_ACCOUNT_ID",
+        "from_provider": "Cloudflare D1"
+      },
+      {
+        "key": "CLOUDFLARE_API_TOKEN",
+        "from_provider": "Cloudflare D1"
+      },
+      {
+        "key": "D1_DATABASE_ID",
+        "from_provider": "Cloudflare D1"
+      }
+    ],
+    "database.provider:dynamodb": [
+      {
+        "key": "AWS_ACCESS_KEY_ID",
+        "from_provider": "DynamoDB"
+      },
+      {
+        "key": "AWS_SECRET_ACCESS_KEY",
+        "from_provider": "DynamoDB"
+      },
+      {
+        "key": "AWS_REGION",
+        "from_provider": "DynamoDB"
+      }
+    ],
+    "database.provider:prisma_postgres": [
+      {
+        "key": "DATABASE_URL",
+        "from_provider": "Prisma Postgres"
+      }
+    ],
+    "backend.storage:gcs": [
+      {
+        "key": "GOOGLE_CLOUD_PROJECT",
+        "from_provider": "Google Cloud Storage"
+      },
+      {
+        "key": "GOOGLE_APPLICATION_CREDENTIALS",
+        "from_provider": "Google Cloud Storage"
+      },
+      {
+        "key": "GCS_BUCKET",
+        "from_provider": "Google Cloud Storage"
+      }
+    ],
+    "backend.storage:azure_blob": [
+      {
+        "key": "AZURE_STORAGE_CONNECTION_STRING",
+        "from_provider": "Azure Blob Storage"
+      },
+      {
+        "key": "AZURE_STORAGE_CONTAINER",
+        "from_provider": "Azure Blob Storage"
+      }
+    ],
+    "backend.storage:backblaze_b2": [
+      {
+        "key": "B2_APPLICATION_KEY_ID",
+        "from_provider": "Backblaze B2"
+      },
+      {
+        "key": "B2_APPLICATION_KEY",
+        "from_provider": "Backblaze B2"
+      },
+      {
+        "key": "B2_BUCKET",
+        "from_provider": "Backblaze B2"
+      }
+    ],
+    "backend.storage:vercel_blob": [
+      {
+        "key": "BLOB_READ_WRITE_TOKEN",
+        "from_provider": "Vercel Blob"
+      }
+    ],
+    "backend.storage:minio": [
+      {
+        "key": "MINIO_ENDPOINT",
+        "from_provider": "MinIO"
+      },
+      {
+        "key": "MINIO_ACCESS_KEY",
+        "from_provider": "MinIO"
+      },
+      {
+        "key": "MINIO_SECRET_KEY",
+        "from_provider": "MinIO"
+      },
+      {
+        "key": "MINIO_BUCKET",
+        "from_provider": "MinIO"
+      }
+    ],
+    "backend.realtime:pubnub": [
+      {
+        "key": "PUBNUB_PUBLISH_KEY",
+        "from_provider": "PubNub"
+      },
+      {
+        "key": "PUBNUB_SUBSCRIBE_KEY",
+        "from_provider": "PubNub"
+      },
+      {
+        "key": "PUBNUB_SECRET_KEY",
+        "from_provider": "PubNub"
+      }
+    ],
+    "backend.realtime:centrifugo": [
+      {
+        "key": "CENTRIFUGO_API_KEY",
+        "from_provider": "Centrifugo"
+      },
+      {
+        "key": "CENTRIFUGO_TOKEN_HMAC_SECRET_KEY",
+        "from_provider": "Centrifugo"
+      }
+    ],
+    "backend.realtime:hocuspocus": [
+      {
+        "key": "HOCUSPOCUS_SECRET",
+        "from_provider": "Hocuspocus"
+      }
+    ],
+    "auth.provider:keycloak": [
+      {
+        "key": "KEYCLOAK_ISSUER",
+        "from_provider": "Keycloak"
+      },
+      {
+        "key": "KEYCLOAK_CLIENT_ID",
+        "from_provider": "Keycloak"
+      },
+      {
+        "key": "KEYCLOAK_CLIENT_SECRET",
+        "from_provider": "Keycloak"
+      }
+    ],
+    "auth.provider:ory": [
+      {
+        "key": "ORY_SDK_URL",
+        "from_provider": "Ory"
+      },
+      {
+        "key": "ORY_API_KEY",
+        "from_provider": "Ory"
+      }
+    ],
+    "auth.provider:stytch": [
+      {
+        "key": "STYTCH_PROJECT_ID",
+        "from_provider": "Stytch"
+      },
+      {
+        "key": "STYTCH_SECRET",
+        "from_provider": "Stytch"
+      }
+    ],
+    "auth.provider:descope": [
+      {
+        "key": "DESCOPE_PROJECT_ID",
+        "from_provider": "Descope"
+      },
+      {
+        "key": "DESCOPE_MANAGEMENT_KEY",
+        "from_provider": "Descope"
+      }
+    ],
+    "auth.provider:okta": [
+      {
+        "key": "OKTA_DOMAIN",
+        "from_provider": "Okta"
+      },
+      {
+        "key": "OKTA_CLIENT_ID",
+        "from_provider": "Okta"
+      },
+      {
+        "key": "OKTA_CLIENT_SECRET",
+        "from_provider": "Okta"
+      }
+    ],
+    "auth.provider:entra_id": [
+      {
+        "key": "ENTRA_CLIENT_ID",
+        "from_provider": "Microsoft Entra ID"
+      },
+      {
+        "key": "ENTRA_TENANT_ID",
+        "from_provider": "Microsoft Entra ID"
+      },
+      {
+        "key": "ENTRA_CLIENT_SECRET",
+        "from_provider": "Microsoft Entra ID"
+      }
+    ],
+    "payments.provider:braintree": [
+      {
+        "key": "BRAINTREE_MERCHANT_ID",
+        "from_provider": "Braintree"
+      },
+      {
+        "key": "BRAINTREE_PUBLIC_KEY",
+        "from_provider": "Braintree"
+      },
+      {
+        "key": "BRAINTREE_PRIVATE_KEY",
+        "from_provider": "Braintree"
+      }
+    ],
+    "payments.provider:mollie": [
+      {
+        "key": "MOLLIE_API_KEY",
+        "from_provider": "Mollie"
+      }
+    ],
+    "payments.provider:razorpay": [
+      {
+        "key": "RAZORPAY_KEY_ID",
+        "from_provider": "Razorpay"
+      },
+      {
+        "key": "RAZORPAY_KEY_SECRET",
+        "from_provider": "Razorpay"
+      }
+    ],
+    "payments.provider:chargebee": [
+      {
+        "key": "CHARGEBEE_SITE",
+        "from_provider": "Chargebee"
+      },
+      {
+        "key": "CHARGEBEE_API_KEY",
+        "from_provider": "Chargebee"
+      }
+    ],
+    "payments.provider:recurly": [
+      {
+        "key": "RECURLY_API_KEY",
+        "from_provider": "Recurly"
+      }
+    ],
+    "payments.provider:gocardless": [
+      {
+        "key": "GOCARDLESS_ACCESS_TOKEN",
+        "from_provider": "GoCardless"
+      }
+    ],
+    "ai.providers:azure_openai": [
+      {
+        "key": "AZURE_OPENAI_API_KEY",
+        "from_provider": "Azure OpenAI"
+      },
+      {
+        "key": "AZURE_OPENAI_ENDPOINT",
+        "from_provider": "Azure OpenAI"
+      }
+    ],
+    "ai.providers:aws_bedrock": [
+      {
+        "key": "AWS_ACCESS_KEY_ID",
+        "from_provider": "AWS Bedrock"
+      },
+      {
+        "key": "AWS_SECRET_ACCESS_KEY",
+        "from_provider": "AWS Bedrock"
+      },
+      {
+        "key": "AWS_REGION",
+        "from_provider": "AWS Bedrock"
+      }
+    ],
+    "ai.providers:vertex_ai": [
+      {
+        "key": "GOOGLE_CLOUD_PROJECT",
+        "from_provider": "Vertex AI"
+      },
+      {
+        "key": "GOOGLE_APPLICATION_CREDENTIALS",
+        "from_provider": "Vertex AI"
+      }
+    ],
+    "ai.providers:cohere": [
+      {
+        "key": "COHERE_API_KEY",
+        "from_provider": "Cohere"
+      }
+    ],
+    "ai.providers:perplexity": [
+      {
+        "key": "PERPLEXITY_API_KEY",
+        "from_provider": "Perplexity"
+      }
+    ],
+    "ai.providers:deepseek": [
+      {
+        "key": "DEEPSEEK_API_KEY",
+        "from_provider": "DeepSeek"
+      }
+    ],
+    "ai.providers:fireworks": [
+      {
+        "key": "FIREWORKS_API_KEY",
+        "from_provider": "Fireworks AI"
+      }
+    ],
+    "ai.providers:cerebras": [
+      {
+        "key": "CEREBRAS_API_KEY",
+        "from_provider": "Cerebras"
+      }
+    ],
+    "ai.providers:voyage": [
+      {
+        "key": "VOYAGE_API_KEY",
+        "from_provider": "Voyage AI"
+      }
+    ],
+    "notifications.sms:sinch": [
+      {
+        "key": "SINCH_SERVICE_PLAN_ID",
+        "from_provider": "Sinch"
+      },
+      {
+        "key": "SINCH_API_TOKEN",
+        "from_provider": "Sinch"
+      }
+    ],
+    "notifications.sms:telnyx": [
+      {
+        "key": "TELNYX_API_KEY",
+        "from_provider": "Telnyx"
+      }
+    ],
+    "notifications.sms:plivo": [
+      {
+        "key": "PLIVO_AUTH_ID",
+        "from_provider": "Plivo"
+      },
+      {
+        "key": "PLIVO_AUTH_TOKEN",
+        "from_provider": "Plivo"
+      }
+    ],
+    "support.provider:help_scout": [
+      {
+        "key": "HELP_SCOUT_APP_ID",
+        "from_provider": "Help Scout"
+      },
+      {
+        "key": "HELP_SCOUT_APP_SECRET",
+        "from_provider": "Help Scout"
+      }
+    ],
+    "support.provider:front": [
+      {
+        "key": "FRONT_API_TOKEN",
+        "from_provider": "Front"
+      }
+    ],
+    "support.provider:gorgias": [
+      {
+        "key": "GORGIAS_API_KEY",
+        "from_provider": "Gorgias"
+      }
+    ],
+    "support.provider:hubspot": [
+      {
+        "key": "HUBSPOT_ACCESS_TOKEN",
+        "from_provider": "HubSpot"
+      }
+    ],
+    "assets.stock:noun_project": [
+      {
+        "key": "NOUN_PROJECT_API_KEY",
+        "from_provider": "Noun Project"
+      },
+      {
+        "key": "NOUN_PROJECT_API_SECRET",
+        "from_provider": "Noun Project"
+      }
+    ]
+  },
+  "implications": {
+    "database.provider:supabase": [
+      "Supabase bundles Postgres, Auth, Storage, and Realtime ? a separate auth / storage / realtime provider may be redundant.",
+      "Use Supabase publishable keys for new public clients; legacy anon JWT keys are compatibility-only."
+    ],
+    "database.provider:firebase": [
+      "Firebase bundles Firestore, Auth, Storage, and Functions under one project."
+    ],
+    "database.provider:convex": [
+      "Convex bundles a reactive database, server functions, file storage, and auth — a separate provider for those may be redundant."
+    ],
+    "database.provider:appwrite": [
+      "Appwrite bundles databases, auth, storage, and functions under one self-hostable project."
+    ],
+    "database.provider:pocketbase": [
+      "PocketBase is a single Go binary bundling an embedded SQLite database, auth, file storage, and realtime."
+    ],
+    "auth.provider:clerk": [
+      "Clerk ships prebuilt sign-in UI and session management; protect routes with its middleware."
+    ],
+    "auth.provider:supabase_auth": [
+      "Supabase Auth shares the Supabase project ? no separate auth env vars beyond the Supabase URL and publishable key."
+    ],
+    "payments.provider:stripe": [
+      "Stripe needs a webhook endpoint to reconcile subscription state — wire STRIPE_WEBHOOK_SECRET."
+    ],
+    "ai.providers:anthropic": [
+      "Keep ANTHROPIC_API_KEY server-side only; never expose it to the browser bundle."
+    ],
+    "deployment.host:github_pages": [
+      "GitHub Pages serves static files only — a server runtime, if needed, must live elsewhere."
+    ]
+  },
+  "assets": [
+    {
+      "asset_id": "logo_primary",
+      "label": "Primary logo (wordmark / lockup)",
+      "filename_hint": "logo.svg",
+      "brand_key": "logo",
+      "when": [
+        {
+          "path": "project.type",
+          "present": true
+        }
+      ]
+    },
+    {
+      "asset_id": "favicon",
+      "label": "Favicon",
+      "filename_hint": "favicon.ico",
+      "brand_key": "favicon",
+      "when": [
+        {
+          "path": "project.platforms",
+          "anyOf": [
+            "web"
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "og_image",
+      "label": "Social / OG share image (1200×630)",
+      "filename_hint": "og-image.png",
+      "brand_key": "social_image",
+      "when": [
+        {
+          "path": "project.platforms",
+          "anyOf": [
+            "web"
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "app_icon_ios",
+      "label": "iOS app icon (1024×1024)",
+      "filename_hint": "icon-ios.png",
+      "brand_key": "app_icon",
+      "when": [
+        {
+          "path": "project.platforms",
+          "anyOf": [
+            "ios"
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "app_icon_android",
+      "label": "Android adaptive icon (432×432)",
+      "filename_hint": "icon-android.png",
+      "brand_key": "app_icon",
+      "when": [
+        {
+          "path": "project.platforms",
+          "anyOf": [
+            "android"
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "app_icon_desktop",
+      "label": "Desktop app icon (ICO + ICNS)",
+      "filename_hint": "icon-desktop.png",
+      "brand_key": "app_icon",
+      "when": [
+        {
+          "path": "project.platforms",
+          "anyOf": [
+            "macos",
+            "windows",
+            "linux"
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "mobile_splash",
+      "label": "Mobile splash screen",
+      "filename_hint": "splash.png",
+      "brand_key": "splash",
+      "when": [
+        {
+          "path": "project.platforms",
+          "anyOf": [
+            "ios",
+            "android"
+          ]
+        }
+      ]
+    }
+  ]
+}

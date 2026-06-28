@@ -1,0 +1,269 @@
+/* ===========================================================================
+   staqpaq — base layer  (global reset, type, frame, device-language primitives)
+   Every color/space value flows through tokens.css. No raw hex here.
+   =========================================================================== */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+/* Root canvas holds the base navy so the fixed blueprint texture (body::before,
+   z-index:-1) can composite over it; body itself is transparent. */
+html { background: var(--ink); }
+
+body {
+  background: transparent;
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Accessibility — a 2px rust focus ring + 2px offset on every interactive
+   element (ui-manifest.yaml :: accessibility.specifics). */
+:focus-visible {
+  outline: 3px solid var(--paper);
+  outline-offset: 3px;
+}
+
+a { color: var(--signal); text-decoration: none; }
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  transform: translateY(-160%);
+  background: var(--ink);
+  border: 1px solid var(--paper);
+  color: var(--paper);
+  padding: 10px 14px;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.skip-link:focus-visible { transform: translateY(0); }
+
+/* --- type utilities -------------------------------------------------------- */
+.vt { font-family: var(--font-display); line-height: 0.92; }
+.signal { color: var(--signal); }
+.dim { color: var(--paper-dim); }
+.faint { color: var(--paper-faint); }
+
+.display { font-family: var(--font-display); font-size: var(--fs-display); line-height: var(--lh-display); letter-spacing: var(--tr-display); }
+.h1 { font-family: var(--font-display); font-size: var(--fs-h1); line-height: var(--lh-h1); font-weight: 400; }
+.h2 { font-family: var(--font-display); font-size: var(--fs-h2); line-height: var(--lh-h2); letter-spacing: var(--tr-h2); font-weight: 400; margin: 0; }
+.metric { font-family: var(--font-display); font-size: var(--fs-metric); line-height: var(--lh-metric); color: var(--signal); }
+.label { font-size: var(--fs-label); letter-spacing: var(--tr-label); text-transform: uppercase; color: var(--paper); }
+.eyebrow { font-size: var(--fs-eyebrow); letter-spacing: var(--tr-eyebrow); text-transform: uppercase; color: var(--paper-dim); }
+
+/* --- hairline rule --------------------------------------------------------- */
+hr.rule, .rule-line { height: var(--hairline); background: var(--rule); border: 0; margin: 0; }
+
+/* --- ticket-stub corners (pure-CSS custom element) ------------------------- */
+/* Used as <sq-ticket> wrapping any bounded panel: 12px steel L-marks
+   top-left + bottom-right (ui-manifest.yaml :: component_kit.customization). */
+sq-ticket { position: relative; display: block; }
+sq-ticket::before,
+sq-ticket::after {
+  content: "";
+  position: absolute;
+  width: var(--corner);
+  height: var(--corner);
+  pointer-events: none;
+}
+sq-ticket::before { left: -1px; top: -1px; border-left: 1px solid var(--steel); border-top: 1px solid var(--steel); }
+sq-ticket::after { right: -1px; bottom: -1px; border-right: 1px solid var(--steel); border-bottom: 1px solid var(--steel); }
+
+/* the configurator frame is a full double-line drafting "wall" (outer + inner
+   offset line), not just L-corners — the drawing boundary of the working sheet */
+sq-ticket.cfg-frame::before { inset: 0; left: 0; top: 0; width: auto; height: auto; border: 1px solid var(--bp-line); }
+sq-ticket.cfg-frame::after { inset: 4px; right: auto; bottom: auto; width: auto; height: auto; border: 1px solid var(--bp-line); opacity: 0.45; }
+
+/* --- stamps (pure-CSS custom element) -------------------------------------- */
+/* <sq-stamp variant="required|critical|ok|optional">LABEL</sq-stamp> — bordered
+   uppercase micro-tags; the document's severity language. */
+sq-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border: 1px solid var(--steel);
+  color: var(--paper-dim);
+  white-space: nowrap;
+}
+sq-stamp[variant="required"] { border-color: var(--signal); color: var(--signal); }
+sq-stamp[variant="critical"] { border-color: var(--crit); color: var(--crit); }
+sq-stamp[variant="ok"] { border-color: var(--sage); color: var(--sage); }
+sq-stamp[variant="optional"] { border-color: var(--steel); color: var(--paper-dim); }
+
+/* --- required marker -------------------------------------------------------- */
+/* <abbr class="req-mark" title="Required">*</abbr> — the only severity language
+   on a field now: a signal-blue asterisk denotes a required decision. */
+.req-mark {
+  color: var(--signal);
+  margin-left: 3px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: help;
+}
+
+/* --- buttons --------------------------------------------------------------- */
+/* Native <button class="btn"> / <button class="btn primary"> for real button
+   semantics + focusability. Primary = the ONLY filled rust element. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 11px 17px;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  border: 1px solid var(--bp-line);
+  background: none;
+  color: var(--paper);
+  transition: transform var(--t-micro) var(--ease-micro), border-color var(--t-micro), background var(--t-micro);
+}
+.btn:hover { transform: translate(-2px, -2px); border-color: var(--paper); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; border-color: var(--rule); }
+.btn.primary { background: var(--signal-deep); border-color: var(--signal-deep); color: var(--on-signal); }
+.btn.primary:hover { background: var(--ink-3); border-color: var(--bp-line); }
+.btn.ghost { background: none; border-color: var(--bp-line); color: var(--paper); }
+
+/* --- blueprint paper · full-bleed background texture ----------------------- */
+/* One fixed layer behind ALL content, at every breakpoint (mobile included).
+   A fixed pseudo-element — NOT background-attachment:fixed, which janks on
+   mobile, and NOT SVG feTurbulence, which re-rasterises per frame under the
+   animating entrance canvas and stalls the main thread. A deep-blue sheet
+   (--paper-ground): soft tonal blotches (uneven/scuffed paper) · a luminous
+   centre "well" · an edge vignette · a very faint dot grid (--grid-dot, 24px)
+   tiled UNDER the texture so it stays crisp in the calm centre and fades into
+   the dark edges. Dots only (no line grid) — far subtler in the text/option-heavy
+   workspace; the entrance's own grid is drawn by the sq-spatial-field canvas,
+   which sits over this layer and is unaffected. All cheap gradients — composited
+   once. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--paper-ground);
+  background-image:
+    radial-gradient(46% 40% at 20% 24%, rgba(150, 175, 245, 0.16), transparent 64%),
+    radial-gradient(50% 44% at 82% 30%, rgba(150, 175, 245, 0.11), transparent 64%),
+    radial-gradient(56% 50% at 66% 82%, rgba(0, 8, 36, 0.34), transparent 66%),
+    radial-gradient(44% 42% at 12% 76%, rgba(0, 8, 36, 0.30), transparent 66%),
+    radial-gradient(ellipse 85% 70% at 50% 42%, rgba(60, 95, 205, 0.26), transparent 70%),
+    radial-gradient(ellipse 105% 105% at 50% 45%, transparent 38%, var(--vignette) 100%),
+    radial-gradient(circle at center, var(--grid-dot) 1px, transparent 1.5px);  /* dot grid */
+  background-size: cover, cover, cover, cover, cover, cover, 24px 24px;
+}
+
+/* --- beamrule (pure-CSS custom element) ------------------------------------ */
+/* <sq-beamrule style="--sq-pct:NN%"></sq-beamrule> — a 2px inset track whose
+   fill (::after) grows to the section's completion %. Sits under each section
+   header; turns sage at 100%. */
+sq-beamrule {
+  display: block;
+  position: relative;
+  height: 2px;
+  background: var(--ink-3);
+  overflow: hidden;
+}
+sq-beamrule::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: var(--sq-pct, 0%);
+  background: var(--signal);
+  transition: width 0.3s var(--ease-micro), background 0.3s;
+}
+sq-beamrule[data-complete]::after { background: var(--sage); }
+
+/* the section header rule reads as a measured dimension line: end ticks +
+   baseline + a signal segment terminated by an arrowhead at the % point */
+sq-beamrule.head-rule {
+  height: 9px;
+  overflow: visible;
+  background:
+    linear-gradient(var(--bp-line), var(--bp-line)) left center / 1px 9px no-repeat,
+    linear-gradient(var(--bp-line), var(--bp-line)) right center / 1px 9px no-repeat,
+    linear-gradient(var(--bp-line), var(--bp-line)) center / 100% 1px no-repeat;
+}
+sq-beamrule.head-rule::after { top: 50%; transform: translateY(-50%); }
+sq-beamrule.head-rule::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: var(--sq-pct, 0%);
+  transform: translate(-100%, -50%);
+  border: 4px solid transparent;
+  border-left-color: var(--signal);
+  border-right: 0;
+}
+sq-beamrule.head-rule[data-complete]::before { border-left-color: var(--sage); }
+
+/* --- layout wrappers ------------------------------------------------------- */
+.wrap { position: relative; max-width: var(--maxw); margin: 0 auto; padding: 34px var(--gut) 96px; }
+.reading { max-width: var(--col); }
+
+/* --- reduced motion: stop beams + ambient parallax ------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  sq-beamrule::after { transition: none; }
+  .btn:hover { transform: none; }
+}
+
+/* ===========================================================================
+   blueprint drafting language — walls, dimension lines, hatch, window boxes.
+   Light --bp-line linework on the deep-blue paper. Presentation only; these
+   are reusable primitives applied to real elements in components/screens.
+   =========================================================================== */
+
+/* double-line "wall" frame — a drawing boundary with an inner offset line */
+.bp-frame { position: relative; }
+.bp-frame > * { position: relative; z-index: 1; }
+.bp-frame::before,
+.bp-frame::after { content: ""; position: absolute; pointer-events: none; border: 1px solid var(--bp-line); z-index: 0; }
+.bp-frame::before { inset: 0; }
+.bp-frame::after { inset: 4px; opacity: 0.45; }
+
+/* 45° poché hatch — section-cut emphasis fill */
+.bp-hatch { background-image: repeating-linear-gradient(45deg, var(--bp-line) 0 1px, transparent 1px 6px); }
+
+/* crosshatch window box — the X-in-a-square plan symbol */
+.bp-xbox {
+  background-image:
+    linear-gradient(45deg, transparent calc(50% - 0.7px), var(--bp-line) calc(50% - 0.7px), var(--bp-line) calc(50% + 0.7px), transparent calc(50% + 0.7px)),
+    linear-gradient(-45deg, transparent calc(50% - 0.7px), var(--bp-line) calc(50% - 0.7px), var(--bp-line) calc(50% + 0.7px), transparent calc(50% + 0.7px));
+}
+
+/* dimension line — a measured rule: end ticks + baseline + (optional fill +
+   arrowhead drawn by the element's own ::after). Apply .bp-dim to a thin bar. */
+.bp-dim {
+  position: relative;
+  height: 9px;
+  background:
+    linear-gradient(var(--bp-line), var(--bp-line)) left center / 1px 9px no-repeat,
+    linear-gradient(var(--bp-line), var(--bp-line)) right center / 1px 9px no-repeat,
+    linear-gradient(var(--bp-line), var(--bp-line)) center / 100% 1px no-repeat;
+  overflow: visible;
+}
+/* measured segment + arrowhead, driven by --sq-pct (0–100%) */
+.bp-dim .seg { position: absolute; top: 50%; left: 0; height: 2px; width: var(--sq-pct, 0%); background: var(--signal); transform: translateY(-50%); transition: width var(--t-fill) var(--ease-micro); }
+.bp-dim .seg::after { content: ""; position: absolute; top: 50%; right: -1px; transform: translate(100%, -50%); border: 4px solid transparent; border-left-color: var(--signal); border-right: 0; }
+.bp-dim[data-complete] .seg,
+.bp-dim[data-complete] .seg::after { background: var(--sage); }
+.bp-dim[data-complete] .seg::after { border-left-color: var(--sage); background: none; }

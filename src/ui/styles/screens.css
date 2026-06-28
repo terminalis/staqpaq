@@ -1,0 +1,285 @@
+/* ===========================================================================
+   staqpaq — screen + shell layout. Realizes the workspace shell (300px rail +
+   ~860px panel) and the entrance hero. Adapted from the privileged
+   screen-treatment.html; every color/space value flows through tokens.
+   =========================================================================== */
+
+sq-app { display: block; min-height: 100vh; }
+
+.boot {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-size: 48px;
+}
+.boot-note { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--paper-dim); }
+
+/* --- entrance -------------------------------------------------------------- */
+.entrance { position: relative; min-height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+
+.ent-wrap {
+  position: relative; z-index: 2;
+  max-width: var(--maxw); width: 100%; margin: 0 auto; flex: 1;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 40px var(--gut) 80px;
+}
+.ent-wordmark { font-size: clamp(72px, 15vw, 168px); line-height: 0.84; letter-spacing: 0.01em; margin: 0; }
+.ent-promise { max-width: 620px; color: var(--paper-dim); font-size: 16px; line-height: 1.55; margin: 22px 0 30px; }
+.ent-promise b { color: var(--paper); font-weight: 400; }
+.ent-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 54px; }
+
+/* plain "how it works" copy (replaces the old animated select→derive→export pipeline) */
+.ent-howto { max-width: 600px; }
+.ent-howto-label { display: block; color: var(--paper-faint); margin-bottom: 8px; }
+.ent-howto p { margin: 0; color: var(--paper-dim); font-size: 14px; line-height: 1.6; }
+
+.ent-foot { display: flex; justify-content: space-between; gap: 16px; margin-top: 54px; border-top: 1px solid var(--rule); padding-top: 16px; }
+
+/* --- workspace shell ------------------------------------------------------- */
+.workspace { display: grid; grid-template-columns: var(--rail) 1fr; min-height: 100vh; position: relative; }
+/* grid children must be allowed to shrink below content size, else the section
+   stepper's nowrap items would expand the column and overflow the page. */
+.shell-rail, .shell-main { min-width: 0; }
+
+/* z-index 2 (above .shell-main's 1) so the mobile section-index sheet — a fixed
+   overlay rendered inside the rail — can paint over the main panel. The rail and
+   main never overlap in layout, so this is inert except for that overlay. */
+/* translucent navy panel (the title-block box's scrim) over the calm paper, with
+   drafting-line dividers (--bp-line) — the rail shares the blueprint linework while
+   the paper faintly shows through. */
+.shell-rail { border-right: 1px solid var(--bp-line); background: var(--panel-scrim); position: relative; z-index: 2; display: flex; flex-direction: column; }
+@media (min-width: 861px) {
+  .shell-rail {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+  }
+  .shell-rail sq-section-nav {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .seclist { min-height: 0; }
+}
+/* the staqpaq boot logotype stays signal-blue */
+.boot .vt { color: var(--signal); }
+/* Entrance hero wordmark is the blue-cream body color, both "staq" and "paq". */
+.ent-wordmark, .ent-wordmark .signal { color: var(--paper); }
+/* reset action — directly under the title-block header, aligned to its inset */
+.rail-actions { padding: 0 16px 14px; }
+.rail-reset { width: 100%; min-height: 44px; justify-content: center; border-color: var(--rule); color: var(--paper); font-size: 12px; }
+
+.section-nav { display: flex; flex: 1; min-height: 0; }
+.seclist { list-style: none; margin: 0; padding: 6px 0; overflow-y: auto; flex: 1; }
+.seclist .navitem {
+  width: 100%; min-height: 44px; border: 0; text-align: left; font-family: var(--font-mono);
+  display: flex; align-items: center; gap: 11px; padding: 9px 20px; cursor: pointer;
+  background: none;
+  color: var(--paper-dim);
+  transition: color var(--t-micro), background var(--t-micro);
+}
+.seclist .navitem:hover { color: var(--paper); background: var(--ink-2); }
+/* active: the same double outline as a selected option (pure box-shadow → no layout shift) */
+.seclist .navitem.active {
+  color: var(--paper); background: var(--ink-2);
+  box-shadow: inset 0 0 0 1px var(--bp-line), inset 0 0 0 3px var(--ink-2), inset 0 0 0 4px var(--bp-line);
+}
+.seclist .navitem .sn { font-family: var(--font-display); font-size: 20px; width: 30px; color: var(--paper-faint); }
+.seclist .navitem.active .sn { color: var(--signal); }
+.seclist .navitem.done .sn { color: var(--sage); }
+.seclist .navitem .nm { flex: 1; font-size: 13px; letter-spacing: 0.02em; }
+/* n/n fields-completed marker (replaces the done tick); sage when complete */
+.seclist .navitem .nn { font-family: var(--font-display); font-size: 16px; color: var(--paper-faint); letter-spacing: 0.04em; }
+.seclist .navitem.done .nn { color: var(--sage); }
+
+/* --- mobile section navigator (position bar + index sheet) ----------------- */
+/* Hidden on desktop; the @media block below swaps them in under 860px. */
+.secbar, .secsheet { display: none; }
+
+.secbar { align-items: stretch; gap: 8px; padding: 10px 12px; }
+.secbar-step {
+  flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
+  min-width: 44px; min-height: 44px; padding: 0 10px;
+  border: 1px solid var(--steel); background: none; color: var(--paper);
+  font-size: 20px; cursor: pointer;
+  transition: border-color var(--t-micro), color var(--t-micro);
+}
+.secbar-step:hover:not(:disabled) { border-color: var(--paper); }
+.secbar-step:disabled { opacity: 0.35; cursor: not-allowed; }
+.secbar-cur {
+  flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 12px;
+  min-height: 44px; padding: 8px 14px; text-align: left; cursor: pointer;
+  border: 1px solid var(--steel); background: var(--ink-2); color: var(--paper);
+  transition: border-color var(--t-micro);
+}
+.secbar-cur:hover { border-color: var(--paper); }
+.secbar-cur .sn { flex: 0 0 auto; font-family: var(--font-display); font-size: 26px; line-height: 1; color: var(--signal); }
+.secbar-cur .secbar-tt { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.secbar-cur .nm { font-size: 14px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--paper); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.secbar-cur .cnt { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--paper-dim); }
+.secbar-cur .chev { flex: 0 0 auto; font-size: 18px; color: var(--paper-dim); }
+
+.secsheet { position: fixed; inset: 0; z-index: 40; }
+.secsheet-panel { position: absolute; inset: 0; display: flex; flex-direction: column; background: var(--ink); }
+.secsheet-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 16px 12px; border-bottom: 1px solid var(--rule);
+}
+.secsheet-head .label { font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--paper-dim); }
+.secsheet-close {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 44px; min-height: 44px; border: 0; background: none; color: var(--paper);
+  font-size: 26px; cursor: pointer;
+}
+.secsheet-list { list-style: none; margin: 0; padding: 6px 0; overflow-y: auto; flex: 1; }
+.secsheet-list .navitem {
+  width: 100%; border: 0; text-align: left; font-family: var(--font-mono); background: none;
+  display: flex; align-items: center; gap: 14px; min-height: 56px; padding: 12px 18px;
+  color: var(--paper-dim); cursor: pointer;
+  transition: color var(--t-micro), background var(--t-micro);
+}
+.secsheet-list .navitem:hover { color: var(--paper); background: var(--ink-2); }
+.secsheet-list .navitem.active {
+  color: var(--paper); background: var(--ink-2);
+  box-shadow: inset 0 0 0 1px var(--bp-line), inset 0 0 0 3px var(--ink-2), inset 0 0 0 4px var(--bp-line);
+}
+.secsheet-list .navitem .sn { flex: 0 0 auto; width: 38px; font-family: var(--font-display); font-size: 26px; color: var(--paper-faint); }
+.secsheet-list .navitem.active .sn { color: var(--signal); }
+.secsheet-list .navitem.done .sn { color: var(--sage); }
+.secsheet-list .navitem .nm { flex: 1; min-width: 0; font-size: 16px; letter-spacing: 0.02em; }
+.secsheet-list .navitem .nn { flex: 0 0 auto; font-family: var(--font-display); font-size: 20px; color: var(--paper-faint); letter-spacing: 0.04em; }
+.secsheet-list .navitem.done .nn { color: var(--sage); }
+
+/* --- main panel ------------------------------------------------------------ */
+.shell-main { position: relative; z-index: 1; display: flex; flex-direction: column; }
+
+/* the working sheet — a double-line drawing boundary (.bp-frame) inset from the
+   shell, holding the panel content and a corner title block */
+.sheet { position: relative; flex: 1; display: flex; flex-direction: column; margin: var(--gut); }
+.cfg-panel, .rev-panel { position: relative; z-index: 1; width: 100%; margin: 0 auto; padding: 30px var(--sp-6) 70px; flex: 1; }
+
+/* --- workspace entrance · scanline curtain --------------------------------- */
+/* Fires once when .workspace mounts (entrance->workspace). The shell is reused
+   across section changes, so this never replays mid-session. Echoes the entrance
+   crane scan. */
+/* BOTH columns clip-path uncover top->bottom, so below the scanline they're
+   transparent and the page background (body::before — the dot grid) shows through;
+   above the line the full workspace is revealed. `backwards` fill keeps them clipped
+   at frame 0 (no flash) and reverts to clip-path:none after the run — so no residual
+   containing block lingers, and the sticky rail pins normally once revealed. */
+.workspace[data-enter] .shell-main,
+.workspace[data-enter] .shell-rail {
+  animation: sq-reveal-col var(--t-reveal) var(--ease-reveal) backwards;
+}
+/* the travelling luminous line — a sibling of the columns so it is never clipped */
+.workspace[data-enter] .scanline {
+  position: absolute; left: 0; right: 0; top: 0; height: 2px; z-index: 5;
+  pointer-events: none; background: var(--signal);
+  box-shadow: 0 0 12px 2px var(--signal), 0 0 28px 6px rgba(48, 87, 225, 0.45);
+  animation: sq-scan var(--t-reveal) var(--ease-reveal) forwards;
+}
+/* Reveal edge travels to 100vh in VIEWPORT space (not each column's own height), so
+   the rail (exactly 100vh) and the taller, scrollable main column uncover in lockstep
+   with the scanline — no jagged step at the seam. (.shell-* are always >=100vh, grid
+   rows stretch to the min-height:100vh workspace, so calc() is never negative; for a
+   taller main the final-frame bottom clip is below the fold, then reverts off-screen.) */
+@keyframes sq-reveal-col {
+  from { clip-path: inset(0 0 100% 0); }
+  to   { clip-path: inset(0 0 calc(100% - 100vh) 0); }
+}
+@keyframes sq-scan {
+  0%   { transform: translateY(0);     opacity: 0; }
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .workspace[data-enter] .shell-main,
+  .workspace[data-enter] .shell-rail { animation: none; }
+  .workspace[data-enter] .scanline { display: none; }
+}
+
+/* title block — the rail header: a bordered drafting box inset at the rail top.
+   No own background — the translucent rail (--panel-scrim) provides the scrim. */
+.bp-titleblock {
+  margin: 16px;
+  border: 1px solid var(--bp-line);
+  background: none;
+}
+/* brand row is a button → back to entrance; mark stacked over the meta so it
+   never overflows the narrow rail */
+.bp-titleblock .tb-brand {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+  width: 100%; padding: 9px 12px; background: none; border: 0;
+  border-bottom: 1px solid var(--bp-line); cursor: pointer; text-align: left;
+}
+.bp-titleblock .tb-mark { font-family: var(--font-display); font-size: 24px; line-height: 1; color: var(--paper); }
+.bp-titleblock .tb-meta { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--paper-faint); }
+/* PROJECT spans the full width (row 1); SHEET + READINESS share row 2 */
+.bp-titleblock .tb-grid { display: grid; grid-template-columns: 1fr 1fr; }
+.bp-titleblock .tb-cell { display: flex; flex-direction: column; gap: 4px; padding: 9px 12px; border-right: 1px solid var(--bp-line); min-width: 0; }
+.bp-titleblock .tb-cell:first-child { grid-column: 1 / -1; border-right: 0; border-bottom: 1px solid var(--bp-line); }
+.bp-titleblock .tb-cell:last-child { border-right: 0; }
+.bp-titleblock .tb-k { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--paper-faint); }
+.bp-titleblock .tb-v { font-size: 12px; letter-spacing: 0.04em; color: var(--paper); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.crumb { display: flex; align-items: center; gap: 8px; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--paper-faint); margin-bottom: 22px; }
+.crumb .on { color: var(--paper-dim); }
+
+.panel-head { display: flex; align-items: flex-start; gap: 18px; margin-bottom: 6px; }
+.panel-head .bignum { font-family: var(--font-display); font-size: var(--fs-h1); color: var(--signal); line-height: 0.7; transform: translateY(2px); }
+.panel-head .ht { flex: 1; }
+.panel-head .of { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--paper-dim); }
+.panel-head h2 { font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h2); margin: 0; letter-spacing: 0.01em; }
+.panel-head .desc { color: var(--paper-dim); font-size: 13.5px; max-width: 560px; margin-top: 6px; }
+.head-rule-row { display: flex; align-items: center; gap: 12px; margin: 20px 0 8px; }
+.head-rule { flex: 1; margin: 0; }
+.head-rule-pct { font-size: 15px; color: var(--paper-faint); min-width: 34px; text-align: right; }
+.req-legend { font-size: 11px; color: var(--paper-faint); letter-spacing: 0.04em; margin: 0 0 14px; }
+.req-legend .req-mark { margin-left: 0; }
+.cfg-frame { display: block; padding: 22px 26px 6px; margin-top: 6px; }
+.cfg-frame sq-field:first-of-type { padding-top: 4px; }
+
+.panel-foot { display: flex; align-items: center; gap: 14px; margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--rule); }
+.panel-foot .spacer { flex: 1; }
+.panel-foot .step { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--paper-faint); }
+
+/* --- review & export ------------------------------------------------------- */
+.rev-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-bottom: 26px; }
+.rev-block { }
+.block-eyebrow { margin-bottom: 12px; }
+.misslist { display: flex; flex-direction: column; gap: 9px; }
+.miss { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.miss-label { color: var(--paper); }
+
+.rev-yaml { margin-bottom: 26px; }
+.rev-derived { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-bottom: 26px; }
+.dlist { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; gap: 7px; font-size: 12.5px; }
+.dlist li { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; color: var(--paper); }
+.dlist code { color: var(--steel); font-family: var(--font-mono); }
+.dlist .faint { color: var(--paper-faint); font-size: 11px; }
+
+.export-bar { display: flex; align-items: center; gap: 12px; margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--rule); flex-wrap: wrap; }
+
+/* --- responsive: rail collapses to a tap-to-open section index ------------- */
+@media (max-width: 860px) {
+  .workspace { grid-template-columns: 1fr; }
+  .shell-rail { border-right: 0; border-bottom: 1px solid var(--bp-line); }
+  /* swap the vertical rail list for the compact position bar + index sheet */
+  .section-nav { display: none; }
+  .seclist { display: none; }
+  .secbar { display: flex; }
+  .secsheet { display: block; }
+  .rev-cols, .rev-derived { grid-template-columns: 1fr; }
+  /* tighter sheet on phones */
+  .sheet { margin: var(--sp-3); }
+  .cfg-panel, .rev-panel { padding: 24px var(--sp-4) 60px; }
+}

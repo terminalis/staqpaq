@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>staqpaq</title>
+    <meta name="theme-color" content="#001233" />
+    <link rel="canonical" href="https://staqpaq.dev/" />
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate icon" href="./assets/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png" sizes="180x180" />
+    <link rel="manifest" href="./assets/manifest.webmanifest" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="staqpaq" />
+    <meta property="og:title" content="staqpaq" />
+    <meta property="og:description" content="staqpaq - build-manifest generator" />
+    <meta property="og:url" content="https://staqpaq.dev/" />
+    <meta property="og:image" content="https://staqpaq.dev/assets/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="staqpaq - build-manifest generator" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="staqpaq" />
+    <meta name="twitter:description" content="staqpaq - build-manifest generator" />
+    <meta name="twitter:image" content="https://staqpaq.dev/assets/og-image.png" />
+    <meta name="twitter:image:alt" content="staqpaq - build-manifest generator" />
+    <meta
+      name="description"
+      content="staqpaq — an application build-manifest. Stamp the parts of an app build onto a bill of materials and export a faithful, deterministic pack."
+    />
+
+    <!--
+      No-build native ESM. Vendored libraries are committed under vendor/ and
+      mapped to bare specifiers here so authored modules import them as
+      `lit` / `idb-keyval` / `fflate`. The boundary-assertion scripts read this
+      same import map, so the static import graph they check matches the runtime.
+    -->
+    <script type="importmap">
+      {
+        "imports": {
+          "lit": "./vendor/lit-core.min.js",
+          "idb-keyval": "./vendor/idb-keyval.js",
+          "fflate": "./vendor/fflate.js"
+        }
+      }
+    </script>
+
+    <!-- Presentation assets (Presentation Binding delivery — ui-manifest.yaml).
+         VT323 (display/numerals), Share Tech Mono (everything else), and the
+         selected app icons are vendored locally. App logic, persistence, type,
+         and icon presentation do not require runtime CDN access. -->
+    <!-- Global token system + presentation styles (Step 2). Token layer first. -->
+    <link rel="stylesheet" href="./src/ui/styles/fonts.css" />
+    <link rel="stylesheet" href="./src/ui/styles/tokens.css" />
+    <link rel="stylesheet" href="./src/ui/styles/base.css" />
+    <link rel="stylesheet" href="./src/ui/styles/components.css" />
+    <link rel="stylesheet" href="./src/ui/styles/screens.css" />
+
+    <!-- The application boot module is wired in Step 10 (UX structure). -->
+    <script type="module" src="./src/ui/main.js"></script>
+  </head>
+  <body>
+    <div id="app"><!-- staqpaq mounts here (Step 10) --></div>
+  </body>
+</html>

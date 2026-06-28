@@ -1,0 +1,63 @@
+{
+  "version": "sample-1",
+  "note": "Presentation-only fixture (ui-manifest.yaml :: presentation_fixtures). The 'Acme Analytics' filled BuildSpec — realistic content, never lorem. Every selection is catalogue-valid and ungated under itself (capabilities.yaml :: load_sample.constraints). Loaded ONLY via load_sample; never seeds production canonical state silently. `selections` only — load_sample wraps it into a full build_spec (fresh id + timestamps).",
+  "selections": {
+    "project.name": "Acme Analytics",
+    "project.type": "saas",
+    "project.audience": [
+      "businesses",
+      "developers"
+    ],
+    "project.platforms": [
+      "web",
+      "ios"
+    ],
+    "business.revenue_model": "subscription",
+    "business.billing_interval": "both",
+    "design.typography.primary": "poppins",
+    "design.typography.secondary": "inter",
+    "design.theme.color": "#3057e1",
+    "design.theme.mode": "system",
+    "design.palette": "clean_saas",
+    "frontend.styling": "tailwind",
+    "frontend.component_library": "shadcn",
+    "frontend.framework": "nextjs",
+    "database.provider": "supabase",
+    "backend.storage": "supabase_storage",
+    "auth.provider": "supabase_auth",
+    "auth.methods": [
+      "email_password",
+      "oauth"
+    ],
+    "payments.provider": "stripe",
+    "payments.flows": [
+      "checkout",
+      "customer_portal"
+    ],
+    "notifications.transactional_email": "resend",
+    "notifications.channels": [
+      "email",
+      "in_app",
+      "webhooks"
+    ],
+    "monitoring.analytics": "posthog",
+    "deployment.host": "vercel",
+    "deployment.ci": "github_actions",
+    "surface.policy_pages": [
+      "cookie_consent_banner",
+      "privacy_policy",
+      "terms_of_service"
+    ],
+    "monitoring.observability": [
+      "sentry"
+    ],
+    "assets.brand_checklist": [
+      "logo"
+    ],
+    "assets.stock": [
+      "unsplash",
+      "pexels"
+    ],
+    "design.icons": "lucide"
+  }
+}
