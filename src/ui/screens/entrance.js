@@ -5,9 +5,57 @@
 
 import { LitElement, html } from 'lit';
 
+const DESKTOP_SPATIAL_FIELD_QUERY = '(min-width: 861px)';
+
+function canShowCrane() {
+  return typeof window === 'undefined' ||
+    !window.matchMedia ||
+    window.matchMedia(DESKTOP_SPATIAL_FIELD_QUERY).matches;
+}
+
 class SqEntrance extends LitElement {
+  static properties = {
+    _showCrane: { state: true },
+  };
+
   createRenderRoot() {
     return this;
+  }
+
+  constructor() {
+    super();
+    this._showCrane = canShowCrane();
+    this._craneQuery = null;
+    this._onCraneQuery = this._onCraneQuery.bind(this);
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    if (typeof window !== 'undefined' && window.matchMedia) {
+      this._craneQuery = window.matchMedia(DESKTOP_SPATIAL_FIELD_QUERY);
+      this._showCrane = this._craneQuery.matches;
+      if (this._craneQuery.addEventListener) {
+        this._craneQuery.addEventListener('change', this._onCraneQuery);
+      } else if (this._craneQuery.addListener) {
+        this._craneQuery.addListener(this._onCraneQuery);
+      }
+    }
+  }
+
+  disconnectedCallback() {
+    if (this._craneQuery) {
+      if (this._craneQuery.removeEventListener) {
+        this._craneQuery.removeEventListener('change', this._onCraneQuery);
+      } else if (this._craneQuery.removeListener) {
+        this._craneQuery.removeListener(this._onCraneQuery);
+      }
+    }
+    this._craneQuery = null;
+    super.disconnectedCallback();
+  }
+
+  _onCraneQuery(e) {
+    this._showCrane = e.matches;
   }
 
   _nav(to) {
@@ -21,7 +69,7 @@ class SqEntrance extends LitElement {
   render() {
     return html`
       <section id="main-content" class="entrance" role="main" tabindex="-1">
-        <sq-spatial-field></sq-spatial-field>
+        <sq-spatial-field .crane=${this._showCrane}></sq-spatial-field>
 
         <div class="ent-wrap">
           <h1 class="ent-wordmark vt"><span>staq</span><span class="signal">paq</span></h1>

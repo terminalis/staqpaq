@@ -83,6 +83,8 @@ class SqSpatialField extends LitElement {
   static properties = {
     // Set to render one static frame and run no loop.
     static: { type: Boolean, reflect: true },
+    // Draw the crane-specific structure. Disabled on mobile while retaining the field reveal.
+    crane: { type: Boolean, reflect: true },
   };
 
   createRenderRoot() {
@@ -92,6 +94,7 @@ class SqSpatialField extends LitElement {
   constructor() {
     super();
     this.static = false;
+    this.crane = true;
     this._raf = 0;
     this._w = 0;
     this._h = 0;
@@ -180,6 +183,12 @@ class SqSpatialField extends LitElement {
   _onResize() {
     this._resize();
     if (this._stopped || this._reduced || this.static) this._drawFrame(REST, true);
+  }
+
+  updated(changed) {
+    if (changed.has('crane') && (this._stopped || this._reduced || this.static)) {
+      this._drawFrame(REST, true);
+    }
   }
 
   _onPointerMove(e) {
@@ -394,35 +403,37 @@ class SqSpatialField extends LitElement {
     ctx.save();
     ctx.translate((this._ptr.x - 0.5) * 18 * par, (this._ptr.y - 0.5) * 14 * par);
 
-    // L2 — crane structure (steel members + lighter stay cables), gated by the scan
-    for (const e of this._edges) {
-      if (!final && e.lowerY * H > revealY) continue;
-      if (e.gateT < 0 && !final) e.gateT = time;
-      const d = final ? 1 : clamp((time - e.gateT) / 0.26, 0, 1);
-      const lw = e.w || 1.25;
-      if (e.cable) {
-        this._strokePolyline(ctx, e.pts, W, H, 0, 0, lw, `rgba(${C.steel},${0.5 * gA})`, d);
-      } else {
-        // faint embossed under-stroke on structural members
-        this._strokePolyline(ctx, e.pts, W, H, 1, 1, Math.max(0.5, lw * 0.4), `rgba(${C.steel},${0.22 * gA})`, d);
-        this._strokePolyline(ctx, e.pts, W, H, 0, 0, lw, `rgba(${C.steel},${0.85 * gA})`, d);
+    if (this.crane) {
+      // L2 — crane structure (steel members + lighter stay cables), gated by the scan
+      for (const e of this._edges) {
+        if (!final && e.lowerY * H > revealY) continue;
+        if (e.gateT < 0 && !final) e.gateT = time;
+        const d = final ? 1 : clamp((time - e.gateT) / 0.26, 0, 1);
+        const lw = e.w || 1.25;
+        if (e.cable) {
+          this._strokePolyline(ctx, e.pts, W, H, 0, 0, lw, `rgba(${C.steel},${0.5 * gA})`, d);
+        } else {
+          // faint embossed under-stroke on structural members
+          this._strokePolyline(ctx, e.pts, W, H, 1, 1, Math.max(0.5, lw * 0.4), `rgba(${C.steel},${0.22 * gA})`, d);
+          this._strokePolyline(ctx, e.pts, W, H, 0, 0, lw, `rgba(${C.steel},${0.85 * gA})`, d);
+        }
       }
-    }
 
-    // L3 — part-node ticket stamps (gated by the scan)
-    for (const n of this._nodes) {
-      if (!final && n.y * H > revealY) continue;
-      if (n._gateT == null && !final) n._gateT = time;
-      const s = final ? 1 : pop((time - (n._gateT ?? time)) / 0.22);
-      this._drawStamp(ctx, n, s, gA, time, final, C);
-    }
+      // L3 — part-node ticket stamps (gated by the scan)
+      for (const n of this._nodes) {
+        if (!final && n.y * H > revealY) continue;
+        if (n._gateT == null && !final) n._gateT = time;
+        const s = final ? 1 : pop((time - (n._gateT ?? time)) / 0.22);
+        this._drawStamp(ctx, n, s, gA, time, final, C);
+      }
 
-    // L4 — signal beam (traversing) then frozen highlights (at rest)
-    if (!final && !this._stopped && time >= BEAM_START && this._beamPath.length) {
-      const bp = clamp((time - BEAM_START) / BEAM_DUR, 0, 1);
-      this._drawBeam(ctx, W, H, bp, gA, C);
+      // L4 — signal beam (traversing) then frozen highlights (at rest)
+      if (!final && !this._stopped && time >= BEAM_START && this._beamPath.length) {
+        const bp = clamp((time - BEAM_START) / BEAM_DUR, 0, 1);
+        this._drawBeam(ctx, W, H, bp, gA, C);
+      }
+      this._drawFrozen(ctx, W, H, settle, gA, C);
     }
-    this._drawFrozen(ctx, W, H, settle, gA, C);
 
     ctx.restore();
 
