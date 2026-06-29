@@ -329,7 +329,13 @@ sq-app { display: block; min-height: 100vh; }
 }
 
 @media (max-width: 520px) {
-  .ent-foot { align-items: flex-start; flex-direction: column; gap: 4px; }
+  .ent-foot {
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 10px;
+    justify-content: space-between;
+  }
   .panel-foot .spacer { display: none; }
   .panel-foot .step { width: 100%; }
   .panel-nav-actions { width: 100%; }
