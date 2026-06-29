@@ -38,9 +38,27 @@ sq-app { display: block; min-height: 100vh; }
 .ent-howto p { margin: 0; color: var(--paper-dim); font-size: 14px; line-height: 1.6; }
 
 .ent-foot { display: flex; justify-content: space-between; gap: 16px; margin-top: 54px; border-top: 1px solid var(--rule); padding-top: 16px; }
+.ent-foot-action,
+.ent-foot-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--paper-dim);
+  font: inherit;
+  cursor: pointer;
+}
+.ent-foot-action:hover,
+.ent-foot-link:hover { color: var(--paper); }
+.ent-foot-action sq-icon,
+.ent-foot-link sq-icon { flex: 0 0 auto; font-size: 14px; }
 
 /* --- workspace shell ------------------------------------------------------- */
 .workspace { display: grid; grid-template-columns: var(--rail) 1fr; min-height: 100vh; position: relative; }
+.workspace-reveal { display: contents; }
 /* grid children must be allowed to shrink below content size, else the section
    stepper's nowrap items would expand the column and overflow the page. */
 .shell-rail, .shell-main { min-width: 0; }
@@ -202,6 +220,7 @@ sq-app { display: block; min-height: 100vh; }
   100% { transform: translateY(100vh); opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .workspace[data-enter] .workspace-reveal,
   .workspace[data-enter] .shell-main,
   .workspace[data-enter] .shell-rail { animation: none; }
   .workspace[data-enter] .scanline { display: none; }
@@ -228,6 +247,17 @@ sq-app { display: block; min-height: 100vh; }
 .bp-titleblock .tb-cell { display: flex; flex-direction: column; gap: 4px; padding: 9px 12px; border-right: 1px solid var(--bp-line); min-width: 0; }
 .bp-titleblock .tb-cell:first-child { grid-column: 1 / -1; border-right: 0; border-bottom: 1px solid var(--bp-line); }
 .bp-titleblock .tb-cell:last-child { border-right: 0; }
+.bp-titleblock button.tb-cell {
+  width: 100%;
+  border-top: 0;
+  border-left: 0;
+  background: none;
+  text-align: left;
+  color: inherit;
+  font-family: var(--font-mono);
+  cursor: pointer;
+}
+.bp-titleblock button.tb-cell:hover .tb-v { color: var(--signal); }
 .bp-titleblock .tb-k { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--paper-faint); }
 .bp-titleblock .tb-v { font-size: 12px; letter-spacing: 0.04em; color: var(--paper); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
@@ -248,9 +278,10 @@ sq-app { display: block; min-height: 100vh; }
 .cfg-frame { display: block; padding: 22px 26px 6px; margin-top: 6px; }
 .cfg-frame sq-field:first-of-type { padding-top: 4px; }
 
-.panel-foot { display: flex; align-items: center; gap: 14px; margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--rule); }
-.panel-foot .spacer { flex: 1; }
+.panel-foot { display: flex; align-items: center; gap: 14px; margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--rule); flex-wrap: wrap; }
+.panel-foot .spacer { flex: 1 1 auto; }
 .panel-foot .step { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--paper-faint); }
+.panel-nav-actions { display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
 
 /* --- review & export ------------------------------------------------------- */
 .rev-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-bottom: 26px; }
@@ -272,6 +303,19 @@ sq-app { display: block; min-height: 100vh; }
 /* --- responsive: rail collapses to a tap-to-open section index ------------- */
 @media (max-width: 860px) {
   .workspace { grid-template-columns: 1fr; }
+  .workspace-reveal {
+    display: grid;
+    grid-template-columns: 1fr;
+    min-height: 100vh;
+  }
+  .workspace[data-enter] .workspace-reveal {
+    animation: sq-reveal-col var(--t-reveal) var(--ease-reveal) backwards;
+  }
+  .workspace[data-enter] .shell-main,
+  .workspace[data-enter] .shell-rail {
+    animation: none;
+    clip-path: none;
+  }
   .shell-rail { border-right: 0; border-bottom: 1px solid var(--bp-line); }
   /* swap the vertical rail list for the compact position bar + index sheet */
   .section-nav { display: none; }
@@ -282,4 +326,12 @@ sq-app { display: block; min-height: 100vh; }
   /* tighter sheet on phones */
   .sheet { margin: var(--sp-3); }
   .cfg-panel, .rev-panel { padding: 24px var(--sp-4) 60px; }
+}
+
+@media (max-width: 520px) {
+  .ent-foot { align-items: flex-start; flex-direction: column; gap: 4px; }
+  .panel-foot .spacer { display: none; }
+  .panel-foot .step { width: 100%; }
+  .panel-nav-actions { width: 100%; }
+  .panel-nav-actions .btn { flex: 1 1 0; justify-content: center; min-width: 0; padding-inline: 12px; }
 }

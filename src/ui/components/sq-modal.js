@@ -4,7 +4,7 @@
 // enforced by the orchestrator. Presentation only, no authority.
 // (ux-design.yaml :: edge_states — destructive actions use a modal confirmation)
 
-import { LitElement, html } from 'lit';
+import { LitElement, html, nothing } from 'lit';
 
 class SqModal extends LitElement {
   static properties = {
@@ -12,6 +12,11 @@ class SqModal extends LitElement {
     title: { type: String },
     body: { type: String },
     confirmLabel: { type: String, attribute: 'confirm-label' },
+    prompt: { type: Boolean },
+    value: { type: String },
+    inputLabel: { type: String, attribute: 'input-label' },
+    placeholder: { type: String },
+    error: { type: String },
   };
 
   createRenderRoot() {
@@ -21,6 +26,11 @@ class SqModal extends LitElement {
   constructor() {
     super();
     this.open = false;
+    this.prompt = false;
+    this.value = '';
+    this.inputLabel = '';
+    this.placeholder = '';
+    this.error = '';
     this._previousFocus = null;
     this._inerted = [];
     this._onKey = this._onKey.bind(this);
@@ -43,9 +53,23 @@ class SqModal extends LitElement {
     if (e.key === 'Tab') this._trapFocus(e);
   }
 
-  _emit(name) {
-    this._releaseFocus();
-    this.dispatchEvent(new CustomEvent(name, { bubbles: true, composed: true }));
+  _emit(name, detail = {}, releaseFocus = true) {
+    if (releaseFocus) this._releaseFocus();
+    this.dispatchEvent(new CustomEvent(name, { bubbles: true, composed: true, detail }));
+  }
+
+  _confirm() {
+    if (!this.prompt) {
+      this._emit('sq-modal-confirm');
+      return;
+    }
+    const input = this.querySelector('.sq-modal-input');
+    this._emit('sq-modal-confirm', { value: input ? input.value : '' }, false);
+  }
+
+  _submitPrompt(e) {
+    e.preventDefault();
+    this._confirm();
   }
 
   firstUpdated() {
@@ -53,9 +77,13 @@ class SqModal extends LitElement {
   }
 
   updated(changed) {
-    if (!changed.has('open')) return;
-    if (this.open) this._activateFocus();
-    else this._releaseFocus();
+    if (changed.has('open')) {
+      if (this.open) this._activateFocus();
+      else this._releaseFocus();
+    }
+    if (changed.has('error') && this.open && this.error) {
+      queueMicrotask(() => this.querySelector('.sq-modal-input')?.focus());
+    }
   }
 
   _focusable() {
@@ -142,12 +170,36 @@ class SqModal extends LitElement {
         <sq-ticket class="sq-modal" role="dialog" aria-modal="true" aria-label=${this.title || 'Confirm'} tabindex="-1">
           <div class="m-title vt">${this.title}</div>
           <p class="m-body">${this.body}</p>
-          <div class="m-actions">
-            <button class="btn ghost" @click=${() => this._emit('sq-modal-cancel')}>Cancel</button>
-            <button class="btn primary" @click=${() => this._emit('sq-modal-confirm')}>
-              ${this.confirmLabel || 'Confirm'}
-            </button>
-          </div>
+          ${this.prompt
+            ? html`
+                <form class="m-form" @submit=${this._submitPrompt}>
+                  <label class="m-label" for="sq-modal-input">${this.inputLabel || 'Value'}</label>
+                  <input
+                    id="sq-modal-input"
+                    class="sq-text-input sq-modal-input"
+                    type="text"
+                    .value=${this.value || ''}
+                    placeholder=${this.placeholder || ''}
+                    aria-invalid=${this.error ? 'true' : 'false'}
+                    aria-describedby=${this.error ? 'sq-modal-input-error' : nothing}
+                  />
+                  ${this.error
+                    ? html`<div id="sq-modal-input-error" class="sq-error">${this.error}</div>`
+                    : ''}
+                  <div class="m-actions">
+                    <button type="button" class="btn ghost" @click=${() => this._emit('sq-modal-cancel')}>Cancel</button>
+                    <button type="submit" class="btn primary">${this.confirmLabel || 'Save'}</button>
+                  </div>
+                </form>
+              `
+            : html`
+                <div class="m-actions">
+                  <button type="button" class="btn ghost" @click=${() => this._emit('sq-modal-cancel')}>Cancel</button>
+                  <button type="button" class="btn primary" @click=${this._confirm}>
+                    ${this.confirmLabel || 'Confirm'}
+                  </button>
+                </div>
+              `}
         </sq-ticket>
       </div>
     `;

@@ -37,6 +37,8 @@ class SqApp extends LitElement {
     _active: { state: true }, // section id | 'review'
     _m: { state: true }, // read-model snapshot
     _modal: { state: true }, // { capabilityId, input, token } | null
+    _projectPrompt: { state: true },
+    _projectPromptError: { state: true },
     _toast: { state: true },
     _booted: { state: true },
   };
@@ -51,6 +53,8 @@ class SqApp extends LitElement {
     this._active = null;
     this._m = null;
     this._modal = null;
+    this._projectPrompt = false;
+    this._projectPromptError = '';
     this._toast = '';
     this._booted = false;
   }
@@ -76,8 +80,14 @@ class SqApp extends LitElement {
     this.addEventListener('sq-load-sample', () => this._run('load_sample', {}));
     this.addEventListener('sq-reset', () => this._run('reset_draft', {}));
     this.addEventListener('sq-export', (e) => this._onExport(e.detail.scope));
-    this.addEventListener('sq-modal-confirm', () => this._onModalConfirm());
-    this.addEventListener('sq-modal-cancel', () => { this._modal = null; });
+    this.addEventListener('sq-modal-confirm', (e) => this._onModalConfirm(e));
+    this.addEventListener('sq-modal-cancel', () => {
+      if (this._projectPrompt) {
+        this._projectPrompt = false;
+        this._projectPromptError = '';
+      }
+      else this._modal = null;
+    });
 
     await facade.boot();
     this.refresh();
@@ -107,7 +117,18 @@ class SqApp extends LitElement {
     this._afterMutation(capabilityId, res);
   }
 
-  async _onModalConfirm() {
+  async _onModalConfirm(e) {
+    if (this._projectPrompt) {
+      const value = e.detail && typeof e.detail.value === 'string' ? e.detail.value.trim() : '';
+      if (!value) {
+        this._projectPromptError = 'Project name is required.';
+        return;
+      }
+      this._projectPrompt = false;
+      this._projectPromptError = '';
+      await this._run('set_custom_value', { path: 'project.name', value });
+      return;
+    }
     const m = this._modal;
     if (!m) return;
     const res = await facade.invokeIntent(m.capabilityId, m.input, m.token);
@@ -172,7 +193,26 @@ class SqApp extends LitElement {
     return ps ? ps.pct : 0;
   }
 
+  _openProjectPrompt() {
+    this._projectPrompt = true;
+    this._projectPromptError = '';
+  }
+
   _renderModal() {
+    if (this._projectPrompt) {
+      const name = (this._m && (this._m.entity.selections['project.name'] || this._m.entity.selections['project.name.custom'])) || '';
+      return html`<sq-modal
+        open
+        prompt
+        title="Edit project name"
+        body="Add or change the name used in the manifest and exported pack."
+        input-label="Project name"
+        placeholder="e.g. Acme Analytics"
+        value=${name}
+        error=${this._projectPromptError}
+        confirm-label="Save name"
+      ></sq-modal>`;
+    }
     if (!this._modal) return html``;
     const copy = CONFIRM_COPY[this._modal.capabilityId] || { title: 'Confirm?', body: '', confirmLabel: 'Confirm' };
     return html`<sq-modal open title=${copy.title} body=${copy.body} confirm-label=${copy.confirmLabel}></sq-modal>`;
@@ -202,6 +242,7 @@ class SqApp extends LitElement {
     return html`
       <div class="workspace" data-enter>
         <div class="scanline" aria-hidden="true"></div>
+        <div class="workspace-reveal">
         <aside class="shell-rail">
           <div class="bp-titleblock">
             <button class="tb-brand" @click=${() => this._onNav('entrance')} title="Back to entrance">
@@ -209,7 +250,15 @@ class SqApp extends LitElement {
               <span class="tb-meta">build manifest</span>
             </button>
             <div class="tb-grid">
-              <div class="tb-cell"><span class="tb-k">project</span><span class="tb-v">${projectName || 'untitled'}</span></div>
+              <button
+                class="tb-cell tb-project"
+                type="button"
+                title="Add or change project name"
+                aria-label="Add or change project name"
+                @click=${this._openProjectPrompt}
+              >
+                <span class="tb-k">project</span><span class="tb-v">${projectName || 'untitled'}</span>
+              </button>
               <div class="tb-cell"><span class="tb-k">sheet</span><span class="tb-v">${sheetLabel}</span></div>
               <div class="tb-cell"><span class="tb-k">readiness</span><span class="tb-v">${overallPct}%</span></div>
             </div>
@@ -239,6 +288,7 @@ class SqApp extends LitElement {
               ></sq-configurator>`}
           </div>
         </main>
+        </div>
       </div>
     `;
   }

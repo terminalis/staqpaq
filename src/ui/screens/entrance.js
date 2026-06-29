@@ -35,9 +35,6 @@ class SqEntrance extends LitElement {
             <button class="btn primary" @click=${() => this._nav('configurator')}>
               <sq-icon name="solar:bolt-circle-bold"></sq-icon> generate staqpaq
             </button>
-            <button class="btn ghost" @click=${this._loadSample}>
-              <sq-icon name="solar:folder-with-files-bold"></sq-icon> Load sample
-            </button>
           </div>
 
           <div class="ent-howto">
@@ -50,8 +47,19 @@ class SqEntrance extends LitElement {
           </div>
 
           <div class="ent-foot">
-            <span class="eyebrow">app stack · bill of materials</span>
-            <span class="eyebrow">Configure · Build · Manifest</span>
+            <button class="ent-foot-action eyebrow" type="button" @click=${this._loadSample}>
+              <sq-icon name="solar:folder-with-files-bold"></sq-icon>
+              <span>Load Sample</span>
+            </button>
+            <a
+              class="ent-foot-link eyebrow"
+              href="https://github.com/terminalis/staqpaq"
+              target="_blank"
+              rel="noopener"
+            >
+              <span>Github</span>
+              <sq-icon name="solar:arrow-right-linear"></sq-icon>
+            </a>
           </div>
         </div>
       </section>

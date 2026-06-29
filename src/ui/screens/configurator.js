@@ -61,17 +61,19 @@ class SqConfigurator extends LitElement {
         </sq-ticket>
 
         <div class="panel-foot">
-          ${this.sectionIndex > 0
-            ? html`<button class="btn ghost" @click=${() => this._nav('prev')}>
-                <sq-icon name="solar:arrow-left-linear"></sq-icon> Back
-              </button>`
-            : ''}
-          <button class="btn primary" @click=${() => this._nav('next')}>
-            ${last ? 'Review & Export' : 'Next'}
-            <sq-icon name="solar:arrow-right-bold"></sq-icon>
-          </button>
-          <span class="spacer"></span>
           <span class="step">${s.number} / ${this.sectionTotal} · autosaved</span>
+          <span class="spacer"></span>
+          <div class="panel-nav-actions">
+            ${this.sectionIndex > 0
+              ? html`<button class="btn ghost" @click=${() => this._nav('prev')}>
+                  <sq-icon name="solar:arrow-left-linear"></sq-icon> Back
+                </button>`
+              : ''}
+            <button class="btn primary" @click=${() => this._nav('next')}>
+              ${last ? 'Review & Export' : 'Next'}
+              <sq-icon name="solar:arrow-right-bold"></sq-icon>
+            </button>
+          </div>
         </div>
       </div>
     `;
