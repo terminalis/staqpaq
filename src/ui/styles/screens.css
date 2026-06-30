@@ -18,44 +18,6 @@ sq-app { display: block; min-height: 100vh; }
 }
 .boot-note { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--paper-dim); }
 
-/* --- entrance -------------------------------------------------------------- */
-.entrance { position: relative; min-height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
-
-.ent-wrap {
-  position: relative; z-index: 2;
-  max-width: var(--maxw); width: 100%; margin: 0 auto; flex: 1;
-  display: flex; flex-direction: column; justify-content: center;
-  padding: 40px var(--gut) 80px;
-}
-.ent-wordmark { font-size: clamp(72px, 15vw, 168px); line-height: 0.84; letter-spacing: 0.01em; margin: 0; }
-.ent-promise { max-width: 620px; color: var(--paper-dim); font-size: 16px; line-height: 1.55; margin: 22px 0 30px; }
-.ent-promise b { color: var(--paper); font-weight: 400; }
-.ent-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 54px; }
-
-/* plain "how it works" copy (replaces the old animated select→derive→export pipeline) */
-.ent-howto { max-width: 600px; }
-.ent-howto-label { display: block; color: var(--paper-faint); margin-bottom: 8px; }
-.ent-howto p { margin: 0; color: var(--paper-dim); font-size: 14px; line-height: 1.6; }
-
-.ent-foot { display: flex; justify-content: space-between; gap: 16px; margin-top: 54px; border-top: 1px solid var(--rule); padding-top: 16px; }
-.ent-foot-action,
-.ent-foot-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--paper-dim);
-  font: inherit;
-  cursor: pointer;
-}
-.ent-foot-action:hover,
-.ent-foot-link:hover { color: var(--paper); }
-.ent-foot-action sq-icon,
-.ent-foot-link sq-icon { flex: 0 0 auto; font-size: 14px; }
-
 /* --- workspace shell ------------------------------------------------------- */
 .workspace { display: grid; grid-template-columns: var(--rail) 1fr; min-height: 100vh; position: relative; }
 .workspace-reveal { display: contents; }
@@ -89,8 +51,6 @@ sq-app { display: block; min-height: 100vh; }
 }
 /* the staqpaq boot logotype stays signal-blue */
 .boot .vt { color: var(--signal); }
-/* Entrance hero wordmark is the blue-cream body color, both "staq" and "paq". */
-.ent-wordmark, .ent-wordmark .signal { color: var(--paper); }
 /* reset action — directly under the title-block header, aligned to its inset */
 .rail-actions { padding: 0 16px 14px; }
 .rail-reset { width: 100%; min-height: 44px; justify-content: center; border-color: var(--rule); color: var(--paper); font-size: 12px; }
@@ -184,10 +144,9 @@ sq-app { display: block; min-height: 100vh; }
 .sheet { position: relative; flex: 1; display: flex; flex-direction: column; margin: var(--gut); }
 .cfg-panel, .rev-panel { position: relative; z-index: 1; width: 100%; margin: 0 auto; padding: 30px var(--sp-6) 70px; flex: 1; }
 
-/* --- workspace entrance · scanline curtain --------------------------------- */
-/* Fires once when .workspace mounts (entrance->workspace). The shell is reused
-   across section changes, so this never replays mid-session. Echoes the entrance
-   crane scan. */
+/* --- workspace · scanline curtain reveal ----------------------------------- */
+/* Fires once when .workspace mounts (i.e. on load). The shell is reused
+   across section changes, so this never replays mid-session. */
 /* BOTH columns clip-path uncover top->bottom, so below the scanline they're
    transparent and the page background (body::before — the dot grid) shows through;
    above the line the full workspace is revealed. `backwards` fill keeps them clipped
@@ -233,13 +192,15 @@ sq-app { display: block; min-height: 100vh; }
   border: 1px solid var(--bp-line);
   background: none;
 }
-/* brand row is a button → back to entrance; mark stacked over the meta so it
+/* brand row links to the source repo; mark stacked over the meta so it
    never overflows the narrow rail */
 .bp-titleblock .tb-brand {
   display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
-  width: 100%; padding: 9px 12px; background: none; border: 0;
-  border-bottom: 1px solid var(--bp-line); cursor: pointer; text-align: left;
+  width: 100%; padding: 9px 12px;
+  border-bottom: 1px solid var(--bp-line); text-align: left;
+  text-decoration: none; color: inherit; cursor: pointer;
 }
+.bp-titleblock .tb-brand:hover .tb-meta { color: var(--signal); }
 .bp-titleblock .tb-mark { font-family: var(--font-display); font-size: 24px; line-height: 1; color: var(--paper); }
 .bp-titleblock .tb-meta { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--paper-faint); }
 /* PROJECT spans the full width (row 1); SHEET + READINESS share row 2 */
@@ -329,13 +290,6 @@ sq-app { display: block; min-height: 100vh; }
 }
 
 @media (max-width: 520px) {
-  .ent-foot {
-    align-items: center;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    gap: 10px;
-    justify-content: space-between;
-  }
   .panel-foot .spacer { display: none; }
   .panel-foot .step { width: 100%; }
   .panel-nav-actions { width: 100%; }

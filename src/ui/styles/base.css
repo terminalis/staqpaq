@@ -143,14 +143,12 @@ sq-stamp[variant="optional"] { border-color: var(--steel); color: var(--paper-di
 /* --- blueprint paper · full-bleed background texture ----------------------- */
 /* One fixed layer behind ALL content, at every breakpoint (mobile included).
    A fixed pseudo-element — NOT background-attachment:fixed, which janks on
-   mobile, and NOT SVG feTurbulence, which re-rasterises per frame under the
-   animating entrance canvas and stalls the main thread. A deep-blue sheet
-   (--paper-ground): soft tonal blotches (uneven/scuffed paper) · a luminous
-   centre "well" · an edge vignette · a very faint dot grid (--grid-dot, 24px)
-   tiled UNDER the texture so it stays crisp in the calm centre and fades into
-   the dark edges. Dots only (no line grid) — far subtler in the text/option-heavy
-   workspace; the entrance's own grid is drawn by the sq-spatial-field canvas,
-   which sits over this layer and is unaffected. All cheap gradients — composited
+   mobile, and NOT SVG feTurbulence, which re-rasterises per frame and stalls
+   the main thread. A deep-blue sheet (--paper-ground): soft tonal blotches
+   (uneven/scuffed paper) · a luminous centre "well" · an edge vignette · a very
+   faint dot grid (--grid-dot, 24px) tiled UNDER the texture so it stays crisp in
+   the calm centre and fades into the dark edges. Dots only (no line grid) — far
+   subtler in the text/option-heavy workspace. All cheap gradients — composited
    once. */
 body::before {
   content: "";
