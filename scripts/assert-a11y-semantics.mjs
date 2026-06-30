@@ -87,7 +87,7 @@ mustInclude('src/ui/components/sq-modal.js', 'this._releaseFocus();\n    this.di
 // navigation once the workspace shell is visible.
 mustInclude('src/ui/app.js', 'class="skip-link"', 'app shell must render a skip link');
 mustInclude('src/ui/app.js', 'id="main-content"', 'workspace main must provide a stable skip target');
-mustInclude('src/ui/screens/entrance.js', 'role="main"', 'entrance surface must expose the page main region');
+mustInclude('src/ui/app.js', '<main id="main-content"', 'workspace must expose the page main region');
 
 // Common interactive targets should be at least 44px tall.
 requireMinHeight('src/ui/styles/base.css', '.btn', 44);

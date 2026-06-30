@@ -7,6 +7,20 @@ deterministic artifacts including `staqpaq.yaml`.
 There is no build step, server runtime, package release process, or runtime
 environment configuration.
 
+## Use it
+
+You do not need to clone or build anything to use staqpaq.
+
+- **In the browser.** Open the hosted app at <https://staqpaq.dev/> and start
+  building immediately — nothing to install.
+- **Install it (works offline).** In a supporting browser (Chrome, Edge, and
+  others), use **Install app** to add staqpaq to your device. After the first
+  load it runs **fully offline**: recording selections, deriving requirements,
+  and exporting the pack all happen locally on your machine with no network
+  connection. Only the very first load needs the internet, to cache the app.
+
+Everything below is for **developing or self-hosting** staqpaq, not for using it.
+
 ## Requirements
 
 - A current evergreen browser with native ES modules and import maps.
@@ -17,6 +31,8 @@ The app does not import from `node_modules` at runtime. Runtime libraries are
 vendored under `vendor/`.
 
 ## Run Locally
+
+For development or self-hosting. End users do not need this — see **Use it** above.
 
 ```bash
 npm run serve

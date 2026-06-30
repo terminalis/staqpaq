@@ -14,7 +14,6 @@ import { downloadPack } from './download.js';
 import './components/sq-elements.js';
 import './components/sq-section-nav.js';
 import './components/sq-modal.js';
-import './screens/entrance.js';
 import './screens/configurator.js';
 import './screens/review-export.js';
 
@@ -24,16 +23,10 @@ const CONFIRM_COPY = {
     body: 'This clears every decision and starts an empty staqpaq. This cannot be undone.',
     confirmLabel: 'Reset draft',
   },
-  load_sample: {
-    title: 'Load the sample?',
-    body: 'This replaces your current draft with the Acme Analytics sample. Your current decisions will be lost.',
-    confirmLabel: 'Load sample',
-  },
 };
 
 class SqApp extends LitElement {
   static properties = {
-    _view: { state: true }, // 'entrance' | 'workspace'
     _active: { state: true }, // section id | 'review'
     _m: { state: true }, // read-model snapshot
     _modal: { state: true }, // { capabilityId, input, token } | null
@@ -49,7 +42,6 @@ class SqApp extends LitElement {
 
   constructor() {
     super();
-    this._view = 'entrance';
     this._active = null;
     this._m = null;
     this._modal = null;
@@ -60,10 +52,9 @@ class SqApp extends LitElement {
   }
 
   updated(changed) {
-    if (this._view !== 'workspace') return;
-    const activeChanged = changed.has('_active') && changed.get('_active') !== this._active;
-    const enteredWorkspace = changed.has('_view') && changed.get('_view') !== 'workspace';
-    if (activeChanged || enteredWorkspace) this._scrollWorkspaceTop();
+    if (changed.has('_active') && changed.get('_active') !== this._active) {
+      this._scrollWorkspaceTop();
+    }
   }
 
   _scrollWorkspaceTop() {
@@ -77,7 +68,6 @@ class SqApp extends LitElement {
     this.addEventListener('sq-field-custom', (e) => this._run('set_custom_value', { path: e.detail.path, value: e.detail.value, values: e.detail.values }));
     this.addEventListener('sq-field-clear', (e) => this._run('clear_selection', { path: e.detail.path }));
     this.addEventListener('sq-nav', (e) => this._onNav(e.detail.to));
-    this.addEventListener('sq-load-sample', () => this._run('load_sample', {}));
     this.addEventListener('sq-reset', () => this._run('reset_draft', {}));
     this.addEventListener('sq-export', (e) => this._onExport(e.detail.scope));
     this.addEventListener('sq-modal-confirm', (e) => this._onModalConfirm(e));
@@ -91,8 +81,8 @@ class SqApp extends LitElement {
 
     await facade.boot();
     this.refresh();
-    this._booted = true;
     if (this._active == null) this._active = this._firstSectionId();
+    this._booted = true;
   }
 
   refresh() {
@@ -139,26 +129,20 @@ class SqApp extends LitElement {
   _afterMutation(capabilityId, res) {
     if (!res.ok) return;
     this.refresh();
-    if (capabilityId === 'load_sample') {
-      this._view = 'workspace';
-      this._active = 'review';
-    } else if (capabilityId === 'reset_draft') {
+    if (capabilityId === 'reset_draft') {
       this._active = this._firstSectionId();
     }
     this._ensureActiveValid();
   }
 
   _onNav(to) {
-    if (to === 'entrance') { this._view = 'entrance'; return; }
     if (to === 'configurator') {
-      this._view = 'workspace';
       if (!this._active || this._active === 'review') this._active = this._firstSectionId();
       return;
     }
-    if (to === 'review') { this._view = 'workspace'; this._active = 'review'; return; }
+    if (to === 'review') { this._active = 'review'; return; }
     if (to === 'next' || to === 'prev') { this._step(to); return; }
     // an explicit section id
-    this._view = 'workspace';
     this._active = to;
   }
 
@@ -245,10 +229,17 @@ class SqApp extends LitElement {
         <div class="workspace-reveal">
         <aside class="shell-rail">
           <div class="bp-titleblock">
-            <button class="tb-brand" @click=${() => this._onNav('entrance')} title="Back to entrance">
+            <a
+              class="tb-brand"
+              href="https://github.com/terminalis/staqpaq"
+              target="_blank"
+              rel="noopener"
+              title="View source on GitHub"
+              aria-label="staqpaq — view source on GitHub"
+            >
               <span class="tb-mark vt">staq<span class="signal">paq</span></span>
               <span class="tb-meta">build manifest</span>
-            </button>
+            </a>
             <div class="tb-grid">
               <button
                 class="tb-cell tb-project"
@@ -296,9 +287,6 @@ class SqApp extends LitElement {
   render() {
     if (!this._booted) {
       return html`<div class="boot"><span class="vt">staq<span class="signal">paq</span></span><span class="boot-note">booting…</span></div>`;
-    }
-    if (this._view === 'entrance') {
-      return html`${this._renderSkipLink()}<sq-entrance></sq-entrance>${this._renderModal()}`;
     }
     return html`${this._renderSkipLink()}${this._renderWorkspace()}${this._renderModal()}`;
   }

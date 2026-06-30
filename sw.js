@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'staqpaq-shell-v7';
+const CACHE_VERSION = 'staqpaq-shell-v8';
 const SHELL_PATHS = Object.freeze([
   './',
   './index.html',
@@ -31,9 +31,7 @@ const SHELL_PATHS = Object.freeze([
   './src/ui/components/sq-option.js',
   './src/ui/components/sq-readiness.js',
   './src/ui/components/sq-section-nav.js',
-  './src/ui/components/sq-spatial-field.js',
   './src/ui/components/sq-yaml-preview.js',
-  './src/ui/screens/entrance.js',
   './src/ui/screens/configurator.js',
   './src/ui/screens/review-export.js',
   './vendor/lit-core.min.js',

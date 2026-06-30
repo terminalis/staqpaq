@@ -10,4 +10,3 @@ import './sq-option.js';
 import './sq-field.js';
 import './sq-readiness.js';
 import './sq-yaml-preview.js';
-import './sq-spatial-field.js';
