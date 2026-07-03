@@ -74,6 +74,7 @@ class SqYamlPreview extends LitElement {
     value: { type: String },
     filename: { type: String },
     tag: { type: String },
+    _copied: { state: true },
   };
 
   createRenderRoot() {
@@ -85,18 +86,45 @@ class SqYamlPreview extends LitElement {
     this.value = '';
     this.filename = 'staqpaq.yaml';
     this.tag = 'canonical · derived';
+    this._copied = ''; // '' | 'copied' | 'copy blocked'
+    this._copiedTimer = 0;
+  }
+
+  // Copy the SAME façade-derived string this preview renders. Delivery only —
+  // never routed through export_pack; the preview surface stays inert.
+  async _copy() {
+    if (!this.value || !navigator.clipboard) return;
+    try {
+      await navigator.clipboard.writeText(this.value);
+      this._copied = 'copied';
+    } catch {
+      // clipboard blocked (permissions / unfocused document) — say so; the
+      // download buttons below remain the fallback
+      this._copied = 'copy blocked';
+    }
+    window.clearTimeout(this._copiedTimer);
+    this._copiedTimer = window.setTimeout(() => { this._copied = ''; }, 2000);
   }
 
   render() {
     const text = (this.value && this.value.trim()) ? this.value : EMPTY_PLACEHOLDER;
     const isEmpty = !(this.value && this.value.trim());
+    const canCopy = !isEmpty && typeof navigator !== 'undefined' && !!navigator.clipboard;
     const lines = text.split('\n');
     return html`
       <div class="yamlbox">
         <sq-ticket>
           <div class="yh">
             <span>${this.filename}</span>
-            <span>${this.tag}</span>
+            <span class="yh-side">
+              <span role="status" class="yh-copied">${this._copied}</span>
+              ${canCopy
+                ? html`<button class="yh-copy" type="button" title="Copy staqpaq.yaml to clipboard" @click=${this._copy}>
+                    <sq-icon name="solar:copy-bold"></sq-icon> copy
+                  </button>`
+                : ''}
+              <span>${this.tag}</span>
+            </span>
           </div>
           <pre class="yaml" aria-label="staqpaq.yaml preview">${
             isEmpty

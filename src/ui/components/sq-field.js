@@ -157,6 +157,7 @@ class SqField extends LitElement {
         <input
           class="sq-text-input"
           type="text"
+          maxlength="200"
           .value=${f.value ?? ''}
           placeholder=${f.placeholder ?? 'enter a value'}
           aria-label=${f.label}
@@ -183,6 +184,7 @@ class SqField extends LitElement {
           <input
             class="sq-text-input"
             type="text"
+            maxlength="32"
             .value=${shown}
             placeholder="#RRGGBB"
             aria-label=${`${f.label} hex`}
@@ -235,7 +237,7 @@ class SqField extends LitElement {
     const custom = f.custom || {};
     return html`
       <div class="field-head">
-        <span id=${this._labelId(f)} class="field-label"
+        <span id=${this._labelId(f)} class="field-label" tabindex="-1"
           >${f.label}${f.primary
             ? html`<abbr class="req-mark" title="Required">**</abbr>`
             : f.severity === 'recommended'
@@ -268,6 +270,7 @@ class SqField extends LitElement {
           <span class="pfx">custom</span>
           <input
             type="text"
+            maxlength="200"
             .value=${custom.value ?? ''}
             placeholder="value outside the curated set"
             aria-label=${`${f.label} custom value`}
@@ -286,6 +289,7 @@ class SqField extends LitElement {
               <input
                 class="custom-row"
                 type="text"
+                maxlength="200"
                 .value=${val}
                 aria-label=${`${f.label} custom value ${i + 1}`}
                 @change=${this._onCustomMulti}
@@ -306,6 +310,7 @@ class SqField extends LitElement {
           <input
             class="custom-row"
             type="text"
+            maxlength="200"
             .value=${''}
             placeholder=${values.length ? 'add another…' : 'value outside the curated set'}
             aria-label=${`${f.label} new custom value`}

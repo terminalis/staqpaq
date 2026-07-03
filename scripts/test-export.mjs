@@ -8,7 +8,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
 import { serializeYaml, buildSpecTree } from '../src/core/export/serializeYaml.js';
-import { staqpaqMd, assetChecklistMd, missingDecisionsMd, envExample, projectName } from '../src/core/export/artifacts.js';
+import { staqpaqMd, assetChecklistMd, envExample, projectName } from '../src/core/export/artifacts.js';
 import { deriveRequirements } from '../src/core/derive/deriveRequirements.js';
 const normalizationModule = await import('../src/core/selections/normalizeSelections.js').catch(() => null);
 
@@ -80,8 +80,6 @@ check('asset checklist marks have/need from brand checklist', /\[x\][^\n]*logo\.
 const md = staqpaqMd(buildSpecTree(sample, catalogue), name);
 check('staqpaq.md header + section', /# Acme Analytics/.test(md) && /## Project/.test(md));
 check('staqpaq.md one-way note', /generated one-way/i.test(md));
-const missing = missingDecisionsMd(derived.missing_decisions, name);
-check('missing-decisions.md renders', /Missing decisions/.test(missing));
 
 // hardening regressions: companion files must not let catalogue/user text create
 // extra Markdown headings, list items, or env assignments.

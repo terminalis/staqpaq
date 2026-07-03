@@ -6,7 +6,7 @@
 
 import { buildPack } from '../export/buildPack.js';
 
-const PACK_FILES = ['staqpaq.yaml', 'staqpaq.md', 'asset-checklist.md', 'missing-decisions.md', '.env.example'];
+const PACK_FILES = ['staqpaq.yaml', 'staqpaq.md', 'asset-checklist.md', '.env.example'];
 
 export function exportPack(ctx, input) {
   const scope = input && input.scope === 'pack' ? 'pack' : 'yaml';

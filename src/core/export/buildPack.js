@@ -8,7 +8,7 @@
 import { deriveRequirements } from '../derive/deriveRequirements.js';
 import { normalizeSelections } from '../selections/normalizeSelections.js';
 import { serializeYaml, buildSpecTree } from './serializeYaml.js';
-import { staqpaqMd, assetChecklistMd, missingDecisionsMd, envExample, projectName } from './artifacts.js';
+import { staqpaqMd, assetChecklistMd, envExample, projectName } from './artifacts.js';
 import { zipArtifacts } from './archive.js';
 
 /** @param {'yaml'|'pack'} scope */
@@ -24,14 +24,12 @@ export function buildPack(selections, catalogue, scope = 'yaml') {
   const tree = buildSpecTree(sel, catalogue);
   result.staqpaq_md = staqpaqMd(tree, name);
   result.asset_checklist_md = assetChecklistMd(derived.required_assets, name);
-  result.missing_decisions_md = missingDecisionsMd(derived.missing_decisions, name);
   result.env_example = envExample(derived.implied_env_vars, name);
 
   const files = {
     'staqpaq.yaml': staqpaq_yaml,
     'staqpaq.md': result.staqpaq_md,
     'asset-checklist.md': result.asset_checklist_md,
-    'missing-decisions.md': result.missing_decisions_md,
     '.env.example': result.env_example,
   };
   result.files = Object.keys(files);

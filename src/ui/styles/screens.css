@@ -248,9 +248,26 @@ sq-app { display: block; min-height: 100vh; }
 .rev-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-bottom: 26px; }
 .rev-block { }
 .block-eyebrow { margin-bottom: 12px; }
-.misslist { display: flex; flex-direction: column; gap: 9px; }
-.miss { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.block-hint { color: var(--paper-faint); font-size: 12px; letter-spacing: 0.02em; margin: -6px 0 12px; }
+.misslist { display: flex; flex-direction: column; gap: 5px; }
+/* each open recommendation is a real button that deep-links to its field */
+.miss {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 34px;
+  padding: 2px 4px;
+  font-size: 13px;
+  font-family: var(--font-mono);
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
 .miss-label { color: var(--paper); }
+.miss .miss-go { color: var(--paper-faint); opacity: 0; transition: opacity var(--t-micro); }
+.miss:hover .miss-label { color: var(--signal); }
+.miss:hover .miss-go, .miss:focus-visible .miss-go { opacity: 1; color: var(--signal); }
 
 .rev-yaml { margin-bottom: 26px; }
 .rev-derived { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-bottom: 26px; }

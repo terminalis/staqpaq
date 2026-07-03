@@ -12,7 +12,8 @@ class SqReviewExport extends LitElement {
     requirements: { type: Object },
     yaml: { type: String },
     sectionTitles: { type: Object },
-    toast: { type: String },
+    sectionOf: { type: Object }, // field path -> owning section id (view-model map)
+    toast: { type: Object }, // { kind: 'ok'|'error', text } | null
   };
 
   createRenderRoot() {
@@ -23,11 +24,21 @@ class SqReviewExport extends LitElement {
     this.dispatchEvent(new CustomEvent('sq-export', { bubbles: true, composed: true, detail: { scope } }));
   }
 
+  _openRecommendation(m) {
+    const to = (this.sectionOf || {})[m.path];
+    if (!to) return;
+    this.dispatchEvent(new CustomEvent('sq-nav', { bubbles: true, composed: true, detail: { to, focusPath: m.path } }));
+  }
+
+  _dismissToast() {
+    this.dispatchEvent(new CustomEvent('sq-toast-dismiss', { bubbles: true, composed: true }));
+  }
+
   _readinessMeta(req) {
     const total = req.readiness.per_section.length;
     const done = req.readiness.per_section.filter((p) => p.pct === 100).length;
     const reqd = req.missing_decisions.filter((m) => m.severity === 'recommended').length;
-    return `${done} of ${total} sections · ${reqd} recommended gap${reqd === 1 ? '' : 's'}`;
+    return `${done} of ${total} sections · ${reqd} open recommendation${reqd === 1 ? '' : 's'}`;
   }
 
   render() {
@@ -59,17 +70,24 @@ class SqReviewExport extends LitElement {
           </div>
 
           <div class="rev-block">
-            <div class="block-eyebrow eyebrow">Missing decisions</div>
+            <div class="block-eyebrow eyebrow">Open recommendations</div>
+            <p class="block-hint">Suggested by the catalogue — leave open if not relevant. Tap one to jump to it.</p>
             ${req.missing_decisions.length
               ? html`<div class="misslist">
                   ${req.missing_decisions.map(
-                    (m) => html`<div class="miss">
-                      <sq-stamp variant="required">${m.severity}</sq-stamp>
+                    (m) => html`<button
+                      type="button"
+                      class="miss"
+                      title=${`Go to ${m.label}`}
+                      @click=${() => this._openRecommendation(m)}
+                    >
+                      <sq-stamp variant=${m.severity}>${m.severity}</sq-stamp>
                       <span class="miss-label">${m.label}</span>
-                    </div>`,
+                      <sq-icon class="miss-go" name="solar:arrow-right-linear" aria-hidden="true"></sq-icon>
+                    </button>`,
                   )}
                 </div>`
-              : html`<div class="sq-empty">All recommended decisions are resolved.</div>`}
+              : html`<div class="sq-empty">Nothing open — all recommendations are decided.</div>`}
           </div>
         </div>
 
@@ -102,7 +120,6 @@ class SqReviewExport extends LitElement {
           <div class="f"><sq-icon name="solar:document-text-bold" style="color:var(--signal)"></sq-icon><span class="nm">staqpaq.yaml</span><span class="canon">canonical</span></div>
           <div class="f"><sq-icon name="solar:document-bold" style="color:var(--paper-dim)"></sq-icon><span class="nm">staqpaq.md</span><span class="tag">companion</span></div>
           <div class="f"><sq-icon name="solar:checklist-minimalistic-bold" style="color:var(--paper-dim)"></sq-icon><span class="nm">asset-checklist.md</span><span class="tag">companion</span></div>
-          <div class="f"><sq-icon name="solar:list-check-bold" style="color:var(--paper-dim)"></sq-icon><span class="nm">missing-decisions.md</span><span class="tag">companion</span></div>
           <div class="f"><sq-icon name="solar:settings-bold" style="color:var(--paper-dim)"></sq-icon><span class="nm">.env.example</span><span class="tag">companion</span></div>
         </div>
 
@@ -113,7 +130,15 @@ class SqReviewExport extends LitElement {
           <button class="btn ghost" @click=${() => this._export('pack')}>
             <sq-icon name="solar:archive-down-minimlistic-bold"></sq-icon> Full pack zip
           </button>
-          ${this.toast ? html`<span class="sq-toast"><sq-icon name="solar:check-circle-bold"></sq-icon> ${this.toast}</span>` : ''}
+          <div class="sq-toast-region" role="status">
+            ${this.toast && this.toast.text
+              ? html`<span class="sq-toast" data-kind=${this.toast.kind || 'ok'}>
+                  <sq-icon name=${this.toast.kind === 'error' ? 'solar:close-circle-linear' : 'solar:check-circle-bold'}></sq-icon>
+                  ${this.toast.text}
+                  <button class="toast-x" type="button" aria-label="Dismiss notification" @click=${this._dismissToast}>✕</button>
+                </span>`
+              : ''}
+          </div>
         </div>
       </div>
     `;

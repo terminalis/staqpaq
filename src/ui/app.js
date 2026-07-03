@@ -47,7 +47,9 @@ class SqApp extends LitElement {
     this._modal = null;
     this._projectPrompt = false;
     this._projectPromptError = '';
-    this._toast = '';
+    this._toast = null; // { kind: 'ok'|'error', text } | null
+    this._toastTimer = 0;
+    this._pendingFocusPath = null;
     this._booted = false;
   }
 
@@ -55,6 +57,7 @@ class SqApp extends LitElement {
     if (changed.has('_active') && changed.get('_active') !== this._active) {
       this._scrollWorkspaceTop();
     }
+    if (this._pendingFocusPath) this._focusPendingField();
   }
 
   _scrollWorkspaceTop() {
@@ -67,9 +70,13 @@ class SqApp extends LitElement {
     this.addEventListener('sq-field-input', (e) => this._run('set_custom_value', { path: e.detail.path, value: e.detail.value }));
     this.addEventListener('sq-field-custom', (e) => this._run('set_custom_value', { path: e.detail.path, value: e.detail.value, values: e.detail.values }));
     this.addEventListener('sq-field-clear', (e) => this._run('clear_selection', { path: e.detail.path }));
-    this.addEventListener('sq-nav', (e) => this._onNav(e.detail.to));
+    this.addEventListener('sq-nav', (e) => this._onNav(e.detail.to, e.detail.focusPath));
     this.addEventListener('sq-reset', () => this._run('reset_draft', {}));
     this.addEventListener('sq-export', (e) => this._onExport(e.detail.scope));
+    this.addEventListener('sq-toast-dismiss', () => {
+      window.clearTimeout(this._toastTimer);
+      this._toast = null;
+    });
     this.addEventListener('sq-modal-confirm', (e) => this._onModalConfirm(e));
     this.addEventListener('sq-modal-cancel', () => {
       if (this._projectPrompt) {
@@ -135,7 +142,8 @@ class SqApp extends LitElement {
     this._ensureActiveValid();
   }
 
-  _onNav(to) {
+  _onNav(to, focusPath) {
+    this._pendingFocusPath = focusPath || null;
     if (to === 'configurator') {
       if (!this._active || this._active === 'review') this._active = this._firstSectionId();
       return;
@@ -144,6 +152,31 @@ class SqApp extends LitElement {
     if (to === 'next' || to === 'prev') { this._step(to); return; }
     // an explicit section id
     this._active = to;
+    if (focusPath) this.requestUpdate(); // ensure a focus pass even when already on the section
+  }
+
+  // After a deep link (an open recommendation) the target section renders in a
+  // child component; poll briefly until the field label exists, then move
+  // focus and bring it into view. setTimeout (not rAF) so it also completes in
+  // backgrounded tabs. View behavior only — no state involved.
+  _focusPendingField(attempt = 0) {
+    const path = this._pendingFocusPath;
+    if (!path) return;
+    const slug = String(path).replace(/[^a-z0-9_-]+/gi, '-');
+    const label = this.querySelector(`#sq-field-label-${slug}`);
+    if (!label) {
+      if (attempt < 15) window.setTimeout(() => this._focusPendingField(attempt + 1), 32);
+      else this._pendingFocusPath = null;
+      return;
+    }
+    this._pendingFocusPath = null;
+    label.focus({ preventScroll: true });
+    label.scrollIntoView({ block: 'start' });
+    const field = label.closest('sq-field');
+    if (field) {
+      field.classList.add('field-flash');
+      window.setTimeout(() => field.classList.remove('field-flash'), 1300);
+    }
   }
 
   _step(dir) {
@@ -162,13 +195,17 @@ class SqApp extends LitElement {
     if (!secs.find((s) => s.id === this._active)) this._active = this._firstSectionId();
   }
 
+  _showToast(kind, text, ms) {
+    window.clearTimeout(this._toastTimer);
+    this._toast = { kind, text };
+    if (ms) this._toastTimer = window.setTimeout(() => { this._toast = null; }, ms);
+  }
+
   async _onExport(scope) {
     const res = await facade.invokeIntent('export_pack', { scope }); // passes ONLY scope
     if (res.ok) {
       downloadPack(res.result);
-      this._toast = scope === 'pack' ? 'Pack exported' : 'staqpaq.yaml exported';
-      this.requestUpdate();
-      window.setTimeout(() => { this._toast = ''; this.requestUpdate(); }, 2600);
+      this._showToast('ok', scope === 'pack' ? 'Pack exported' : 'staqpaq.yaml exported', 6000);
     }
   }
 
@@ -209,7 +246,11 @@ class SqApp extends LitElement {
   _renderWorkspace() {
     const m = this._m;
     const sectionTitles = {};
-    for (const s of m.catalogueView.sections) sectionTitles[s.id] = s.title;
+    const sectionOf = {}; // field path -> owning section id (for deep links)
+    for (const s of m.catalogueView.sections) {
+      sectionTitles[s.id] = s.title;
+      for (const f of s.fields || []) sectionOf[f.path] = s.id;
+    }
     const items = m.catalogueView.sections.map((s) => ({
       id: s.id, number: s.number, title: s.title,
       resolved: s.resolvedCount, total: s.fieldCount,
@@ -225,6 +266,7 @@ class SqApp extends LitElement {
 
     return html`
       <div class="workspace" data-enter>
+        <h1 class="sr-only">staqpaq — application build-manifest generator</h1>
         <div class="scanline" aria-hidden="true"></div>
         <div class="workspace-reveal">
         <aside class="shell-rail">
@@ -269,6 +311,7 @@ class SqApp extends LitElement {
                 .requirements=${m.requirements}
                 .yaml=${m.yaml}
                 .sectionTitles=${sectionTitles}
+                .sectionOf=${sectionOf}
                 .toast=${this._toast}
               ></sq-review-export>`
             : html`<sq-configurator

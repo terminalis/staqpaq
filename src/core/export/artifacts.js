@@ -3,8 +3,11 @@
 //
 //   staqpaq.md          - human-readable, generated one-way from the yaml tree
 //   asset-checklist.md  - actual brand-asset files only
-//   missing-decisions.md- unresolved required decisions only
 //   .env.example        - env vars from selected providers only
+//
+// missing-decisions.md was retired from the pack: "missing" asserted gaps the
+// user may have left open deliberately (severity is the catalogue's opinion,
+// not the project's). Open recommendations remain an in-app review aid only.
 
 const TITLES = {
   project: 'Project', business: 'Business Model', frontend: 'Frontend',
@@ -83,28 +86,6 @@ export function assetChecklistMd(requiredAssets, name) {
     }
   }
   return out.join('\n') + '\n';
-}
-
-/** missing-decisions.md - unresolved required decisions only, by severity. */
-export function missingDecisionsMd(missing, name) {
-  const out = [
-    `# Missing decisions \u2014 ${inlineText(name)}`,
-    '',
-    'Unresolved recommended decisions. Resolve these in staqpaq before handing off.',
-    '',
-  ];
-  if (!missing.length) {
-    out.push('All recommended decisions are resolved.');
-    return out.join('\n') + '\n';
-  }
-  for (const sev of ['recommended']) {
-    const group = missing.filter((m) => m.severity === sev);
-    if (!group.length) continue;
-    out.push(`## ${sev.charAt(0).toUpperCase() + sev.slice(1)}`, '');
-    for (const m of group) out.push(`- ${inlineText(m.label)} (\`${codeText(m.path)}\`)`);
-    out.push('');
-  }
-  return out.join('\n');
 }
 
 /** .env.example - env vars from selected providers only. */
