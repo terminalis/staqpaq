@@ -8,7 +8,10 @@
 //   Step 6 — record_selection, clear_selection, set_custom_value
 //   Step 7 — derive_requirements
 //   Step 8 — export_pack
-//   Step 9 — load_sample, reset_draft
+//   Step 9 — reset_draft
+//   Roadmap — import_draft (the yaml round-trip)
+// load_sample was removed with the welcome-screen rework: the sample fixture
+// remains load-time validation data, not a user-facing feature.
 
 import { registerHandler, sealRegistry } from './registry.js';
 import { recordSelection } from '../capabilities/recordSelection.js';
@@ -16,7 +19,7 @@ import { clearSelection } from '../capabilities/clearSelection.js';
 import { setCustomValue } from '../capabilities/setCustomValue.js';
 import { deriveRequirementsCapability } from '../capabilities/deriveRequirements.js';
 import { exportPack } from '../capabilities/exportPack.js';
-import { loadSample } from '../capabilities/loadSample.js';
+import { importDraft } from '../capabilities/importDraft.js';
 import { resetDraft } from '../capabilities/resetDraft.js';
 
 registerHandler('record_selection', recordSelection);
@@ -24,6 +27,6 @@ registerHandler('clear_selection', clearSelection);
 registerHandler('set_custom_value', setCustomValue);
 registerHandler('derive_requirements', deriveRequirementsCapability);
 registerHandler('export_pack', exportPack);
-registerHandler('load_sample', loadSample);
+registerHandler('import_draft', importDraft);
 registerHandler('reset_draft', resetDraft);
 sealRegistry();

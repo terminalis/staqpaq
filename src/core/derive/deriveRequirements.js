@@ -86,7 +86,9 @@ export function deriveRequirements(selections = {}, catalogue) {
     }
   }
 
-  // missing_decisions (applicable, required, unresolved) + severity-weighted readiness
+  // missing_decisions (applicable, required, unresolved) + severity-weighted readiness.
+  // hidden fields are pipeline state (welcome-screen choices) — they serialize but
+  // never count toward readiness, and an all-hidden section is never reported.
   const missing_decisions = [];
   const per_section = [];
   let totalWeight = 0;
@@ -95,8 +97,10 @@ export function deriveRequirements(selections = {}, catalogue) {
     if (!sectionApplies(section, sel)) continue;
     let secTotal = 0;
     let secResolved = 0;
+    let secVisible = 0;
     for (const field of section.fields || []) {
-      if (!fieldApplies(field, sel)) continue;
+      if (field.hidden || !fieldApplies(field, sel)) continue;
+      secVisible += 1;
       const w = SEVERITY_WEIGHT[field.severity] || 1;
       secTotal += w;
       totalWeight += w;
@@ -107,6 +111,7 @@ export function deriveRequirements(selections = {}, catalogue) {
         missing_decisions.push({ path: field.path, label: field.label, severity: field.severity });
       }
     }
+    if (secVisible === 0) continue;
     per_section.push({ section_id: section.id, pct: secTotal === 0 ? 100 : Math.round((secResolved / secTotal) * 100) });
   }
   const overall_pct = totalWeight === 0 ? 0 : Math.round((resolvedWeight / totalWeight) * 100);

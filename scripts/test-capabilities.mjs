@@ -293,6 +293,47 @@ check('ai features None gates model providers', recordSelection(ctx({ 'ai.featur
 let ai = recordSelection(ctx({ 'ai.providers': ['openai', 'other'], 'ai.providers.custom': ['Local model'] }), { path: 'ai.features', option_key: 'none' }).selections;
 check('ai features None sweeps providers', ai['ai.providers'] === undefined && ai['ai.providers.custom'] === undefined);
 
+// 29 · stack type: a vendor stack hides + sweeps every project-shaped decision
+const prof = recordSelection(
+  ctx({
+    'project.name': 'Acme',
+    'project.type': 'saas',
+    'surface.screens': ['dashboard'],
+    'ai.features': ['chat'],
+    'payments.flows': ['checkout'],
+    'auth.methods': ['email_password'],
+    'design.palette': 'monochrome',
+    'frontend.framework': 'react',
+    'payments.provider': ['stripe'],
+    'auth.provider': 'clerk',
+  }),
+  { path: 'meta.kind', option_key: 'profile' },
+);
+check('vendor stack keeps the name (relabelled Stack name) and sweeps the other identity fields',
+  prof.selections['project.name'] === 'Acme' && prof.selections['project.type'] === undefined);
+check('vendor stack sweeps surfaces + project-shaped decisions',
+  prof.selections['surface.screens'] === undefined
+  && prof.selections['ai.features'] === undefined
+  && prof.selections['payments.flows'] === undefined
+  && prof.selections['auth.methods'] === undefined
+  && prof.selections['design.palette'] === undefined);
+check('vendor stack keeps vendor choices',
+  prof.selections['frontend.framework'] === 'react'
+  && JSON.stringify(prof.selections['payments.provider']) === JSON.stringify(['stripe'])
+  && prof.selections['auth.provider'] === 'clerk');
+check('vendor stack keeps its own kind marker', prof.selections['meta.kind'] === 'profile');
+check('kind switch reports the swept paths', (prof.output.swept_paths || []).includes('project.type'));
+check('project-only field rejects recording under a vendor stack', recordSelection(ctx({ 'meta.kind': 'profile' }), { path: 'project.type', option_key: 'saas' }).error?.code === 'FIELD_NOT_APPLICABLE');
+check('kind unset keeps project fields applicable', !recordSelection(ctx({}), { path: 'project.type', option_key: 'saas' }).error);
+check('clearing the kind restores project applicability', !recordSelection(ctx({}), { path: 'project.type', option_key: 'saas' }).error);
+
+// 30 · export failure surfaces as a reportable error, never a throw across the orchestrator
+const { exportPack } = await import('../src/core/capabilities/exportPack.js');
+const sabotaged = exportPack({ draft: { selections: {} }, catalogue: { allFields: null } }, { scope: 'yaml' });
+check('exportPack returns EXPORT_FAILED instead of throwing', !!(sabotaged && sabotaged.error && sabotaged.error.code === 'EXPORT_FAILED'));
+const healthyExport = exportPack({ draft: { selections: {} }, catalogue }, { scope: 'yaml' });
+check('exportPack still succeeds on a healthy catalogue', !!(healthyExport && healthyExport.output && !healthyExport.error));
+
 if (failures.length) {
   console.error(`✗ test-capabilities FAILED — ${failures.length} of ${pass + failures.length}:`);
   for (const f of failures) console.error('    - ' + f);

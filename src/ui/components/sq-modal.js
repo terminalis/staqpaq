@@ -178,6 +178,7 @@ class SqModal extends LitElement {
                     id="sq-modal-input"
                     class="sq-text-input sq-modal-input"
                     type="text"
+                    maxlength="200"
                     .value=${this.value || ''}
                     placeholder=${this.placeholder || ''}
                     aria-invalid=${this.error ? 'true' : 'false'}

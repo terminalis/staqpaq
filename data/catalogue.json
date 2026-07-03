@@ -3,6 +3,32 @@
   "note": "Static, version-controlled reference data (snag S1: authored product data, NOT a frozen behavioral spec — editable; adding options/providers is pure data). sections -> fields (kind/severity/applies_when/custom) -> curated options (with requires/precludes gating). The five MVP field kinds only: text, single_select, multi_select, boolean, color. Severity is two-tier: recommended | optional (advisory — nothing is enforced; export is never blocked). Categorical option lists are authored alphabetically by label (None/Other sentinels last); inherently ordinal lists (billing_interval, asset_status) keep their logical order. Gating condition: { path, anyOf:[keys] } | { path, present:true }; an option carries `requires` (gated unless ALL hold) and/or `precludes` (gated if ANY holds); each rule carries its own `reason`.",
   "sections": [
     {
+      "id": "meta",
+      "number": "00",
+      "title": "Pipeline",
+      "blurb": "Internal pipeline state chosen on the welcome screen — never shown in the configurator.",
+      "fields": [
+        {
+          "path": "meta.kind",
+          "label": "Stack type",
+          "kind": "single_select",
+          "severity": "optional",
+          "hidden": true,
+          "note": "Chosen on the welcome screen: a project stack captures one product end to end; a vendor stack records favoured tools to reuse across projects. Unset means project.",
+          "options": [
+            {
+              "key": "project",
+              "label": "Project stack"
+            },
+            {
+              "key": "profile",
+              "label": "Vendor stack"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "identity",
       "number": "01",
       "title": "Identity & Scope",
@@ -10,12 +36,14 @@
       "fields": [
         {
           "path": "project.name",
-          "note": "The product's name — labels the manifest and the exported pack.",
+          "note": "Names the manifest and the exported pack — used for the export filename.",
           "label": "Project name",
           "kind": "text",
           "severity": "recommended",
           "primary": true,
-          "placeholder": "e.g. Acme Analytics"
+          "placeholder": "e.g. Acme Analytics",
+          "label_profile": "Stack name",
+          "placeholder_profile": "e.g. Default Stack"
         },
         {
           "path": "project.type",
@@ -56,6 +84,14 @@
             {
               "key": "other",
               "label": "Other"
+            }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
             }
           ]
         },
@@ -126,6 +162,14 @@
               "label": "Windows",
               "icon": "simple-icons:windows"
             }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
+            }
           ]
         },
         {
@@ -187,6 +231,14 @@
             {
               "key": "other",
               "label": "Other"
+            }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
             }
           ]
         },
@@ -306,6 +358,14 @@
                 }
               ]
             }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
+            }
           ]
         },
         {
@@ -322,6 +382,12 @@
                 "usage_based",
                 "freemium",
                 "seat_based"
+              ]
+            },
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
               ]
             }
           ],
@@ -412,9 +478,18 @@
               "key": "other",
               "label": "Other"
             }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
+            }
           ]
         }
-      ]
+      ],
+      "blurb_profile": "Name your vendor stack — it labels the manifest and the exported pack."
     },
     {
       "id": "frontend",
@@ -591,7 +666,7 @@
                     "react_native",
                     "flutter"
                   ],
-                  "reason": "Panda CSS targets the web DOM ? clear the React Native / Flutter framework to enable web styling."
+                  "reason": "Panda CSS targets the web DOM — clear the React Native / Flutter framework to enable web styling."
                 }
               ]
             },
@@ -649,7 +724,7 @@
                     "nextjs",
                     "react"
                   ],
-                  "reason": "styled-jsx is used with React and Next.js ? set a compatible React framework."
+                  "reason": "styled-jsx is used with React and Next.js — set a compatible React framework."
                 }
               ]
             },
@@ -709,7 +784,7 @@
                     "react_native",
                     "flutter"
                   ],
-                  "reason": "UnoCSS targets web build pipelines ? clear the React Native / Flutter framework to enable it."
+                  "reason": "UnoCSS targets web build pipelines — clear the React Native / Flutter framework to enable it."
                 }
               ]
             },
@@ -873,7 +948,7 @@
                     "react_native",
                     "expo"
                   ],
-                  "reason": "gluestack-ui targets React Native and Expo ? set a React Native or Expo framework."
+                  "reason": "gluestack-ui targets React Native and Expo — set a React Native or Expo framework."
                 }
               ]
             },
@@ -1802,6 +1877,14 @@
               "label": "None",
               "exclusive": true
             }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
+            }
           ]
         },
         {
@@ -1835,6 +1918,14 @@
               "key": "teams",
               "label": "Teams"
             }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
+            }
           ]
         }
       ]
@@ -1843,7 +1934,7 @@
       "id": "payments",
       "number": "05",
       "title": "Payments & Monetization",
-      "blurb": "Billing, checkout, advertising, affiliate, and monetization tooling. Options unlock once the product has a monetized revenue model.",
+      "blurb": "Billing, checkout, advertising, affiliate, and monetization tooling. Everything stays available while the revenue model is undecided — options are struck out only if a conflicting revenue model in Identity & Scope rules them out.",
       "fields": [
         {
           "path": "payments.provider",
@@ -1883,7 +1974,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -1908,7 +1999,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -1933,7 +2024,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -1958,7 +2049,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -1982,7 +2073,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2007,7 +2098,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2032,7 +2123,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2057,7 +2148,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2082,7 +2173,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2107,7 +2198,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2131,7 +2222,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2156,7 +2247,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2180,7 +2271,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2205,7 +2296,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2230,7 +2321,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2255,7 +2346,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2280,7 +2371,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2330,7 +2421,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2362,7 +2453,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2394,7 +2485,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2426,7 +2517,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2458,7 +2549,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2490,7 +2581,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2522,7 +2613,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2554,7 +2645,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2586,8 +2677,16 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
+              ]
+            }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
               ]
             }
           ]
@@ -2619,7 +2718,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2643,7 +2742,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2667,7 +2766,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2691,7 +2790,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2715,7 +2814,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2739,7 +2838,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2763,8 +2862,16 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model ? set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
+              ]
+            }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
               ]
             }
           ]
@@ -2798,7 +2905,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2823,7 +2930,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2848,7 +2955,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2872,7 +2979,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2896,7 +3003,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2920,7 +3027,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2944,7 +3051,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -2968,7 +3075,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -3012,7 +3119,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -3036,7 +3143,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -3060,7 +3167,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -3084,7 +3191,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -3108,7 +3215,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -3132,7 +3239,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -3157,7 +3264,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -3181,7 +3288,7 @@
                     "sponsorship",
                     "seat_based"
                   ],
-                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                  "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
               ]
             },
@@ -3475,6 +3582,14 @@
                   ],
                   "reason": "Clear None before entering another AI feature."
                 }
+              ]
+            }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
               ]
             }
           ]
@@ -4505,7 +4620,15 @@
           "note": "Your brand's primary accent colour — seeds the palette.",
           "label": "Theme color",
           "kind": "color",
-          "severity": "recommended"
+          "severity": "recommended",
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
+            }
+          ]
         },
         {
           "path": "design.theme.mode",
@@ -4525,6 +4648,14 @@
             {
               "key": "system",
               "label": "System"
+            }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
             }
           ]
         },
@@ -4578,6 +4709,14 @@
             {
               "key": "playful",
               "label": "Playful"
+            }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
             }
           ]
         },
@@ -4644,6 +4783,14 @@
               "key": "other",
               "label": "Other"
             }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
+            }
           ]
         },
         {
@@ -4697,6 +4844,14 @@
             {
               "key": "other",
               "label": "Other"
+            }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
             }
           ]
         },
@@ -4934,7 +5089,16 @@
             }
           ]
         }
-      ]
+      ],
+      "applies_when": [
+        {
+          "path": "meta.kind",
+          "noneOf": [
+            "profile"
+          ]
+        }
+      ],
+      "guard_note": "Project decisions only — screens and policy pages describe a product build, not a vendor stack."
     },
     {
       "id": "assets",
@@ -4997,6 +5161,14 @@
             {
               "key": "wordmark",
               "label": "Wordmark"
+            }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
             }
           ]
         },

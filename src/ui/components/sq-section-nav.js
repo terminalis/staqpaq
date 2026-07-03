@@ -58,9 +58,28 @@ class SqSectionNav extends LitElement {
     }
   }
 
+  // A GUARDED item (a section ruled out by the current pipeline) stays listed —
+  // crosshatched with its reason, never hidden — mirroring gated options. It is
+  // focusable so the reason is reachable, but it never navigates.
   _rowTpl(it, mode = 'nav') {
     const isReview = it.id === 'review';
     const selected = it.id === this.active;
+    if (it.guarded) {
+      return html`
+        <li>
+          <button
+            type="button"
+            class="navitem guarded"
+            aria-disabled="true"
+            title=${it.reason || 'Not part of this pipeline.'}
+            aria-label=${`${it.title} — guarded. ${it.reason || ''}`}
+          >
+            <span class="sn vt">${it.number}</span>
+            <span class="nm">${it.title}</span>
+          </button>
+        </li>
+      `;
+    }
     return html`
       <li>
         <button

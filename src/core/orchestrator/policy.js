@@ -2,7 +2,7 @@
 // access control beyond confirmation: every capability is permitted; the only
 // policy gate is the destructive-action confirmation requirement.
 // (capabilities.yaml :: policies — roles=[author]; reset_draft confirm always,
-//  load_sample confirm when overwriting a non-empty draft.)
+//  import_draft confirm when overwriting a non-empty draft.)
 
 import { CAPABILITY_GRAPH } from './capabilityGraph.js';
 import { isEmptyDraft } from '../state/index.js';

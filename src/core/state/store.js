@@ -15,6 +15,12 @@ import { readModel } from './readModel.js';
 let _current = null; // the canonical BuildSpec (in memory)
 let _events = []; // the event log (in memory)
 let _booted = false;
+// What boot found: a resumed draft and any selections dropped/rewritten while
+// normalizing against the current catalogue. Read-only boot telemetry for the UI.
+let _bootInfo = { resumed: false, updated_at: null, decided_count: 0, migrated_paths: [] };
+// The last write-through outcome. Persistence stays best-effort (failures never
+// break the app) but the degradation is REPORTABLE instead of silent.
+let _persistHealth = { ok: true, quota: false, at: null };
 
 function sameSelections(a = {}, b = {}) {
   const ak = Object.keys(a).sort();
@@ -45,6 +51,17 @@ export async function bootState(catalogue) {
     const changed = !sameSelections(rawSelections, selections);
     _current = changed ? withSelections(draft, selections) : { ...draft, selections: { ...selections } };
     if (changed) await writeDraft(_current);
+    const migrated_paths = Object.keys(rawSelections)
+      .filter((k) => JSON.stringify(rawSelections[k]) !== JSON.stringify(selections[k]));
+    const decided = new Set(Object.keys(selections).map((k) =>
+      k.endsWith('.custom') ? k.slice(0, -7) : k.endsWith('.dismissed') ? k.slice(0, -10) : k,
+    ));
+    _bootInfo = {
+      resumed: decided.size > 0,
+      updated_at: draft.updated_at || null,
+      decided_count: decided.size,
+      migrated_paths,
+    };
   } else {
     _current = createBuildSpec(); // empty in-memory draft if none persisted yet
   }
@@ -66,13 +83,28 @@ export function getEvents() {
   return readModel(_events);
 }
 
+/** What boot found (read, copy) — resumed draft + catalogue-migration report. */
+export function getBootInfo() {
+  return readModel(_bootInfo);
+}
+
+/** The last write-through outcome (read, copy) — best-effort persistence health. */
+export function getPersistHealth() {
+  return readModel(_persistHealth);
+}
+
+function noteWrite(res) {
+  _persistHealth = { ok: !!(res && res.ok), quota: !!(res && res.quota), at: new Date().toISOString() };
+}
+
 /** Persist step — write-through a new selections map as the whole aggregate.
  *  Stamps updated_at, replaces the in-memory current, persists the draft key.
- *  Quota/IO failure is swallowed by the adapter; in-memory state stays valid. */
+ *  Quota/IO failure is swallowed by the adapter; in-memory state stays valid —
+ *  but the outcome is recorded so the UI can surface the degradation. */
 export async function commitSelections(selections) {
   const next = withSelections(getDraft(), selections);
   _current = next;
-  await writeDraft(next);
+  noteWrite(await writeDraft(next));
   return next;
 }
 
@@ -83,5 +115,5 @@ export async function appendEvents(events) {
   for (const e of events) {
     _events.push({ name: e.name, payload: e.payload || {}, at });
   }
-  await writeEvents(_events);
+  noteWrite(await writeEvents(_events));
 }

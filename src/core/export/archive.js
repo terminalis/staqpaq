@@ -4,7 +4,10 @@
 // byte-identical, preserving export_pack's determinism guarantee.
 // (service-map.yaml :: services[svc.archive.zip])
 
-import { zipSync, strToU8 } from 'fflate';
+// Relative vendor path (not the bare 'fflate' import-map specifier) so the
+// export graph also resolves under plain Node — letting scripts/test-*.mjs
+// exercise buildPack/exportPack headlessly. The browser resolves it identically.
+import { zipSync, strToU8 } from '../../../vendor/fflate.js';
 
 // A fixed timestamp so the archive bytes never depend on wall-clock time.
 const FIXED_MTIME = new Date('2020-01-01T00:00:00Z');

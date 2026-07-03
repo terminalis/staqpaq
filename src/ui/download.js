@@ -24,11 +24,13 @@ function slugify(name) {
     .replace(/^-+|-+$/g, '');
 }
 
-/** Save the result of an export_pack invocation, named after the project. */
+/** Save the result of an export_pack invocation, named after the project;
+ *  vendor profiles get a `-profile` hint in the filename. */
 export function downloadPack(result) {
   if (!result) return;
   const slug = slugify(result.project_name);
-  const base = slug ? `${slug}_staqpaq` : 'staqpaq';
+  const kindHint = result.kind === 'profile' ? '-profile' : '';
+  const base = (slug ? `${slug}_staqpaq` : 'staqpaq') + kindHint;
   if (result.scope === 'pack' && result.pack_zip) {
     downloadBlob(`${base}.zip`, result.pack_zip, 'application/zip');
   } else {

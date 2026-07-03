@@ -51,9 +51,40 @@ sq-app { display: block; min-height: 100vh; }
 }
 /* the staqpaq boot logotype stays signal-blue */
 .boot .vt { color: var(--signal); }
-/* reset action — directly under the title-block header, aligned to its inset */
-.rail-actions { padding: 0 16px 14px; }
+/* rail actions — directly under the title-block header, aligned to its inset */
+.rail-actions { display: flex; flex-direction: column; gap: 8px; padding: 0 16px 14px; }
 .rail-reset { width: 100%; min-height: 44px; justify-content: center; border-color: var(--rule); color: var(--paper); font-size: 12px; }
+
+/* rail notices — resumed-draft strip + save-degradation banner */
+.rail-notices { display: flex; flex-direction: column; gap: 8px; padding: 0 16px 14px; }
+.rail-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  border: 1px solid var(--rule);
+  background: var(--ink-2);
+  color: var(--paper-dim);
+  font-size: 12px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  padding: 9px 6px 9px 11px;
+}
+.rail-notice.crit { border-color: var(--crit); color: var(--crit); padding-right: 11px; }
+.rail-notice .notice-x {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
+  margin: -6px 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.rail-notice .notice-x:hover { color: var(--paper); }
 
 .section-nav { display: flex; flex: 1; min-height: 0; }
 .seclist { list-style: none; margin: 0; padding: 6px 0; overflow-y: auto; flex: 1; }
@@ -77,6 +108,18 @@ sq-app { display: block; min-height: 100vh; }
 /* n/n fields-completed marker (replaces the done tick); sage when complete */
 .seclist .navitem .nn { font-family: var(--font-display); font-size: 16px; color: var(--paper-faint); letter-spacing: 0.04em; }
 .seclist .navitem.done .nn { color: var(--sage); }
+
+/* GUARDED section — ruled out by the current pipeline: crosshatched like a
+   gated option, reason in the tooltip, focusable but inert */
+.seclist .navitem.guarded,
+.secsheet-list .navitem.guarded {
+  color: var(--paper-dim);
+  cursor: not-allowed;
+  background-image: repeating-linear-gradient(45deg, rgba(214, 224, 255, 0.13) 0 1px, transparent 1px 6px);
+}
+.seclist .navitem.guarded:hover,
+.secsheet-list .navitem.guarded:hover { color: var(--paper-dim); background-color: transparent; }
+.navitem.guarded .sn { color: var(--paper-faint); }
 
 /* --- mobile section navigator (position bar + index sheet) ----------------- */
 /* Hidden on desktop; the @media block below swaps them in under 860px. */
@@ -139,6 +182,82 @@ sq-app { display: block; min-height: 100vh; }
 /* --- main panel ------------------------------------------------------------ */
 .shell-main { position: relative; z-index: 1; display: flex; flex-direction: column; }
 
+/* --- welcome screen --------------------------------------------------------
+   Shown BEFORE the workspace mounts (so before the scanline reveal): the about
+   text, the stack-type chooser that sets the pipeline direction, and the
+   import entry point. Reopened from the staqpaq mark at the top of the rail. */
+.welcome {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--gut) var(--gut) calc(var(--gut) + 54px);
+}
+.welcome-panel {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  padding: 34px 36px 26px;
+  background: var(--panel-scrim);
+}
+.welcome-brand { display: flex; align-items: baseline; gap: 14px; margin-bottom: 18px; }
+.welcome-mark { font-size: 44px; line-height: 1; color: var(--paper); }
+.welcome-sub { font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--paper-dim); }
+.welcome-body { color: var(--paper-dim); font-size: 13.5px; line-height: 1.6; margin: 0 0 10px; }
+.welcome-body code { color: var(--signal); font-family: var(--font-mono); }
+.welcome-choose { color: var(--paper); margin: 22px 0 12px; }
+.welcome-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.welcome-choice {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  min-height: 44px;
+  padding: 16px 16px 14px;
+  border: 1px solid var(--bp-line);
+  background: var(--ink-2);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  text-align: left;
+  cursor: pointer;
+  transition: transform var(--t-micro), border-color var(--t-micro), background var(--t-micro);
+}
+.welcome-choice:hover { transform: translate(-2px, -2px); border-color: var(--paper); }
+.welcome-choice:active { transform: translate(0, 0); background: var(--ink-3); }
+.welcome-choice .wc-title { font-size: 26px; line-height: 1; color: var(--paper); }
+.welcome-choice .wc-desc { font-size: 12px; line-height: 1.5; color: var(--paper-dim); }
+.welcome-choice .wc-now {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  padding: 2px 7px;
+  border: 1px solid var(--sage);
+  color: var(--sage);
+  background: var(--ink);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.welcome-actions { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+.welcome-src {
+  position: absolute;
+  left: 50%;
+  bottom: calc(18px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+  white-space: nowrap;
+}
+.welcome-src:hover { color: var(--signal); }
+@media (max-width: 640px) {
+  .welcome-panel { padding: 24px 18px 20px; }
+  .welcome-choices { grid-template-columns: 1fr; }
+}
+
 /* the working sheet — a double-line drawing boundary (.bp-frame) inset from the
    shell, holding the panel content and a corner title block */
 .sheet { position: relative; flex: 1; display: flex; flex-direction: column; margin: var(--gut); }
@@ -197,12 +316,13 @@ sq-app { display: block; min-height: 100vh; }
 .bp-titleblock .tb-brand {
   display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
   width: 100%; padding: 9px 12px;
-  border-bottom: 1px solid var(--bp-line); text-align: left;
+  border: 0; border-bottom: 1px solid var(--bp-line); text-align: left;
+  background: none; font-family: inherit;
   text-decoration: none; color: inherit; cursor: pointer;
 }
 .bp-titleblock .tb-brand:hover .tb-meta { color: var(--signal); }
 .bp-titleblock .tb-mark { font-family: var(--font-display); font-size: 24px; line-height: 1; color: var(--paper); }
-.bp-titleblock .tb-meta { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--paper-faint); }
+.bp-titleblock .tb-meta { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--paper-faint); }
 /* PROJECT spans the full width (row 1); SHEET + READINESS share row 2 */
 .bp-titleblock .tb-grid { display: grid; grid-template-columns: 1fr 1fr; }
 .bp-titleblock .tb-cell { display: flex; flex-direction: column; gap: 4px; padding: 9px 12px; border-right: 1px solid var(--bp-line); min-width: 0; }
@@ -219,7 +339,7 @@ sq-app { display: block; min-height: 100vh; }
   cursor: pointer;
 }
 .bp-titleblock button.tb-cell:hover .tb-v { color: var(--signal); }
-.bp-titleblock .tb-k { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--paper-faint); }
+.bp-titleblock .tb-k { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--paper-faint); }
 .bp-titleblock .tb-v { font-size: 12px; letter-spacing: 0.04em; color: var(--paper); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .crumb { display: flex; align-items: center; gap: 8px; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--paper-faint); margin-bottom: 22px; }
@@ -248,9 +368,26 @@ sq-app { display: block; min-height: 100vh; }
 .rev-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-bottom: 26px; }
 .rev-block { }
 .block-eyebrow { margin-bottom: 12px; }
-.misslist { display: flex; flex-direction: column; gap: 9px; }
-.miss { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.block-hint { color: var(--paper-faint); font-size: 12px; letter-spacing: 0.02em; margin: -6px 0 12px; }
+.misslist { display: flex; flex-direction: column; gap: 5px; }
+/* each open recommendation is a real button that deep-links to its field */
+.miss {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 34px;
+  padding: 2px 4px;
+  font-size: 13px;
+  font-family: var(--font-mono);
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
 .miss-label { color: var(--paper); }
+.miss .miss-go { color: var(--paper-faint); opacity: 0; transition: opacity var(--t-micro); }
+.miss:hover .miss-label { color: var(--signal); }
+.miss:hover .miss-go, .miss:focus-visible .miss-go { opacity: 1; color: var(--signal); }
 
 .rev-yaml { margin-bottom: 26px; }
 .rev-derived { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-bottom: 26px; }
@@ -281,12 +418,26 @@ sq-app { display: block; min-height: 100vh; }
   /* swap the vertical rail list for the compact position bar + index sheet */
   .section-nav { display: none; }
   .seclist { display: none; }
-  .secbar { display: flex; }
+  /* the position bar pins to the viewport bottom (thumb-reachable stepper) so
+     navigation stays available mid-section; below the sheet (z-40) + modal (z-50).
+     During the load reveal the ancestor clip-path hides it until the scanline
+     passes — consistent with the curtain, and the clip reverts after the run. */
+  .secbar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 30;
+    background: var(--ink);
+    border-top: 1px solid var(--bp-line);
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  }
   .secsheet { display: block; }
   .rev-cols, .rev-derived { grid-template-columns: 1fr; }
-  /* tighter sheet on phones */
+  /* tighter sheet on phones; bottom padding clears the pinned position bar */
   .sheet { margin: var(--sp-3); }
-  .cfg-panel, .rev-panel { padding: 24px var(--sp-4) 60px; }
+  .cfg-panel, .rev-panel { padding: 24px var(--sp-4) 130px; }
 }
 
 @media (max-width: 520px) {

@@ -2,9 +2,14 @@
 // canonical tree and derived read-model.
 //
 //   staqpaq.md          - human-readable, generated one-way from the yaml tree
+//   AGENTS.md           - the consumer brief: how a human or agent uses the pack
 //   asset-checklist.md  - actual brand-asset files only
-//   missing-decisions.md- unresolved required decisions only
 //   .env.example        - env vars from selected providers only
+//
+// missing-decisions.md was retired from the pack: "missing" asserted gaps the
+// user may have left open deliberately (severity is the catalogue's opinion,
+// not the project's). Open recommendations remain an in-app review aid only;
+// AGENTS.md tells consumers that undecided fields are deliberately open.
 
 const TITLES = {
   project: 'Project', business: 'Business Model', frontend: 'Frontend',
@@ -85,26 +90,46 @@ export function assetChecklistMd(requiredAssets, name) {
   return out.join('\n') + '\n';
 }
 
-/** missing-decisions.md - unresolved required decisions only, by severity. */
-export function missingDecisionsMd(missing, name) {
-  const out = [
-    `# Missing decisions \u2014 ${inlineText(name)}`,
+/** AGENTS.md - the pack's consumer story: read order + ground rules for a human
+ *  or coding agent building from these decisions. Named for the agent-
+ *  instructions convention so an agent starting in an unzipped pack reads it
+ *  unprompted. Deterministic over (tree, derived, name). */
+export function agentBriefMd(tree, derived, name) {
+  const decided = Object.keys(tree || {}).length;
+  const envCount = (derived.implied_env_vars || []).length;
+  const assetCount = (derived.required_assets || []).length;
+  return [
+    `# Agent brief — ${inlineText(name)}`,
     '',
-    'Unresolved recommended decisions. Resolve these in staqpaq before handing off.',
+    'This pack was exported from staqpaq (a client-only build-manifest generator).',
+    'It is the bill of materials for a build — written for a human or a coding',
+    'agent starting from these decisions.',
     '',
-  ];
-  if (!missing.length) {
-    out.push('All recommended decisions are resolved.');
-    return out.join('\n') + '\n';
-  }
-  for (const sev of ['recommended']) {
-    const group = missing.filter((m) => m.severity === sev);
-    if (!group.length) continue;
-    out.push(`## ${sev.charAt(0).toUpperCase() + sev.slice(1)}`, '');
-    for (const m of group) out.push(`- ${inlineText(m.label)} (\`${codeText(m.path)}\`)`);
-    out.push('');
-  }
-  return out.join('\n');
+    '## Read order',
+    '',
+    '1. `staqpaq.yaml` — the canonical manifest: every decision the author made.',
+    '2. `asset-checklist.md` — brand-asset files the build expects (`[x]` = provided).',
+    '3. `.env.example` — environment variable keys implied by the chosen providers.',
+    '4. `staqpaq.md` — the same manifest, human-readable.',
+    '',
+    '## Ground rules',
+    '',
+    '- `staqpaq.yaml` is the single source of intent. Build what it says; do not',
+    '  infer decisions it does not contain.',
+    '- **Anything absent is deliberately open — not missing, not a defect.** Pick a',
+    '  sensible default and record it in your build notes, or ask the author.',
+    '- Free-text values are the author’s own vocabulary; treat them as requirements',
+    '  even when you do not recognize the name.',
+    '- Environment variable values are never included. Wire the keys from',
+    '  `.env.example` and leave the values to the operator.',
+    '',
+    '## This pack',
+    '',
+    `- Decided sections: ${decided}`,
+    `- Implied env var keys: ${envCount}`,
+    `- Brand assets expected: ${assetCount}`,
+    '',
+  ].join('\n');
 }
 
 /** .env.example - env vars from selected providers only. */

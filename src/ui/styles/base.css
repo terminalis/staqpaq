@@ -32,6 +32,19 @@ body {
 
 a { color: var(--signal); text-decoration: none; }
 
+/* visually hidden, exposed to assistive tech (the page h1 lives here) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .skip-link {
   position: fixed;
   top: 12px;
@@ -91,7 +104,7 @@ sq-stamp {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   padding: 2px 7px;
@@ -100,6 +113,7 @@ sq-stamp {
   white-space: nowrap;
 }
 sq-stamp[variant="required"] { border-color: var(--signal); color: var(--signal); }
+sq-stamp[variant="recommended"] { border-color: var(--signal); color: var(--signal); }
 sq-stamp[variant="critical"] { border-color: var(--crit); color: var(--crit); }
 sq-stamp[variant="ok"] { border-color: var(--sage); color: var(--sage); }
 sq-stamp[variant="optional"] { border-color: var(--steel); color: var(--paper-dim); }
@@ -135,9 +149,11 @@ sq-stamp[variant="optional"] { border-color: var(--steel); color: var(--paper-di
   transition: transform var(--t-micro) var(--ease-micro), border-color var(--t-micro), background var(--t-micro);
 }
 .btn:hover { transform: translate(-2px, -2px); border-color: var(--paper); }
+.btn:active { transform: translate(0, 0); background: var(--ink-3); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; border-color: var(--rule); }
 .btn.primary { background: var(--signal-deep); border-color: var(--signal-deep); color: var(--on-signal); }
 .btn.primary:hover { background: var(--ink-3); border-color: var(--bp-line); }
+.btn.primary:active { background: var(--signal-deep); }
 .btn.ghost { background: none; border-color: var(--bp-line); color: var(--paper); }
 
 /* --- blueprint paper · full-bleed background texture ----------------------- */

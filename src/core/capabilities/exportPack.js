@@ -6,22 +6,28 @@
 
 import { buildPack } from '../export/buildPack.js';
 
-const PACK_FILES = ['staqpaq.yaml', 'staqpaq.md', 'asset-checklist.md', 'missing-decisions.md', '.env.example'];
+const PACK_FILES = ['staqpaq.yaml', 'staqpaq.md', 'AGENTS.md', 'asset-checklist.md', '.env.example'];
 
 export function exportPack(ctx, input) {
-  const scope = input && input.scope === 'pack' ? 'pack' : 'yaml';
-  const pack = buildPack(ctx.draft.selections, ctx.catalogue, scope);
+  try {
+    const scope = input && input.scope === 'pack' ? 'pack' : 'yaml';
+    const pack = buildPack(ctx.draft.selections, ctx.catalogue, scope);
 
-  // distinct decided field paths (custom / dismissed sidecars count as their base field)
-  const decided = new Set(
-    Object.keys(ctx.draft.selections).map((k) =>
-      k.endsWith('.custom') ? k.slice(0, -7) : k.endsWith('.dismissed') ? k.slice(0, -10) : k,
-    ),
-  );
-  const artifact_names = scope === 'pack' ? PACK_FILES : ['staqpaq.yaml'];
+    // distinct decided field paths (custom / dismissed sidecars count as their base field)
+    const decided = new Set(
+      Object.keys(ctx.draft.selections).map((k) =>
+        k.endsWith('.custom') ? k.slice(0, -7) : k.endsWith('.dismissed') ? k.slice(0, -10) : k,
+      ),
+    );
+    const artifact_names = scope === 'pack' ? PACK_FILES : ['staqpaq.yaml'];
 
-  return {
-    output: pack,
-    events: [{ name: 'pack_exported', payload: { scope, artifact_names, selection_count: decided.size } }],
-  };
+    return {
+      output: pack,
+      events: [{ name: 'pack_exported', payload: { scope, artifact_names, selection_count: decided.size } }],
+    };
+  } catch (e) {
+    // Never throw across the orchestrator: a failed build returns a reportable
+    // error so the UI can say "nothing was downloaded" instead of going silent.
+    return { error: { code: 'EXPORT_FAILED', message: String((e && e.message) || e) } };
+  }
 }

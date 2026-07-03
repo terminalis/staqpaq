@@ -1,5 +1,5 @@
 // Confirmation tokens for destructive capabilities (reset_draft always;
-// load_sample when overwriting a non-empty draft). The orchestrator MINTS a
+// import_draft when overwriting a non-empty draft). The orchestrator MINTS a
 // token when confirmation is required without a valid one (returned to the UI in
 // the CONFIRMATION_REQUIRED error), and VERIFIES + consumes it when the user
 // confirms. Single-use, bound to the capability. (capabilities.yaml :: policies)
