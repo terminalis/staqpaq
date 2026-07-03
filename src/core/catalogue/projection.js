@@ -80,16 +80,19 @@ export function projectField(field, selections, catalogue) {
   };
 }
 
-/** Project the whole catalogue against current selections. */
+/** Project the whole catalogue against current selections. A `hidden: true`
+ *  field is pipeline state (set by the welcome screen, still serialized) — it
+ *  never renders; a section left with nothing to render is omitted entirely. */
 export function projectCatalogue(catalogue, selections = {}) {
   const sections = [];
   for (const section of catalogue.sections) {
     if (!sectionApplies(section, selections)) continue;
     const fields = [];
     for (const field of section.fields || []) {
-      if (!fieldApplies(field, selections)) continue;
+      if (field.hidden || !fieldApplies(field, selections)) continue;
       fields.push(projectField(field, selections, catalogue));
     }
+    if (fields.length === 0) continue;
     sections.push({
       id: section.id,
       number: section.number,

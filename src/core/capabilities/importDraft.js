@@ -4,7 +4,7 @@
 // unknown paths/keys drop with an explicit report, gated combinations sweep,
 // and canonical order is re-imposed, so import(export(S)) === S for
 // app-produced files while hand-edited files converge to the nearest valid
-// state. Confirmation is `on_overwrite` (same policy as load_sample). Emits
+// state. Confirmation is `on_overwrite` (overwriting a non-empty draft). Emits
 // draft_imported. Input: { text, file_name } — a user-chosen file's contents,
 // NEVER the rendered preview (the preview surface stays inert).
 

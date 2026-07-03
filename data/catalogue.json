@@ -3,28 +3,37 @@
   "note": "Static, version-controlled reference data (snag S1: authored product data, NOT a frozen behavioral spec — editable; adding options/providers is pure data). sections -> fields (kind/severity/applies_when/custom) -> curated options (with requires/precludes gating). The five MVP field kinds only: text, single_select, multi_select, boolean, color. Severity is two-tier: recommended | optional (advisory — nothing is enforced; export is never blocked). Categorical option lists are authored alphabetically by label (None/Other sentinels last); inherently ordinal lists (billing_interval, asset_status) keep their logical order. Gating condition: { path, anyOf:[keys] } | { path, present:true }; an option carries `requires` (gated unless ALL hold) and/or `precludes` (gated if ANY holds); each rule carries its own `reason`.",
   "sections": [
     {
+      "id": "meta",
+      "number": "00",
+      "title": "Pipeline",
+      "blurb": "Internal pipeline state chosen on the welcome screen — never shown in the configurator.",
+      "fields": [
+        {
+          "path": "meta.kind",
+          "label": "Stack type",
+          "kind": "single_select",
+          "severity": "optional",
+          "hidden": true,
+          "note": "Chosen on the welcome screen: a project stack captures one product end to end; a vendor stack records favoured tools to reuse across projects. Unset means project.",
+          "options": [
+            {
+              "key": "project",
+              "label": "Project stack"
+            },
+            {
+              "key": "profile",
+              "label": "Vendor stack"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "identity",
       "number": "01",
       "title": "Identity & Scope",
       "blurb": "What you're building, where it runs, who it's for, and how it makes money.",
       "fields": [
-        {
-          "path": "meta.kind",
-          "label": "Staqpaq kind",
-          "kind": "single_select",
-          "severity": "optional",
-          "note": "What this staqpaq describes. A project build captures one product end to end; a vendor profile records your favoured stack to reuse across projects. Leave unset for a project build.",
-          "options": [
-            {
-              "key": "project",
-              "label": "Project build"
-            },
-            {
-              "key": "profile",
-              "label": "Vendor profile"
-            }
-          ]
-        },
         {
           "path": "project.name",
           "note": "The product's name — labels the manifest and the exported pack.",
@@ -73,14 +82,6 @@
             {
               "key": "other",
               "label": "Other"
-            }
-          ],
-          "applies_when": [
-            {
-              "path": "meta.kind",
-              "noneOf": [
-                "profile"
-              ]
             }
           ]
         },
@@ -151,14 +152,6 @@
               "label": "Windows",
               "icon": "simple-icons:windows"
             }
-          ],
-          "applies_when": [
-            {
-              "path": "meta.kind",
-              "noneOf": [
-                "profile"
-              ]
-            }
           ]
         },
         {
@@ -220,14 +213,6 @@
             {
               "key": "other",
               "label": "Other"
-            }
-          ],
-          "applies_when": [
-            {
-              "path": "meta.kind",
-              "noneOf": [
-                "profile"
-              ]
             }
           ]
         },
@@ -347,14 +332,6 @@
                 }
               ]
             }
-          ],
-          "applies_when": [
-            {
-              "path": "meta.kind",
-              "noneOf": [
-                "profile"
-              ]
-            }
           ]
         },
         {
@@ -371,12 +348,6 @@
                 "usage_based",
                 "freemium",
                 "seat_based"
-              ]
-            },
-            {
-              "path": "meta.kind",
-              "noneOf": [
-                "profile"
               ]
             }
           ],
@@ -467,14 +438,14 @@
               "key": "other",
               "label": "Other"
             }
-          ],
-          "applies_when": [
-            {
-              "path": "meta.kind",
-              "noneOf": [
-                "profile"
-              ]
-            }
+          ]
+        }
+      ],
+      "applies_when": [
+        {
+          "path": "meta.kind",
+          "noneOf": [
+            "profile"
           ]
         }
       ]
@@ -1865,6 +1836,14 @@
               "label": "None",
               "exclusive": true
             }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
+            }
           ]
         },
         {
@@ -1897,6 +1876,14 @@
             {
               "key": "teams",
               "label": "Teams"
+            }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
             }
           ]
         }
@@ -2653,6 +2640,14 @@
                 }
               ]
             }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
+            }
           ]
         },
         {
@@ -2828,6 +2823,14 @@
                   ],
                   "reason": "Applies once the product uses a monetized revenue model — set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
                 }
+              ]
+            }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
               ]
             }
           ]
@@ -3538,6 +3541,14 @@
                   ],
                   "reason": "Clear None before entering another AI feature."
                 }
+              ]
+            }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
               ]
             }
           ]
@@ -4597,6 +4608,14 @@
               "key": "system",
               "label": "System"
             }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
+            }
           ]
         },
         {
@@ -4649,6 +4668,14 @@
             {
               "key": "playful",
               "label": "Playful"
+            }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
             }
           ]
         },
@@ -4715,6 +4742,14 @@
               "key": "other",
               "label": "Other"
             }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
+            }
           ]
         },
         {
@@ -4768,6 +4803,14 @@
             {
               "key": "other",
               "label": "Other"
+            }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
             }
           ]
         },

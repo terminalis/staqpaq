@@ -54,8 +54,6 @@ sq-app { display: block; min-height: 100vh; }
 /* rail actions — directly under the title-block header, aligned to its inset */
 .rail-actions { display: flex; flex-direction: column; gap: 8px; padding: 0 16px 14px; }
 .rail-reset { width: 100%; min-height: 44px; justify-content: center; border-color: var(--rule); color: var(--paper); font-size: 12px; }
-.rail-about { width: 100%; min-height: 44px; justify-content: center; border-color: var(--rule); color: var(--paper-dim); font-size: 12px; }
-.rail-about:hover { color: var(--paper); }
 
 /* rail notices — resumed-draft strip + save-degradation banner */
 .rail-notices { display: flex; flex-direction: column; gap: 8px; padding: 0 16px 14px; }
@@ -172,35 +170,77 @@ sq-app { display: block; min-height: 100vh; }
 /* --- main panel ------------------------------------------------------------ */
 .shell-main { position: relative; z-index: 1; display: flex; flex-direction: column; }
 
-/* first-run orientation ticket — sits above the working sheet, never a gate */
-.intro-panel {
-  position: relative;
-  display: block;
-  margin: var(--gut) var(--gut) 0;
-  padding: 24px 26px 22px;
-  background: var(--panel-scrim);
-}
-.intro-panel .intro-x {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  display: inline-flex;
+/* --- welcome screen --------------------------------------------------------
+   Shown BEFORE the workspace mounts (so before the scanline reveal): the about
+   text, the stack-type chooser that sets the pipeline direction, and the
+   import entry point. Reopened from the staqpaq mark at the top of the rail. */
+.welcome {
+  min-height: 100vh;
+  display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 44px;
-  min-height: 44px;
-  border: 0;
-  background: none;
-  color: var(--paper-dim);
-  font-size: 16px;
-  cursor: pointer;
+  padding: var(--gut);
 }
-.intro-panel .intro-x:hover { color: var(--paper); }
-.intro-panel .intro-eyebrow { color: var(--paper-dim); margin-bottom: 10px; }
-.intro-panel .intro-title { font-size: var(--fs-h2); color: var(--paper); margin-bottom: 12px; }
-.intro-panel .intro-body { color: var(--paper-dim); font-size: 13.5px; line-height: 1.6; max-width: 640px; margin: 0 0 10px; }
-.intro-panel .intro-body code { color: var(--signal); font-family: var(--font-mono); }
-.intro-panel .intro-actions { display: flex; align-items: center; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.welcome-panel {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  padding: 34px 36px 26px;
+  background: var(--panel-scrim);
+}
+.welcome-brand { display: flex; align-items: baseline; gap: 14px; margin-bottom: 18px; }
+.welcome-mark { font-size: 44px; line-height: 1; color: var(--paper); }
+.welcome-sub { font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--paper-dim); }
+.welcome-body { color: var(--paper-dim); font-size: 13.5px; line-height: 1.6; margin: 0 0 10px; }
+.welcome-body code { color: var(--signal); font-family: var(--font-mono); }
+.welcome-choose { color: var(--paper); margin: 22px 0 12px; }
+.welcome-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.welcome-choice {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  min-height: 44px;
+  padding: 16px 16px 14px;
+  border: 1px solid var(--bp-line);
+  background: var(--ink-2);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  text-align: left;
+  cursor: pointer;
+  transition: transform var(--t-micro), border-color var(--t-micro), background var(--t-micro);
+}
+.welcome-choice:hover { transform: translate(-2px, -2px); border-color: var(--paper); }
+.welcome-choice:active { transform: translate(0, 0); background: var(--ink-3); }
+.welcome-choice .wc-title { font-size: 26px; line-height: 1; color: var(--paper); }
+.welcome-choice .wc-desc { font-size: 12px; line-height: 1.5; color: var(--paper-dim); }
+.welcome-choice .wc-now {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  padding: 2px 7px;
+  border: 1px solid var(--sage);
+  color: var(--sage);
+  background: var(--ink);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.welcome-actions { display: flex; align-items: center; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+.welcome-src {
+  display: inline-block;
+  margin-top: 18px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+}
+.welcome-src:hover { color: var(--signal); }
+@media (max-width: 640px) {
+  .welcome-panel { padding: 24px 18px 20px; }
+  .welcome-choices { grid-template-columns: 1fr; }
+}
 
 /* the working sheet — a double-line drawing boundary (.bp-frame) inset from the
    shell, holding the panel content and a corner title block */
@@ -260,7 +300,8 @@ sq-app { display: block; min-height: 100vh; }
 .bp-titleblock .tb-brand {
   display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
   width: 100%; padding: 9px 12px;
-  border-bottom: 1px solid var(--bp-line); text-align: left;
+  border: 0; border-bottom: 1px solid var(--bp-line); text-align: left;
+  background: none; font-family: inherit;
   text-decoration: none; color: inherit; cursor: pointer;
 }
 .bp-titleblock .tb-brand:hover .tb-meta { color: var(--signal); }

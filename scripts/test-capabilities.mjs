@@ -293,17 +293,39 @@ check('ai features None gates model providers', recordSelection(ctx({ 'ai.featur
 let ai = recordSelection(ctx({ 'ai.providers': ['openai', 'other'], 'ai.providers.custom': ['Local model'] }), { path: 'ai.features', option_key: 'none' }).selections;
 check('ai features None sweeps providers', ai['ai.providers'] === undefined && ai['ai.providers.custom'] === undefined);
 
-// 29 · staqpaq kind: a vendor profile hides + sweeps project-only decisions
+// 29 · stack type: a vendor stack hides + sweeps every project-shaped decision
 const prof = recordSelection(
-  ctx({ 'project.type': 'saas', 'surface.screens': ['dashboard'], 'frontend.framework': 'react' }),
+  ctx({
+    'project.name': 'Acme',
+    'project.type': 'saas',
+    'surface.screens': ['dashboard'],
+    'ai.features': ['chat'],
+    'payments.flows': ['checkout'],
+    'auth.methods': ['email_password'],
+    'design.palette': 'monochrome',
+    'frontend.framework': 'react',
+    'payments.provider': ['stripe'],
+    'auth.provider': 'clerk',
+  }),
   { path: 'meta.kind', option_key: 'profile' },
 );
-check('profile kind sweeps project-only fields', prof.selections['project.type'] === undefined && prof.selections['surface.screens'] === undefined);
-check('profile kind keeps vendor fields', prof.selections['frontend.framework'] === 'react');
-check('profile kind reports the swept paths', (prof.output.swept_paths || []).includes('project.type'));
-check('project-only field rejects recording under profile', recordSelection(ctx({ 'meta.kind': 'profile' }), { path: 'project.type', option_key: 'saas' }).error?.code === 'FIELD_NOT_APPLICABLE');
+check('vendor stack sweeps the whole identity section (incl. project name)',
+  prof.selections['project.name'] === undefined && prof.selections['project.type'] === undefined);
+check('vendor stack sweeps surfaces + project-shaped decisions',
+  prof.selections['surface.screens'] === undefined
+  && prof.selections['ai.features'] === undefined
+  && prof.selections['payments.flows'] === undefined
+  && prof.selections['auth.methods'] === undefined
+  && prof.selections['design.palette'] === undefined);
+check('vendor stack keeps vendor choices',
+  prof.selections['frontend.framework'] === 'react'
+  && JSON.stringify(prof.selections['payments.provider']) === JSON.stringify(['stripe'])
+  && prof.selections['auth.provider'] === 'clerk');
+check('vendor stack keeps its own kind marker', prof.selections['meta.kind'] === 'profile');
+check('kind switch reports the swept paths', (prof.output.swept_paths || []).includes('project.type'));
+check('project-only field rejects recording under a vendor stack', recordSelection(ctx({ 'meta.kind': 'profile' }), { path: 'project.type', option_key: 'saas' }).error?.code === 'FIELD_NOT_APPLICABLE');
 check('kind unset keeps project fields applicable', !recordSelection(ctx({}), { path: 'project.type', option_key: 'saas' }).error);
-check('switching back to project restores applicability', !recordSelection(ctx({ 'meta.kind': 'project' }), { path: 'project.type', option_key: 'saas' }).error);
+check('clearing the kind restores project applicability', !recordSelection(ctx({}), { path: 'project.type', option_key: 'saas' }).error);
 
 // 30 · export failure surfaces as a reportable error, never a throw across the orchestrator
 const { exportPack } = await import('../src/core/capabilities/exportPack.js');

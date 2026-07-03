@@ -24,11 +24,6 @@ const CONFIRM_COPY = {
     body: 'This clears every decision and starts an empty staqpaq. This cannot be undone.',
     confirmLabel: 'Reset draft',
   },
-  load_sample: {
-    title: 'Load the sample?',
-    body: 'This replaces your current draft with the curated sample staqpaq. Your existing decisions are cleared.',
-    confirmLabel: 'Load sample',
-  },
   import_draft: {
     title: 'Import staqpaq.yaml?',
     body: 'This replaces your current draft with the decisions from the imported file. Your existing decisions are cleared.',
@@ -46,7 +41,7 @@ class SqApp extends LitElement {
     _toast: { state: true },
     _booted: { state: true },
     _bootNoticeDismissed: { state: true },
-    _introOpen: { state: true },
+    _welcome: { state: true },
     _kindSweepNotice: { state: true },
   };
 
@@ -67,7 +62,7 @@ class SqApp extends LitElement {
     this._booted = false;
     this._bootInfo = null; // façade boot telemetry (resumed draft, migrations)
     this._bootNoticeDismissed = false;
-    this._introOpen = false;
+    this._welcome = false; // the pre-workspace welcome screen (about + stack-type chooser)
     this._kindSweepNotice = 0; // project-only answers cleared by a kind switch
   }
 
@@ -110,8 +105,10 @@ class SqApp extends LitElement {
     this.refresh();
     if (this._active == null) this._active = this._firstSectionId();
     // True first run only: no decisions AND an empty event log (the log survives
-    // resets, so returning users are never re-ambushed by the intro).
-    this._introOpen =
+    // resets, so returning users go straight to their workspace). The welcome
+    // screen shows BEFORE the workspace mounts — the scanline reveal fires when
+    // the user has chosen a stack type and the workspace appears.
+    this._welcome =
       Object.keys(this._m.entity.selections).length === 0 && facade.readEvents().length === 0;
     this._booted = true;
   }
@@ -197,6 +194,10 @@ class SqApp extends LitElement {
       } else {
         this._showToast('ok', `${base}.`, 6000);
       }
+      // land on the review bench (also leaves the welcome screen when the
+      // import started there) — the summary + toast are visible right away
+      this._welcome = false;
+      this._active = 'review';
     }
     this._ensureActiveValid();
   }
@@ -320,44 +321,76 @@ class SqApp extends LitElement {
     return html`<a class="skip-link" href="#main-content">Skip to main content</a>`;
   }
 
-  // First-run orientation panel: an in-workspace ticket, not a gate — the
-  // workspace still mounts immediately. Shown automatically on a true first run;
-  // reopenable any time from the rail "about" button.
-  _renderIntro() {
-    if (!this._introOpen) return '';
+  // The welcome screen — shown BEFORE the workspace (and its scanline reveal):
+  // the about text, the stack-type chooser that sets the pipeline direction,
+  // and the import entry point. Reopenable any time from the staqpaq mark at
+  // the top of the rail.
+  _renderWelcome() {
+    const sel = (this._m && this._m.entity.selections) || {};
+    const kind = sel['meta.kind'];
+    const hasDraft = Object.keys(sel).some((k) => k !== 'meta.kind');
+    const current = (on) => (on ? html`<span class="wc-now">current draft</span>` : '');
     return html`
-      <sq-ticket class="intro-panel bp-frame">
-        <button class="intro-x" type="button" aria-label="Dismiss introduction"
-          @click=${() => { this._introOpen = false; }}>✕</button>
-        <div class="eyebrow intro-eyebrow">What is this?</div>
-        <div class="intro-title vt">A build manifest for your app</div>
-        <p class="intro-body">
-          staqpaq records your app-build decisions — product shape, stack, providers,
-          screens — derives what they imply (env vars, brand assets, provider notes),
-          and exports a deterministic pack: <code>staqpaq.yaml</code> plus companion
-          docs. Hand the pack to a teammate or a coding agent as the build's bill of
-          materials. Undecided fields are fine — they simply stay open.
-        </p>
-        <p class="intro-body">
-          Everything runs locally in your browser and keeps working offline; your
-          draft autosaves on this device.
-        </p>
-        <div class="intro-actions">
-          <button class="btn primary" @click=${() => { this._introOpen = false; }}>
-            Start a project staqpaq
-          </button>
-          <button class="btn ghost" @click=${() => { this._introOpen = false; this._run('record_selection', { path: 'meta.kind', option_key: 'profile' }); }}>
-            Record your vendor defaults
-          </button>
-          <button class="btn ghost" @click=${() => { this._introOpen = false; this._run('load_sample', {}); }}>
-            Load the sample
-          </button>
-          <a class="btn ghost" href="https://github.com/terminalis/staqpaq" target="_blank" rel="noopener">
-            View source
+      <main id="main-content" class="welcome" tabindex="-1">
+        <div class="welcome-panel bp-frame">
+          <div class="welcome-brand">
+            <span class="welcome-mark vt">staq<span class="signal">paq</span></span>
+            <span class="welcome-sub">build manifest</span>
+          </div>
+          <p class="welcome-body">
+            staqpaq records your build decisions — stack, providers, surfaces —
+            derives what they imply (env vars, brand assets, provider notes), and
+            exports a deterministic pack: <code>staqpaq.yaml</code> plus companion
+            docs. Hand the pack to a teammate or a coding agent as the build's
+            bill of materials. Undecided fields simply stay open.
+          </p>
+          <p class="welcome-body">
+            Everything runs locally in your browser and works offline; your draft
+            autosaves on this device.
+          </p>
+          <div class="eyebrow welcome-choose">Choose your stack type</div>
+          <div class="welcome-choices">
+            <button class="welcome-choice" type="button" @click=${() => this._chooseKind('project')}>
+              <span class="wc-title vt">Project stack</span>
+              <span class="wc-desc">One product, end to end — identity, stack, surfaces, assets.</span>
+              ${current(kind !== 'profile' && hasDraft)}
+            </button>
+            <button class="welcome-choice" type="button" @click=${() => this._chooseKind('profile')}>
+              <span class="wc-title vt">Vendor stack</span>
+              <span class="wc-desc">Your favoured tools and providers, reusable across projects.</span>
+              ${current(kind === 'profile')}
+            </button>
+          </div>
+          <div class="welcome-actions">
+            <button class="btn ghost" @click=${() => this._onImport()}>
+              <sq-icon name="solar:upload-minimalistic-bold"></sq-icon> Import staqpaq.yaml
+            </button>
+            ${hasDraft || kind
+              ? html`<button class="btn ghost" @click=${() => { this._welcome = false; }}>
+                  Continue where you left off
+                </button>`
+              : ''}
+          </div>
+          <a class="welcome-src" href="https://github.com/terminalis/staqpaq" target="_blank" rel="noopener">
+            view source on GitHub
           </a>
         </div>
-      </sq-ticket>
+      </main>
     `;
+  }
+
+  // Choosing a stack type sets the pipeline direction. Project is the default
+  // (kind unset); switching a profile draft back simply clears the kind
+  // (non-destructive — vendor answers all apply to a project). Switching TO a
+  // vendor stack sweeps project-only answers; the rail notice reports it.
+  async _chooseKind(kind) {
+    const cur = this._m && this._m.entity.selections['meta.kind'];
+    if (kind === 'profile' && cur !== 'profile') {
+      await this._run('record_selection', { path: 'meta.kind', option_key: 'profile' });
+    } else if (kind === 'project' && cur === 'profile') {
+      await this._run('clear_selection', { path: 'meta.kind' });
+    }
+    this._welcome = false;
   }
 
   // Rail notices: the one-time resumed-draft strip (+ catalogue-migration report)
@@ -426,27 +459,28 @@ class SqApp extends LitElement {
         <div class="workspace-reveal">
         <aside class="shell-rail">
           <div class="bp-titleblock">
-            <a
+            <button
               class="tb-brand"
-              href="https://github.com/terminalis/staqpaq"
-              target="_blank"
-              rel="noopener"
-              title="View source on GitHub"
-              aria-label="staqpaq — view source on GitHub"
+              type="button"
+              title="About staqpaq — welcome screen"
+              aria-label="staqpaq — open the welcome screen"
+              @click=${() => { this._welcome = true; }}
             >
               <span class="tb-mark vt">staq<span class="signal">paq</span></span>
-              <span class="tb-meta">${isProfile ? 'vendor profile' : 'build manifest'}</span>
-            </a>
+              <span class="tb-meta">${isProfile ? 'vendor stack' : 'build manifest'}</span>
+            </button>
             <div class="tb-grid">
-              <button
-                class="tb-cell tb-project"
-                type="button"
-                title="Add or change project name"
-                aria-label="Add or change project name"
-                @click=${this._openProjectPrompt}
-              >
-                <span class="tb-k">${isProfile ? 'profile' : 'project'}</span><span class="tb-v">${projectName || 'untitled'}</span>
-              </button>
+              ${isProfile
+                ? html`<div class="tb-cell"><span class="tb-k">kind</span><span class="tb-v">vendor stack</span></div>`
+                : html`<button
+                    class="tb-cell tb-project"
+                    type="button"
+                    title="Add or change project name"
+                    aria-label="Add or change project name"
+                    @click=${this._openProjectPrompt}
+                  >
+                    <span class="tb-k">project</span><span class="tb-v">${projectName || 'untitled'}</span>
+                  </button>`}
               <div class="tb-cell"><span class="tb-k">sheet</span><span class="tb-v">${sheetLabel}</span></div>
               <div class="tb-cell"><span class="tb-k">readiness</span><span class="tb-v">${overallPct}%</span></div>
             </div>
@@ -455,16 +489,12 @@ class SqApp extends LitElement {
             <button class="btn ghost rail-reset" @click=${() => this._run('reset_draft', {})}>
               <sq-icon name="solar:restart-bold"></sq-icon> Reset / start new
             </button>
-            <button class="btn ghost rail-about" @click=${() => { this._introOpen = true; }}>
-              <sq-icon name="solar:document-text-bold"></sq-icon> About staqpaq
-            </button>
           </div>
           ${this._renderRailNotices()}
           <sq-section-nav .items=${items} active=${this._active}></sq-section-nav>
         </aside>
 
         <main id="main-content" class="shell-main" tabindex="-1">
-          ${this._renderIntro()}
           <div class="sheet bp-frame">
           ${this._active === 'review'
             ? html`<sq-review-export
@@ -490,6 +520,9 @@ class SqApp extends LitElement {
   render() {
     if (!this._booted) {
       return html`<div class="boot"><span class="vt">staq<span class="signal">paq</span></span><span class="boot-note">booting…</span></div>`;
+    }
+    if (this._welcome) {
+      return html`${this._renderSkipLink()}${this._renderWelcome()}${this._renderModal()}`;
     }
     return html`${this._renderSkipLink()}${this._renderWorkspace()}${this._renderModal()}`;
   }

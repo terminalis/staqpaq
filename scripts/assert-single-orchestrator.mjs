@@ -2,7 +2,7 @@
 // assert-single-orchestrator
 //
 // Every capability (record_selection, clear_selection, set_custom_value,
-// derive_requirements, export_pack, load_sample, reset_draft) is invoked ONLY
+// derive_requirements, export_pack, import_draft, reset_draft) is invoked ONLY
 // through src/core/orchestrator/runIntent.js. Mechanically: capability handler
 // modules under src/core/capabilities/** may be imported ONLY by the
 // orchestrator (src/core/orchestrator/**) — never from src/ui/**, the data
