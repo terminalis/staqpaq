@@ -47,7 +47,9 @@ class SqOption extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    if (!this.hasAttribute('tabindex')) this.tabIndex = 0;
+    // Roving tabindex: the owning <sq-field> group promotes exactly one option
+    // to tabIndex 0 (WAI-ARIA APG); arrows move focus between the rest.
+    if (!this.hasAttribute('tabindex')) this.tabIndex = -1;
     this._syncA11y();
     this.addEventListener('click', this._onActivate);
     this.addEventListener('keydown', this._onKey);

@@ -149,6 +149,54 @@ class SqField extends LitElement {
     this._emit('sq-record', { path: this.field.path, optionKey: e.detail.optionKey });
   }
 
+  // --- roving tabindex (WAI-ARIA APG: one tab stop per option group) ---------
+  // Arrows/Home/End move focus without selecting (selection commits sweeps —
+  // too heavy per keypress); Enter/Space on the focused option selects. Gated
+  // options stay arrow-reachable (their tooltip shows on focus) but are never
+  // the group's initial tab stop.
+  _options() {
+    return [...this.querySelectorAll('sq-option')];
+  }
+
+  _applyRove() {
+    const opts = this._options();
+    if (!opts.length) return;
+    let rover = this._roveKey ? opts.find((o) => o.optionKey === this._roveKey) : null;
+    if (!rover) rover = opts.find((o) => o.selected && !o.gated);
+    if (!rover) rover = opts.find((o) => !o.gated);
+    if (!rover) rover = opts[0];
+    for (const o of opts) o.tabIndex = o === rover ? 0 : -1;
+  }
+
+  updated() {
+    this._applyRove();
+  }
+
+  _onOptsFocusin(e) {
+    const opt = e.target && e.target.closest ? e.target.closest('sq-option') : null;
+    if (opt) this._roveKey = opt.optionKey;
+  }
+
+  _onOptsKeydown(e) {
+    const NAV = ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp', 'Home', 'End'];
+    if (!NAV.includes(e.key)) return;
+    const opts = this._options();
+    if (!opts.length) return;
+    const cur = opts.indexOf(document.activeElement);
+    let idx;
+    if (e.key === 'Home') idx = 0;
+    else if (e.key === 'End') idx = opts.length - 1;
+    else {
+      const dir = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : -1;
+      idx = cur === -1 ? (dir === 1 ? 0 : opts.length - 1) : (cur + dir + opts.length) % opts.length;
+    }
+    e.preventDefault();
+    const target = opts[idx];
+    this._roveKey = target.optionKey;
+    for (const o of opts) o.tabIndex = o === target ? 0 : -1;
+    target.focus();
+  }
+
   _renderControl(f) {
     const opts = f.options || [];
 
@@ -207,6 +255,8 @@ class SqField extends LitElement {
         role=${controlRole === 'radio' ? 'radiogroup' : 'group'}
         aria-labelledby=${this._labelId(f)}
         @sq-option-activate=${this._onOption}
+        @keydown=${this._onOptsKeydown}
+        @focusin=${this._onOptsFocusin}
       >
         ${opts.map(
           (o) => {

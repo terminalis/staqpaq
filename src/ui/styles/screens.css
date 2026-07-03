@@ -51,9 +51,42 @@ sq-app { display: block; min-height: 100vh; }
 }
 /* the staqpaq boot logotype stays signal-blue */
 .boot .vt { color: var(--signal); }
-/* reset action — directly under the title-block header, aligned to its inset */
-.rail-actions { padding: 0 16px 14px; }
+/* rail actions — directly under the title-block header, aligned to its inset */
+.rail-actions { display: flex; flex-direction: column; gap: 8px; padding: 0 16px 14px; }
 .rail-reset { width: 100%; min-height: 44px; justify-content: center; border-color: var(--rule); color: var(--paper); font-size: 12px; }
+.rail-about { width: 100%; min-height: 44px; justify-content: center; border-color: var(--rule); color: var(--paper-dim); font-size: 12px; }
+.rail-about:hover { color: var(--paper); }
+
+/* rail notices — resumed-draft strip + save-degradation banner */
+.rail-notices { display: flex; flex-direction: column; gap: 8px; padding: 0 16px 14px; }
+.rail-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  border: 1px solid var(--rule);
+  background: var(--ink-2);
+  color: var(--paper-dim);
+  font-size: 12px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  padding: 9px 6px 9px 11px;
+}
+.rail-notice.crit { border-color: var(--crit); color: var(--crit); padding-right: 11px; }
+.rail-notice .notice-x {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
+  margin: -6px 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.rail-notice .notice-x:hover { color: var(--paper); }
 
 .section-nav { display: flex; flex: 1; min-height: 0; }
 .seclist { list-style: none; margin: 0; padding: 6px 0; overflow-y: auto; flex: 1; }
@@ -138,6 +171,36 @@ sq-app { display: block; min-height: 100vh; }
 
 /* --- main panel ------------------------------------------------------------ */
 .shell-main { position: relative; z-index: 1; display: flex; flex-direction: column; }
+
+/* first-run orientation ticket — sits above the working sheet, never a gate */
+.intro-panel {
+  position: relative;
+  display: block;
+  margin: var(--gut) var(--gut) 0;
+  padding: 24px 26px 22px;
+  background: var(--panel-scrim);
+}
+.intro-panel .intro-x {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  background: none;
+  color: var(--paper-dim);
+  font-size: 16px;
+  cursor: pointer;
+}
+.intro-panel .intro-x:hover { color: var(--paper); }
+.intro-panel .intro-eyebrow { color: var(--paper-dim); margin-bottom: 10px; }
+.intro-panel .intro-title { font-size: var(--fs-h2); color: var(--paper); margin-bottom: 12px; }
+.intro-panel .intro-body { color: var(--paper-dim); font-size: 13.5px; line-height: 1.6; max-width: 640px; margin: 0 0 10px; }
+.intro-panel .intro-body code { color: var(--signal); font-family: var(--font-mono); }
+.intro-panel .intro-actions { display: flex; align-items: center; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
 
 /* the working sheet — a double-line drawing boundary (.bp-frame) inset from the
    shell, holding the panel content and a corner title block */

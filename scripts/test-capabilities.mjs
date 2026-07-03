@@ -293,6 +293,13 @@ check('ai features None gates model providers', recordSelection(ctx({ 'ai.featur
 let ai = recordSelection(ctx({ 'ai.providers': ['openai', 'other'], 'ai.providers.custom': ['Local model'] }), { path: 'ai.features', option_key: 'none' }).selections;
 check('ai features None sweeps providers', ai['ai.providers'] === undefined && ai['ai.providers.custom'] === undefined);
 
+// 29 · export failure surfaces as a reportable error, never a throw across the orchestrator
+const { exportPack } = await import('../src/core/capabilities/exportPack.js');
+const sabotaged = exportPack({ draft: { selections: {} }, catalogue: { allFields: null } }, { scope: 'yaml' });
+check('exportPack returns EXPORT_FAILED instead of throwing', !!(sabotaged && sabotaged.error && sabotaged.error.code === 'EXPORT_FAILED'));
+const healthyExport = exportPack({ draft: { selections: {} }, catalogue }, { scope: 'yaml' });
+check('exportPack still succeeds on a healthy catalogue', !!(healthyExport && healthyExport.output && !healthyExport.error));
+
 if (failures.length) {
   console.error(`✗ test-capabilities FAILED — ${failures.length} of ${pass + failures.length}:`);
   for (const f of failures) console.error('    - ' + f);

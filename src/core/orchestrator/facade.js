@@ -13,7 +13,7 @@ import { loadCatalogue, getCatalogue } from '../catalogue/loader.js';
 import { projectCatalogue } from '../catalogue/projection.js';
 import { deriveRequirements } from '../derive/deriveRequirements.js';
 import { serializeYaml } from '../export/serializeYaml.js';
-import { bootState, getDraft, getEvents } from '../state/index.js';
+import { bootState, getDraft, getEvents, getBootInfo, getPersistHealth } from '../state/index.js';
 
 let _booting = null;
 
@@ -59,4 +59,14 @@ export function readPreviewYaml() {
 /** read_events → the event log. */
 export function readEvents() {
   return getEvents();
+}
+
+/** What boot found — resumed-draft info + catalogue-migration report. */
+export function readBootInfo() {
+  return getBootInfo();
+}
+
+/** Best-effort persistence health — lets the UI surface a save degradation. */
+export function readPersistenceHealth() {
+  return getPersistHealth();
 }

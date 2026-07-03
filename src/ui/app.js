@@ -23,6 +23,11 @@ const CONFIRM_COPY = {
     body: 'This clears every decision and starts an empty staqpaq. This cannot be undone.',
     confirmLabel: 'Reset draft',
   },
+  load_sample: {
+    title: 'Load the sample?',
+    body: 'This replaces your current draft with the curated sample staqpaq. Your existing decisions are cleared.',
+    confirmLabel: 'Load sample',
+  },
 };
 
 class SqApp extends LitElement {
@@ -34,6 +39,8 @@ class SqApp extends LitElement {
     _projectPromptError: { state: true },
     _toast: { state: true },
     _booted: { state: true },
+    _bootNoticeDismissed: { state: true },
+    _introOpen: { state: true },
   };
 
   createRenderRoot() {
@@ -51,6 +58,9 @@ class SqApp extends LitElement {
     this._toastTimer = 0;
     this._pendingFocusPath = null;
     this._booted = false;
+    this._bootInfo = null; // façade boot telemetry (resumed draft, migrations)
+    this._bootNoticeDismissed = false;
+    this._introOpen = false;
   }
 
   updated(changed) {
@@ -87,9 +97,25 @@ class SqApp extends LitElement {
     });
 
     await facade.boot();
+    this._bootInfo = facade.readBootInfo();
     this.refresh();
     if (this._active == null) this._active = this._firstSectionId();
+    // True first run only: no decisions AND an empty event log (the log survives
+    // resets, so returning users are never re-ambushed by the intro).
+    this._introOpen =
+      Object.keys(this._m.entity.selections).length === 0 && facade.readEvents().length === 0;
     this._booted = true;
+  }
+
+  /** Coarse relative time for the resumed-draft strip (presentation only). */
+  _relTime(iso) {
+    const then = Date.parse(iso || '');
+    if (!Number.isFinite(then)) return '';
+    const mins = Math.round((Date.now() - then) / 60000);
+    const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+    if (mins < 60) return rtf.format(-Math.max(mins, 0), 'minute');
+    if (mins < 60 * 24) return rtf.format(-Math.round(mins / 60), 'hour');
+    return rtf.format(-Math.round(mins / (60 * 24)), 'day');
   }
 
   refresh() {
@@ -98,6 +124,7 @@ class SqApp extends LitElement {
       catalogueView: facade.readCatalogueView(),
       requirements: facade.readRequirements(),
       yaml: facade.readPreviewYaml(),
+      persist: facade.readPersistenceHealth(),
     };
   }
 
@@ -202,11 +229,23 @@ class SqApp extends LitElement {
   }
 
   async _onExport(scope) {
-    const res = await facade.invokeIntent('export_pack', { scope }); // passes ONLY scope
-    if (res.ok) {
-      downloadPack(res.result);
-      this._showToast('ok', scope === 'pack' ? 'Pack exported' : 'staqpaq.yaml exported', 6000);
+    let res;
+    try {
+      res = await facade.invokeIntent('export_pack', { scope }); // passes ONLY scope
+    } catch {
+      res = null; // unexpected throw — treated exactly like a failed result below
     }
+    if (!res || !res.ok) {
+      this._showToast('error', 'Export failed — nothing was downloaded.'); // stays until dismissed
+      return;
+    }
+    try {
+      downloadPack(res.result);
+    } catch {
+      this._showToast('error', 'Download failed — nothing was saved.');
+      return;
+    }
+    this._showToast('ok', scope === 'pack' ? 'Pack exported' : 'staqpaq.yaml exported', 6000);
   }
 
   _sectionPct(id) {
@@ -241,6 +280,71 @@ class SqApp extends LitElement {
 
   _renderSkipLink() {
     return html`<a class="skip-link" href="#main-content">Skip to main content</a>`;
+  }
+
+  // First-run orientation panel: an in-workspace ticket, not a gate — the
+  // workspace still mounts immediately. Shown automatically on a true first run;
+  // reopenable any time from the rail "about" button.
+  _renderIntro() {
+    if (!this._introOpen) return '';
+    return html`
+      <sq-ticket class="intro-panel bp-frame">
+        <button class="intro-x" type="button" aria-label="Dismiss introduction"
+          @click=${() => { this._introOpen = false; }}>✕</button>
+        <div class="eyebrow intro-eyebrow">What is this?</div>
+        <div class="intro-title vt">A build manifest for your app</div>
+        <p class="intro-body">
+          staqpaq records your app-build decisions — product shape, stack, providers,
+          screens — derives what they imply (env vars, brand assets, provider notes),
+          and exports a deterministic pack: <code>staqpaq.yaml</code> plus companion
+          docs. Hand the pack to a teammate or a coding agent as the build's bill of
+          materials. Undecided fields are fine — they simply stay open.
+        </p>
+        <p class="intro-body">
+          Everything runs locally in your browser and keeps working offline; your
+          draft autosaves on this device.
+        </p>
+        <div class="intro-actions">
+          <button class="btn primary" @click=${() => { this._introOpen = false; }}>
+            Start deciding
+          </button>
+          <button class="btn ghost" @click=${() => { this._introOpen = false; this._run('load_sample', {}); }}>
+            Load the sample
+          </button>
+          <a class="btn ghost" href="https://github.com/terminalis/staqpaq" target="_blank" rel="noopener">
+            View source
+          </a>
+        </div>
+      </sq-ticket>
+    `;
+  }
+
+  // Rail notices: the one-time resumed-draft strip (+ catalogue-migration report)
+  // and the persistent save-degradation banner. Pure projections of boot / persist
+  // telemetry read from the façade.
+  _renderRailNotices() {
+    const parts = [];
+    const b = this._bootInfo;
+    if (b && b.resumed && !this._bootNoticeDismissed) {
+      const n = b.decided_count;
+      const when = b.updated_at ? `, updated ${this._relTime(b.updated_at)}` : '';
+      const migrated = b.migrated_paths.length
+        ? ` ${b.migrated_paths.length} saved selection${b.migrated_paths.length === 1 ? ' no longer matched the current catalogue and was' : 's no longer matched the current catalogue and were'} removed.`
+        : '';
+      parts.push(html`<div class="rail-notice" role="status">
+        <span>Resumed draft — ${n} decision${n === 1 ? '' : 's'}${when}.${migrated} Reset to start fresh.</span>
+        <button class="notice-x" type="button" aria-label="Dismiss resumed-draft notice"
+          @click=${() => { this._bootNoticeDismissed = true; }}>✕</button>
+      </div>`);
+    }
+    const p = this._m && this._m.persist;
+    if (p && p.ok === false) {
+      parts.push(html`<div class="rail-notice crit" role="status">
+        Changes aren't being saved (${p.quota ? 'storage full' : 'storage blocked'}).
+        Your work stays in this tab — export now to keep it.
+      </div>`);
+    }
+    return parts.length ? html`<div class="rail-notices">${parts}</div>` : '';
   }
 
   _renderWorkspace() {
@@ -300,11 +404,16 @@ class SqApp extends LitElement {
             <button class="btn ghost rail-reset" @click=${() => this._run('reset_draft', {})}>
               <sq-icon name="solar:restart-bold"></sq-icon> Reset / start new
             </button>
+            <button class="btn ghost rail-about" @click=${() => { this._introOpen = true; }}>
+              <sq-icon name="solar:document-text-bold"></sq-icon> About staqpaq
+            </button>
           </div>
+          ${this._renderRailNotices()}
           <sq-section-nav .items=${items} active=${this._active}></sq-section-nav>
         </aside>
 
         <main id="main-content" class="shell-main" tabindex="-1">
+          ${this._renderIntro()}
           <div class="sheet bp-frame">
           ${this._active === 'review'
             ? html`<sq-review-export
