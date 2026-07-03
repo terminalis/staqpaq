@@ -72,6 +72,7 @@ function ruledOutBySelection(fieldPath, optionKey, selections, catalogue) {
         }
       }
       for (const rule of sel.precludes || []) {
+        if (rule.one_way) continue;
         if (rule.path === fieldPath && Array.isArray(rule.anyOf) && rule.anyOf.includes(optionKey)) {
           return sel.label || k;
         }

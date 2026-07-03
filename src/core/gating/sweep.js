@@ -15,6 +15,7 @@
 // terminates), supporting cascade sweeps. Returns { selections, sweptPaths }.
 
 import { fieldApplies, sectionApplies, evaluateOptionGate } from '../catalogue/conditions.js';
+import { CUSTOM_SENTINEL } from '../catalogue/custom.js';
 
 function isSingleOptionKind(kind) {
   return kind === 'single_select';
@@ -54,11 +55,13 @@ export function sweepSelections(selections, catalogue) {
         if (!hasValue) continue;
         const value = current[path];
         if (field.kind === 'multi_select' && Array.isArray(value)) {
+          const hadCustomSentinel = value.includes(CUSTOM_SENTINEL);
           const kept = value.filter((k) => {
             const opt = (field.options || []).find((o) => o.key === k);
             return !opt || !evaluateOptionGate(opt, current, field, catalogue).gated;
           });
           if (kept.length !== value.length) {
+            if (hadCustomSentinel && !kept.includes(CUSTOM_SENTINEL) && hasCustom) delete current[customKey];
             if (kept.length === 0) delete current[path];
             else current[path] = kept;
             swept.add(path);

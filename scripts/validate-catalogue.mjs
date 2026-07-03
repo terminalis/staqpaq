@@ -51,6 +51,19 @@ if (!audienceField) {
   if (!audienceKeys.has('other')) regressionFailures.push('project.audience includes Other sentinel');
 }
 
+const paymentsSection = (catalogue.sections || []).find((section) => section.id === 'payments');
+const paymentFieldPaths = (paymentsSection?.fields || []).map((field) => field.path);
+const paymentFeaturesIndex = paymentFieldPaths.indexOf('payments.features');
+const adPlatformsIndex = paymentFieldPaths.indexOf('monetization.ad_platforms');
+const affiliatePlatformsIndex = paymentFieldPaths.indexOf('monetization.affiliate_platforms');
+if (!paymentsSection) {
+  regressionFailures.push('payments section exists');
+} else if (paymentFeaturesIndex === -1 || adPlatformsIndex === -1 || affiliatePlatformsIndex === -1) {
+  regressionFailures.push('payment features/ad/affiliate fields exist');
+} else if (!(paymentFeaturesIndex < adPlatformsIndex && paymentFeaturesIndex < affiliatePlatformsIndex)) {
+  regressionFailures.push('payments.features appears before ad and affiliate monetization fields');
+}
+
 function expectIssue(name, dataIssues, pattern) {
   if (!dataIssues.some((i) => pattern.test(i))) regressionFailures.push(name);
 }

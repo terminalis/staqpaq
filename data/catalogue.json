@@ -192,9 +192,9 @@
         },
         {
           "path": "business.revenue_model",
-          "note": "How the product makes money. A paid model unlocks the Payments section.",
+          "note": "How the product makes money. Pick all that apply; monetized models unlock payment and monetization tooling.",
           "label": "Revenue model",
-          "kind": "single_select",
+          "kind": "multi_select",
           "severity": "recommended",
           "options": [
             {
@@ -1842,14 +1842,14 @@
     {
       "id": "payments",
       "number": "05",
-      "title": "Payments",
-      "blurb": "Billing, checkout, and monetization tooling. Options unlock once the product has a monetized revenue model.",
+      "title": "Payments & Monetization",
+      "blurb": "Billing, checkout, advertising, affiliate, and monetization tooling. Options unlock once the product has a monetized revenue model.",
       "fields": [
         {
           "path": "payments.provider",
-          "note": "The processor or billing platform used for paid, sponsored, licensed, or transaction-based revenue. Add your own via Other.",
-          "label": "Payment provider",
-          "kind": "single_select",
+          "note": "The processors or billing platforms used for paid, sponsored, licensed, or transaction-based revenue. Pick all that apply, or add your own via Other.",
+          "label": "Payment providers",
+          "kind": "multi_select",
           "severity": "recommended",
           "custom": true,
           "suggests": [
@@ -2286,7 +2286,8 @@
             },
             {
               "key": "none",
-              "label": "None"
+              "label": "None",
+              "exclusive": true
             },
             {
               "key": "other",
@@ -2767,6 +2768,433 @@
               ]
             }
           ]
+        },
+        {
+          "path": "monetization.ad_platforms",
+          "note": "Advertising networks, ad servers, or header-bidding tools used to monetize inventory. Pick all that apply, or None.",
+          "label": "Ad platforms",
+          "kind": "multi_select",
+          "severity": "optional",
+          "custom": true,
+          "options": [
+            {
+              "key": "admob",
+              "label": "AdMob",
+              "icon": "simple-icons:googleadmob",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "adsense",
+              "label": "AdSense",
+              "icon": "simple-icons:googleadsense",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "buysellads",
+              "label": "BuySellAds",
+              "icon": "simple-icons:buysellads",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "carbon_ads",
+              "label": "Carbon Ads",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "ezoic",
+              "label": "Ezoic",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "google_ad_manager",
+              "label": "Google Ad Manager",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "gumgum",
+              "label": "GumGum",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "prebid",
+              "label": "Prebid",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "none",
+              "label": "None",
+              "exclusive": true
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "monetization.affiliate_platforms",
+          "note": "Affiliate, referral, or partner platforms used to manage partner-sourced revenue. Pick all that apply, or None.",
+          "label": "Affiliate platforms",
+          "kind": "multi_select",
+          "severity": "optional",
+          "custom": true,
+          "options": [
+            {
+              "key": "amazon_associates",
+              "label": "Amazon Associates",
+              "icon": "simple-icons:amazon",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "awin",
+              "label": "Awin",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "cj_affiliate",
+              "label": "CJ Affiliate",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "firstpromoter",
+              "label": "FirstPromoter",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "impact",
+              "label": "impact.com",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "partnerstack",
+              "label": "PartnerStack",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "rakuten_advertising",
+              "label": "Rakuten Advertising",
+              "icon": "simple-icons:rakuten",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "rewardful",
+              "label": "Rewardful",
+              "requires": [
+                {
+                  "path": "business.revenue_model",
+                  "anyOf": [
+                    "subscription",
+                    "one_time",
+                    "usage_based",
+                    "freemium",
+                    "commission",
+                    "donation",
+                    "affiliate",
+                    "advertising",
+                    "licensing",
+                    "services",
+                    "sponsorship",
+                    "seat_based"
+                  ],
+                  "reason": "Applies once the product uses a monetized revenue model - set a paid, sponsored, licensed, or transaction-based revenue model in Identity & Scope."
+                }
+              ]
+            },
+            {
+              "key": "none",
+              "label": "None",
+              "exclusive": true
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
         }
       ]
     },
@@ -2786,79 +3214,250 @@
           "options": [
             {
               "key": "agents",
-              "label": "Agents"
+              "label": "Agents",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "Clear None before selecting AI features."
+                }
+              ]
             },
             {
               "key": "byok",
-              "label": "BYOK"
+              "label": "BYOK",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "Clear None before selecting AI features."
+                }
+              ]
             },
             {
               "key": "chat",
-              "label": "Chat"
+              "label": "Chat",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "Clear None before selecting AI features."
+                }
+              ]
             },
             {
               "key": "classification",
-              "label": "Classification"
+              "label": "Classification",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "Clear None before selecting AI features."
+                }
+              ]
             },
             {
               "key": "document_extraction",
-              "label": "Document extraction"
+              "label": "Document extraction",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "Clear None before selecting AI features."
+                }
+              ]
             },
             {
               "key": "embeddings",
-              "label": "Embeddings"
+              "label": "Embeddings",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "Clear None before selecting AI features."
+                }
+              ]
             },
             {
               "key": "fine_tuning",
-              "label": "Fine-tuning"
+              "label": "Fine-tuning",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "Clear None before selecting AI features."
+                }
+              ]
             },
             {
               "key": "guardrails",
-              "label": "Guardrails"
+              "label": "Guardrails",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "Clear None before selecting AI features."
+                }
+              ]
             },
             {
               "key": "image_generation",
-              "label": "Image generation"
+              "label": "Image generation",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "Clear None before selecting AI features."
+                }
+              ]
             },
             {
               "key": "moderation",
-              "label": "Moderation"
+              "label": "Moderation",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "Clear None before selecting AI features."
+                }
+              ]
             },
             {
               "key": "rag",
-              "label": "RAG"
+              "label": "RAG",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "Clear None before selecting AI features."
+                }
+              ]
             },
             {
               "key": "recommendations",
-              "label": "Recommendations"
+              "label": "Recommendations",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "Clear None before selecting AI features."
+                }
+              ]
             },
             {
               "key": "speech_to_text",
-              "label": "Speech-to-text"
+              "label": "Speech-to-text",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "Clear None before selecting AI features."
+                }
+              ]
             },
             {
               "key": "summarize",
-              "label": "Summarization"
+              "label": "Summarization",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "Clear None before selecting AI features."
+                }
+              ]
             },
             {
               "key": "text_to_speech",
-              "label": "Text-to-speech"
+              "label": "Text-to-speech",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "Clear None before selecting AI features."
+                }
+              ]
             },
             {
               "key": "tool_calling",
-              "label": "Tool calling"
+              "label": "Tool calling",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "Clear None before selecting AI features."
+                }
+              ]
             },
             {
               "key": "usage_limits",
-              "label": "Usage limits"
+              "label": "Usage limits",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "Clear None before selecting AI features."
+                }
+              ]
             },
             {
               "key": "vector_search",
-              "label": "Vector search"
+              "label": "Vector search",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "Clear None before selecting AI features."
+                }
+              ]
             },
             {
               "key": "vision",
-              "label": "Vision"
+              "label": "Vision",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "Clear None before selecting AI features."
+                }
+              ]
             },
             {
               "key": "none",
@@ -2867,7 +3466,16 @@
             },
             {
               "key": "other",
-              "label": "Other"
+              "label": "Other",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "Clear None before entering another AI feature."
+                }
+              ]
             }
           ]
         },
@@ -2882,99 +3490,309 @@
             {
               "key": "anthropic",
               "label": "Anthropic",
-              "icon": "simple-icons:anthropic"
+              "icon": "simple-icons:anthropic",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "AI providers apply only when AI features are selected - clear None in AI features to enable this option.",
+                  "one_way": true
+                }
+              ]
             },
             {
               "key": "aws_bedrock",
               "label": "AWS Bedrock",
-              "icon": "simple-icons:amazonaws"
+              "icon": "simple-icons:amazonaws",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "AI providers apply only when AI features are selected - clear None in AI features to enable this option.",
+                  "one_way": true
+                }
+              ]
             },
             {
               "key": "azure_openai",
               "label": "Azure OpenAI",
-              "icon": "simple-icons:microsoftazure"
+              "icon": "simple-icons:microsoftazure",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "AI providers apply only when AI features are selected - clear None in AI features to enable this option.",
+                  "one_way": true
+                }
+              ]
             },
             {
               "key": "cerebras",
-              "label": "Cerebras"
+              "label": "Cerebras",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "AI providers apply only when AI features are selected - clear None in AI features to enable this option.",
+                  "one_way": true
+                }
+              ]
             },
             {
               "key": "cohere",
-              "label": "Cohere"
+              "label": "Cohere",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "AI providers apply only when AI features are selected - clear None in AI features to enable this option.",
+                  "one_way": true
+                }
+              ]
             },
             {
               "key": "deepseek",
               "label": "DeepSeek",
-              "icon": "simple-icons:deepseek"
+              "icon": "simple-icons:deepseek",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "AI providers apply only when AI features are selected - clear None in AI features to enable this option.",
+                  "one_way": true
+                }
+              ]
             },
             {
               "key": "elevenlabs",
               "label": "ElevenLabs",
-              "icon": "simple-icons:elevenlabs"
+              "icon": "simple-icons:elevenlabs",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "AI providers apply only when AI features are selected - clear None in AI features to enable this option.",
+                  "one_way": true
+                }
+              ]
             },
             {
               "key": "fireworks",
-              "label": "Fireworks AI"
+              "label": "Fireworks AI",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "AI providers apply only when AI features are selected - clear None in AI features to enable this option.",
+                  "one_way": true
+                }
+              ]
             },
             {
               "key": "google",
               "label": "Google Gemini",
-              "icon": "simple-icons:google"
+              "icon": "simple-icons:google",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "AI providers apply only when AI features are selected - clear None in AI features to enable this option.",
+                  "one_way": true
+                }
+              ]
             },
             {
               "key": "groq",
-              "label": "Groq"
+              "label": "Groq",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "AI providers apply only when AI features are selected - clear None in AI features to enable this option.",
+                  "one_way": true
+                }
+              ]
             },
             {
               "key": "huggingface",
               "label": "Hugging Face",
-              "icon": "simple-icons:huggingface"
+              "icon": "simple-icons:huggingface",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "AI providers apply only when AI features are selected - clear None in AI features to enable this option.",
+                  "one_way": true
+                }
+              ]
             },
             {
               "key": "mistral",
               "label": "Mistral",
-              "icon": "simple-icons:mistralai"
+              "icon": "simple-icons:mistralai",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "AI providers apply only when AI features are selected - clear None in AI features to enable this option.",
+                  "one_way": true
+                }
+              ]
             },
             {
               "key": "openai",
               "label": "OpenAI",
-              "icon": "simple-icons:openai"
+              "icon": "simple-icons:openai",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "AI providers apply only when AI features are selected - clear None in AI features to enable this option.",
+                  "one_way": true
+                }
+              ]
             },
             {
               "key": "openrouter",
               "label": "OpenRouter",
-              "icon": "simple-icons:openrouter"
+              "icon": "simple-icons:openrouter",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "AI providers apply only when AI features are selected - clear None in AI features to enable this option.",
+                  "one_way": true
+                }
+              ]
             },
             {
               "key": "perplexity",
               "label": "Perplexity",
-              "icon": "simple-icons:perplexity"
+              "icon": "simple-icons:perplexity",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "AI providers apply only when AI features are selected - clear None in AI features to enable this option.",
+                  "one_way": true
+                }
+              ]
             },
             {
               "key": "replicate",
               "label": "Replicate",
-              "icon": "simple-icons:replicate"
+              "icon": "simple-icons:replicate",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "AI providers apply only when AI features are selected - clear None in AI features to enable this option.",
+                  "one_way": true
+                }
+              ]
             },
             {
               "key": "together",
-              "label": "Together AI"
+              "label": "Together AI",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "AI providers apply only when AI features are selected - clear None in AI features to enable this option.",
+                  "one_way": true
+                }
+              ]
             },
             {
               "key": "vertex_ai",
               "label": "Vertex AI",
-              "icon": "simple-icons:googlecloud"
+              "icon": "simple-icons:googlecloud",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "AI providers apply only when AI features are selected - clear None in AI features to enable this option.",
+                  "one_way": true
+                }
+              ]
             },
             {
               "key": "voyage",
-              "label": "Voyage AI"
+              "label": "Voyage AI",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "AI providers apply only when AI features are selected - clear None in AI features to enable this option.",
+                  "one_way": true
+                }
+              ]
             },
             {
               "key": "xai",
-              "label": "xAI"
+              "label": "xAI",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "AI providers apply only when AI features are selected - clear None in AI features to enable this option.",
+                  "one_way": true
+                }
+              ]
             },
             {
               "key": "other",
-              "label": "Other"
+              "label": "Other",
+              "precludes": [
+                {
+                  "path": "ai.features",
+                  "anyOf": [
+                    "none"
+                  ],
+                  "reason": "AI providers apply only when AI features are selected - clear None in AI features to enable this option.",
+                  "one_way": true
+                }
+              ]
             }
           ]
         }
@@ -3973,6 +4791,10 @@
           "note": "The product's primary screens and flows. Pick all that apply, or add your own via Other.",
           "options": [
             {
+              "key": "not_found",
+              "label": "404 / not found"
+            },
+            {
               "key": "dashboard",
               "label": "Admin dashboard"
             },
@@ -4005,8 +4827,16 @@
               "label": "Landing page"
             },
             {
+              "key": "notification_center",
+              "label": "Notification center"
+            },
+            {
               "key": "onboarding",
               "label": "Onboarding"
+            },
+            {
+              "key": "password_reset",
+              "label": "Password reset"
             },
             {
               "key": "pricing",

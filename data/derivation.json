@@ -1437,6 +1437,104 @@
         "key": "NOUN_PROJECT_API_SECRET",
         "from_provider": "Noun Project"
       }
+    ],
+    "monetization.ad_platforms:admob": [
+      {
+        "key": "ADMOB_APP_ID",
+        "from_provider": "AdMob"
+      }
+    ],
+    "monetization.ad_platforms:adsense": [
+      {
+        "key": "GOOGLE_ADSENSE_CLIENT_ID",
+        "from_provider": "AdSense"
+      }
+    ],
+    "monetization.ad_platforms:buysellads": [
+      {
+        "key": "BUYSELLADS_ZONE_ID",
+        "from_provider": "BuySellAds"
+      }
+    ],
+    "monetization.ad_platforms:carbon_ads": [
+      {
+        "key": "CARBON_ADS_SERVE_ID",
+        "from_provider": "Carbon Ads"
+      },
+      {
+        "key": "CARBON_ADS_PLACEMENT",
+        "from_provider": "Carbon Ads"
+      }
+    ],
+    "monetization.ad_platforms:ezoic": [
+      {
+        "key": "EZOIC_SITE_ID",
+        "from_provider": "Ezoic"
+      }
+    ],
+    "monetization.ad_platforms:google_ad_manager": [
+      {
+        "key": "GOOGLE_AD_MANAGER_NETWORK_CODE",
+        "from_provider": "Google Ad Manager"
+      }
+    ],
+    "monetization.ad_platforms:gumgum": [
+      {
+        "key": "GUMGUM_PUBLISHER_ID",
+        "from_provider": "GumGum"
+      }
+    ],
+    "monetization.affiliate_platforms:amazon_associates": [
+      {
+        "key": "AMAZON_ASSOCIATES_TAG",
+        "from_provider": "Amazon Associates"
+      }
+    ],
+    "monetization.affiliate_platforms:awin": [
+      {
+        "key": "AWIN_PUBLISHER_ID",
+        "from_provider": "Awin"
+      }
+    ],
+    "monetization.affiliate_platforms:cj_affiliate": [
+      {
+        "key": "CJ_PUBLISHER_ID",
+        "from_provider": "CJ Affiliate"
+      }
+    ],
+    "monetization.affiliate_platforms:firstpromoter": [
+      {
+        "key": "FIRSTPROMOTER_API_KEY",
+        "from_provider": "FirstPromoter"
+      }
+    ],
+    "monetization.affiliate_platforms:impact": [
+      {
+        "key": "IMPACT_ACCOUNT_SID",
+        "from_provider": "impact.com"
+      },
+      {
+        "key": "IMPACT_AUTH_TOKEN",
+        "from_provider": "impact.com"
+      }
+    ],
+    "monetization.affiliate_platforms:partnerstack": [
+      {
+        "key": "PARTNERSTACK_API_KEY",
+        "from_provider": "PartnerStack"
+      }
+    ],
+    "monetization.affiliate_platforms:rakuten_advertising": [
+      {
+        "key": "RAKUTEN_ADVERTISING_API_KEY",
+        "from_provider": "Rakuten Advertising"
+      }
+    ],
+    "monetization.affiliate_platforms:rewardful": [
+      {
+        "key": "REWARDFUL_API_KEY",
+        "from_provider": "Rewardful"
+      }
     ]
   },
   "implications": {
@@ -1470,6 +1568,27 @@
     ],
     "deployment.host:github_pages": [
       "GitHub Pages serves static files only — a server runtime, if needed, must live elsewhere."
+    ],
+    "monetization.ad_platforms:adsense": [
+      "AdSense usually requires a publisher client ID, ad placement snippets, and consent handling when personalized ads or cookies are used."
+    ],
+    "monetization.ad_platforms:google_ad_manager": [
+      "Google Ad Manager is an ad server for managing direct and programmatic inventory; confirm ad slots and consent-mode requirements before launch."
+    ],
+    "monetization.ad_platforms:gumgum": [
+      "GumGum is a contextual advertising platform; confirm publisher inventory approval and placement requirements."
+    ],
+    "monetization.ad_platforms:prebid": [
+      "Prebid is header-bidding infrastructure; it typically needs bidder adapters, consent wiring, and an ad server handoff."
+    ],
+    "monetization.affiliate_platforms:amazon_associates": [
+      "Amazon Associates usually requires affiliate disclosures and tagged outbound links."
+    ],
+    "monetization.affiliate_platforms:partnerstack": [
+      "PartnerStack can manage affiliate, referral, and partner programs; confirm tracking and payout workflow before launch."
+    ],
+    "monetization.affiliate_platforms:impact": [
+      "impact.com partnership tracking usually needs conversion events and partner-link attribution."
     ]
   },
   "assets": [
