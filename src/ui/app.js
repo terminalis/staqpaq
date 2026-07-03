@@ -47,6 +47,7 @@ class SqApp extends LitElement {
     _booted: { state: true },
     _bootNoticeDismissed: { state: true },
     _introOpen: { state: true },
+    _kindSweepNotice: { state: true },
   };
 
   createRenderRoot() {
@@ -67,6 +68,7 @@ class SqApp extends LitElement {
     this._bootInfo = null; // façade boot telemetry (resumed draft, migrations)
     this._bootNoticeDismissed = false;
     this._introOpen = false;
+    this._kindSweepNotice = 0; // project-only answers cleared by a kind switch
   }
 
   updated(changed) {
@@ -145,7 +147,7 @@ class SqApp extends LitElement {
       this._modal = { capabilityId, input, token: res.error.confirmationToken };
       return;
     }
-    this._afterMutation(capabilityId, res);
+    this._afterMutation(capabilityId, res, input);
   }
 
   async _onModalConfirm(e) {
@@ -164,10 +166,10 @@ class SqApp extends LitElement {
     if (!m) return;
     const res = await facade.invokeIntent(m.capabilityId, m.input, m.token);
     this._modal = null;
-    this._afterMutation(m.capabilityId, res);
+    this._afterMutation(m.capabilityId, res, m.input);
   }
 
-  _afterMutation(capabilityId, res) {
+  _afterMutation(capabilityId, res, input) {
     if (!res.ok) {
       if (capabilityId === 'import_draft' && res.error) {
         const line = res.error.line ? ` (line ${res.error.line})` : '';
@@ -178,6 +180,11 @@ class SqApp extends LitElement {
     this.refresh();
     if (capabilityId === 'reset_draft') {
       this._active = this._firstSectionId();
+    }
+    // Switching the staqpaq kind sweeps project-only answers — say so, visibly.
+    if (capabilityId === 'record_selection' && input && input.path === 'meta.kind') {
+      const swept = (res.result && res.result.swept_paths) || [];
+      this._kindSweepNotice = swept.length;
     }
     if (capabilityId === 'import_draft') {
       const out = res.result || {};
@@ -337,7 +344,10 @@ class SqApp extends LitElement {
         </p>
         <div class="intro-actions">
           <button class="btn primary" @click=${() => { this._introOpen = false; }}>
-            Start deciding
+            Start a project staqpaq
+          </button>
+          <button class="btn ghost" @click=${() => { this._introOpen = false; this._run('record_selection', { path: 'meta.kind', option_key: 'profile' }); }}>
+            Record your vendor defaults
           </button>
           <button class="btn ghost" @click=${() => { this._introOpen = false; this._run('load_sample', {}); }}>
             Load the sample
@@ -368,6 +378,15 @@ class SqApp extends LitElement {
           @click=${() => { this._bootNoticeDismissed = true; }}>✕</button>
       </div>`);
     }
+    if (this._kindSweepNotice > 0) {
+      const n = this._kindSweepNotice;
+      parts.push(html`<div class="rail-notice" role="status">
+        <span>Kind switched — ${n} project-specific answer${n === 1 ? ' was' : 's were'} cleared
+        (they don't apply to a vendor profile).</span>
+        <button class="notice-x" type="button" aria-label="Dismiss kind-switch notice"
+          @click=${() => { this._kindSweepNotice = 0; }}>✕</button>
+      </div>`);
+    }
     const p = this._m && this._m.persist;
     if (p && p.ok === false) {
       parts.push(html`<div class="rail-notice crit" role="status">
@@ -394,6 +413,7 @@ class SqApp extends LitElement {
     items.push({ id: 'review', number: '→', title: 'Review & Export', done: false });
     const activeSection = m.catalogueView.sections.find((s) => s.id === this._active);
     const projectName = m.entity.selections['project.name'] || m.entity.selections['project.name.custom'];
+    const isProfile = m.entity.selections['meta.kind'] === 'profile';
     const overallPct = Math.round(m.requirements.readiness.overall_pct || 0);
     const sheetLabel = this._active === 'review'
       ? 'review'
@@ -415,7 +435,7 @@ class SqApp extends LitElement {
               aria-label="staqpaq — view source on GitHub"
             >
               <span class="tb-mark vt">staq<span class="signal">paq</span></span>
-              <span class="tb-meta">build manifest</span>
+              <span class="tb-meta">${isProfile ? 'vendor profile' : 'build manifest'}</span>
             </a>
             <div class="tb-grid">
               <button
@@ -425,7 +445,7 @@ class SqApp extends LitElement {
                 aria-label="Add or change project name"
                 @click=${this._openProjectPrompt}
               >
-                <span class="tb-k">project</span><span class="tb-v">${projectName || 'untitled'}</span>
+                <span class="tb-k">${isProfile ? 'profile' : 'project'}</span><span class="tb-v">${projectName || 'untitled'}</span>
               </button>
               <div class="tb-cell"><span class="tb-k">sheet</span><span class="tb-v">${sheetLabel}</span></div>
               <div class="tb-cell"><span class="tb-k">readiness</span><span class="tb-v">${overallPct}%</span></div>

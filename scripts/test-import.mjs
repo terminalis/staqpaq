@@ -104,6 +104,20 @@ check('gated combinations sweep on import (ai none rules out providers)',
   JSON.stringify(conflicted.selections['ai.features']) === JSON.stringify(['none'])
   && conflicted.selections['ai.providers'] === undefined);
 
+// --- stack-profile round-trip -----------------------------------------------------
+const profileSel = normalizeSelections(
+  { 'meta.kind': 'profile', 'frontend.framework': 'react', 'database.provider': 'supabase' },
+  catalogue,
+);
+const profileYaml = serializeYaml(profileSel, catalogue);
+check('profile yaml self-describes its kind', /(^|\n)meta:\n {2}kind: profile\n/.test(profileYaml));
+const profBack = importYaml(profileYaml);
+check('profile round-trip re-exports byte-identical',
+  serializeYaml(profBack.selections, catalogue) === profileYaml);
+const mixed = importYaml('meta:\n  kind: profile\nproject:\n  type: saas\nfrontend:\n  framework: react\n');
+check('project-only content sweeps when importing a profile',
+  mixed.selections['project.type'] === undefined && mixed.selections['frontend.framework'] === 'react');
+
 // --- hostile / malformed input --------------------------------------------------
 delete Object.prototype.staqpaqPolluted;
 const proto = parseStaqpaqYaml('__proto__:\n  staqpaqPolluted: yes\n');

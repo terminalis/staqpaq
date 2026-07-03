@@ -17,6 +17,9 @@ export function selectionTokens(value) {
 
 /** Does one condition hold against the selections map?
  *  { path, anyOf:[keys] } — selection at path includes/equals any key.
+ *  { path, noneOf:[keys] } — selection at path includes NONE of the keys
+ *    (holds while the path is undecided — the "unless" operator, used to keep
+ *    project-only fields visible until the staqpaq kind is set to profile).
  *  { path, present:true|false } — selection at path is present / absent. */
 export function conditionHolds(cond, selections) {
   if (!cond || !cond.path) return false;
@@ -25,6 +28,9 @@ export function conditionHolds(cond, selections) {
   if (cond.present === false) return tokens.length === 0;
   if (Array.isArray(cond.anyOf)) {
     return cond.anyOf.some((k) => tokens.includes(String(k)));
+  }
+  if (Array.isArray(cond.noneOf)) {
+    return cond.noneOf.every((k) => !tokens.includes(String(k)));
   }
   return false;
 }

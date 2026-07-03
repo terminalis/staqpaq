@@ -18,7 +18,12 @@ export function buildPack(selections, catalogue, scope = 'yaml') {
   const name = projectName(sel);
   const staqpaq_yaml = serializeYaml(sel, catalogue);
 
-  const result = { scope, staqpaq_yaml, project_name: sel['project.name'] || sel['project.name.custom'] || '' };
+  const result = {
+    scope,
+    staqpaq_yaml,
+    project_name: sel['project.name'] || sel['project.name.custom'] || '',
+    kind: sel['meta.kind'] === 'profile' ? 'profile' : 'project',
+  };
   if (scope !== 'pack') return result;
 
   const tree = buildSpecTree(sel, catalogue);

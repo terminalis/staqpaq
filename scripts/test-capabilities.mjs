@@ -293,7 +293,19 @@ check('ai features None gates model providers', recordSelection(ctx({ 'ai.featur
 let ai = recordSelection(ctx({ 'ai.providers': ['openai', 'other'], 'ai.providers.custom': ['Local model'] }), { path: 'ai.features', option_key: 'none' }).selections;
 check('ai features None sweeps providers', ai['ai.providers'] === undefined && ai['ai.providers.custom'] === undefined);
 
-// 29 · export failure surfaces as a reportable error, never a throw across the orchestrator
+// 29 · staqpaq kind: a vendor profile hides + sweeps project-only decisions
+const prof = recordSelection(
+  ctx({ 'project.type': 'saas', 'surface.screens': ['dashboard'], 'frontend.framework': 'react' }),
+  { path: 'meta.kind', option_key: 'profile' },
+);
+check('profile kind sweeps project-only fields', prof.selections['project.type'] === undefined && prof.selections['surface.screens'] === undefined);
+check('profile kind keeps vendor fields', prof.selections['frontend.framework'] === 'react');
+check('profile kind reports the swept paths', (prof.output.swept_paths || []).includes('project.type'));
+check('project-only field rejects recording under profile', recordSelection(ctx({ 'meta.kind': 'profile' }), { path: 'project.type', option_key: 'saas' }).error?.code === 'FIELD_NOT_APPLICABLE');
+check('kind unset keeps project fields applicable', !recordSelection(ctx({}), { path: 'project.type', option_key: 'saas' }).error);
+check('switching back to project restores applicability', !recordSelection(ctx({ 'meta.kind': 'project' }), { path: 'project.type', option_key: 'saas' }).error);
+
+// 30 · export failure surfaces as a reportable error, never a throw across the orchestrator
 const { exportPack } = await import('../src/core/capabilities/exportPack.js');
 const sabotaged = exportPack({ draft: { selections: {} }, catalogue: { allFields: null } }, { scope: 'yaml' });
 check('exportPack returns EXPORT_FAILED instead of throwing', !!(sabotaged && sabotaged.error && sabotaged.error.code === 'EXPORT_FAILED'));

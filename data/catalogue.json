@@ -9,6 +9,23 @@
       "blurb": "What you're building, where it runs, who it's for, and how it makes money.",
       "fields": [
         {
+          "path": "meta.kind",
+          "label": "Staqpaq kind",
+          "kind": "single_select",
+          "severity": "optional",
+          "note": "What this staqpaq describes. A project build captures one product end to end; a vendor profile records your favoured stack to reuse across projects. Leave unset for a project build.",
+          "options": [
+            {
+              "key": "project",
+              "label": "Project build"
+            },
+            {
+              "key": "profile",
+              "label": "Vendor profile"
+            }
+          ]
+        },
+        {
           "path": "project.name",
           "note": "The product's name — labels the manifest and the exported pack.",
           "label": "Project name",
@@ -56,6 +73,14 @@
             {
               "key": "other",
               "label": "Other"
+            }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
             }
           ]
         },
@@ -126,6 +151,14 @@
               "label": "Windows",
               "icon": "simple-icons:windows"
             }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
+            }
           ]
         },
         {
@@ -187,6 +220,14 @@
             {
               "key": "other",
               "label": "Other"
+            }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
             }
           ]
         },
@@ -306,6 +347,14 @@
                 }
               ]
             }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
+            }
           ]
         },
         {
@@ -322,6 +371,12 @@
                 "usage_based",
                 "freemium",
                 "seat_based"
+              ]
+            },
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
               ]
             }
           ],
@@ -411,6 +466,14 @@
             {
               "key": "other",
               "label": "Other"
+            }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
             }
           ]
         }
@@ -4505,7 +4568,15 @@
           "note": "Your brand's primary accent colour — seeds the palette.",
           "label": "Theme color",
           "kind": "color",
-          "severity": "recommended"
+          "severity": "recommended",
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
+            }
+          ]
         },
         {
           "path": "design.theme.mode",
@@ -4934,6 +5005,14 @@
             }
           ]
         }
+      ],
+      "applies_when": [
+        {
+          "path": "meta.kind",
+          "noneOf": [
+            "profile"
+          ]
+        }
       ]
     },
     {
@@ -4997,6 +5076,14 @@
             {
               "key": "wordmark",
               "label": "Wordmark"
+            }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
             }
           ]
         },
