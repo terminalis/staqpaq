@@ -26,6 +26,8 @@ const PROVIDER_ICON_PLACEHOLDER_FIELDS = new Set([
   'backend.realtime',
   'auth.provider',
   'payments.provider',
+  'monetization.ad_platforms',
+  'monetization.affiliate_platforms',
   'ai.providers',
   'notifications.transactional_email',
   'notifications.marketing_email',

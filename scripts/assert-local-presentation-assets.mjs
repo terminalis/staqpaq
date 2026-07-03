@@ -59,7 +59,7 @@ if (!componentStyles.includes('.opt-icon-placeholder') || !componentStyles.inclu
   violations.push('src/ui/styles/components.css must style the option icon placeholder as an outlined square');
 }
 
-for (const fieldPath of ['frontend.framework', 'database.provider', 'auth.provider', 'payments.provider', 'monitoring.analytics']) {
+for (const fieldPath of ['frontend.framework', 'database.provider', 'auth.provider', 'payments.provider', 'monetization.ad_platforms', 'monetization.affiliate_platforms', 'monitoring.analytics']) {
   if (!fieldRenderer.includes(`'${fieldPath}'`)) {
     violations.push(`src/ui/components/sq-field.js placeholder allowlist is missing ${fieldPath}`);
   }
@@ -97,6 +97,13 @@ function findField(path) {
 const notificationChannels = findField('notifications.channels');
 if (notificationChannels && (notificationChannels.options || []).some((option) => option.icon)) {
   violations.push('notifications.channels must not use brand icons; keep it as generic channel labels');
+}
+
+for (const fieldPath of ['monetization.ad_platforms', 'monetization.affiliate_platforms']) {
+  const field = findField(fieldPath);
+  if (!field || !(field.options || []).some((option) => option.icon)) {
+    violations.push(`${fieldPath} must include at least one local brand icon so other vendors get placeholders`);
+  }
 }
 
 const targetPlatforms = findField('project.platforms');

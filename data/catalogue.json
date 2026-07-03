@@ -2780,6 +2780,7 @@
             {
               "key": "admob",
               "label": "AdMob",
+              "icon": "simple-icons:googleadmob",
               "requires": [
                 {
                   "path": "business.revenue_model",
@@ -2804,6 +2805,7 @@
             {
               "key": "adsense",
               "label": "AdSense",
+              "icon": "simple-icons:googleadsense",
               "requires": [
                 {
                   "path": "business.revenue_model",
@@ -2828,6 +2830,7 @@
             {
               "key": "buysellads",
               "label": "BuySellAds",
+              "icon": "simple-icons:buysellads",
               "requires": [
                 {
                   "path": "business.revenue_model",
@@ -2991,6 +2994,7 @@
             {
               "key": "amazon_associates",
               "label": "Amazon Associates",
+              "icon": "simple-icons:amazon",
               "requires": [
                 {
                   "path": "business.revenue_model",
@@ -3135,6 +3139,7 @@
             {
               "key": "rakuten_advertising",
               "label": "Rakuten Advertising",
+              "icon": "simple-icons:rakuten",
               "requires": [
                 {
                   "path": "business.revenue_model",
