@@ -36,12 +36,14 @@
       "fields": [
         {
           "path": "project.name",
-          "note": "The product's name — labels the manifest and the exported pack.",
+          "note": "Names the manifest and the exported pack — used for the export filename.",
           "label": "Project name",
           "kind": "text",
           "severity": "recommended",
           "primary": true,
-          "placeholder": "e.g. Acme Analytics"
+          "placeholder": "e.g. Acme Analytics",
+          "label_profile": "Stack name",
+          "placeholder_profile": "e.g. My default stack"
         },
         {
           "path": "project.type",
@@ -82,6 +84,14 @@
             {
               "key": "other",
               "label": "Other"
+            }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
             }
           ]
         },
@@ -152,6 +162,14 @@
               "label": "Windows",
               "icon": "simple-icons:windows"
             }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
+            }
           ]
         },
         {
@@ -213,6 +231,14 @@
             {
               "key": "other",
               "label": "Other"
+            }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
             }
           ]
         },
@@ -332,6 +358,14 @@
                 }
               ]
             }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
+            }
           ]
         },
         {
@@ -348,6 +382,12 @@
                 "usage_based",
                 "freemium",
                 "seat_based"
+              ]
+            },
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
               ]
             }
           ],
@@ -438,17 +478,18 @@
               "key": "other",
               "label": "Other"
             }
+          ],
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
+            }
           ]
         }
       ],
-      "applies_when": [
-        {
-          "path": "meta.kind",
-          "noneOf": [
-            "profile"
-          ]
-        }
-      ]
+      "blurb_profile": "Name your vendor stack — it labels the manifest and the exported pack."
     },
     {
       "id": "frontend",
@@ -5056,7 +5097,8 @@
             "profile"
           ]
         }
-      ]
+      ],
+      "guard_note": "Project decisions only — screens and policy pages describe a product build, not a vendor stack."
     },
     {
       "id": "assets",

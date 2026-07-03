@@ -309,8 +309,8 @@ const prof = recordSelection(
   }),
   { path: 'meta.kind', option_key: 'profile' },
 );
-check('vendor stack sweeps the whole identity section (incl. project name)',
-  prof.selections['project.name'] === undefined && prof.selections['project.type'] === undefined);
+check('vendor stack keeps the name (relabelled Stack name) and sweeps the other identity fields',
+  prof.selections['project.name'] === 'Acme' && prof.selections['project.type'] === undefined);
 check('vendor stack sweeps surfaces + project-shaped decisions',
   prof.selections['surface.screens'] === undefined
   && prof.selections['ai.features'] === undefined

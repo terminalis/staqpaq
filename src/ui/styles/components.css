@@ -265,24 +265,6 @@ sq-yaml-preview .yh {
   text-transform: uppercase;
   color: var(--paper-dim);
 }
-sq-yaml-preview .yh-side { display: inline-flex; align-items: center; gap: 12px; }
-sq-yaml-preview .yh-copy {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 3px 8px;
-  border: 1px solid var(--rule);
-  background: none;
-  color: var(--paper-dim);
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: border-color var(--t-micro), color var(--t-micro);
-}
-sq-yaml-preview .yh-copy:hover { border-color: var(--paper); color: var(--paper); }
-sq-yaml-preview .yh-copied { color: var(--sage); letter-spacing: 0.18em; }
 sq-yaml-preview pre.yaml {
   margin: 0;
   padding: 14px 16px;

@@ -114,9 +114,11 @@ check('profile yaml self-describes its kind', /(^|\n)meta:\n {2}kind: profile\n/
 const profBack = importYaml(profileYaml);
 check('profile round-trip re-exports byte-identical',
   serializeYaml(profBack.selections, catalogue) === profileYaml);
-const mixed = importYaml('meta:\n  kind: profile\nproject:\n  type: saas\nfrontend:\n  framework: react\n');
-check('project-only content sweeps when importing a profile',
-  mixed.selections['project.type'] === undefined && mixed.selections['frontend.framework'] === 'react');
+const mixed = importYaml('meta:\n  kind: profile\nproject:\n  name: My Stack\n  type: saas\nfrontend:\n  framework: react\n');
+check('project-only content sweeps when importing a profile (but the stack name survives)',
+  mixed.selections['project.type'] === undefined
+  && mixed.selections['project.name'] === 'My Stack'
+  && mixed.selections['frontend.framework'] === 'react');
 
 // --- hostile / malformed input --------------------------------------------------
 delete Object.prototype.staqpaqPolluted;

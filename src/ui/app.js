@@ -86,7 +86,7 @@ class SqApp extends LitElement {
     this.addEventListener('sq-nav', (e) => this._onNav(e.detail.to, e.detail.focusPath));
     this.addEventListener('sq-reset', () => this._run('reset_draft', {}));
     this.addEventListener('sq-export', (e) => this._onExport(e.detail.scope));
-    this.addEventListener('sq-import', () => this._onImport());
+    this.addEventListener('sq-copy', () => this._onCopyYaml());
     this.addEventListener('sq-toast-dismiss', () => {
       window.clearTimeout(this._toastTimer);
       this._toast = null;
@@ -134,8 +134,14 @@ class SqApp extends LitElement {
     };
   }
 
+  /** Sections the user can actually work in (guarded ones are listed but inert). */
+  _workableSections() {
+    return ((this._m && this._m.catalogueView.sections) || []).filter((s) => !s.guarded);
+  }
+
   _firstSectionId() {
-    return (this._m && this._m.catalogueView.sections[0] && this._m.catalogueView.sections[0].id) || 'review';
+    const secs = this._workableSections();
+    return (secs[0] && secs[0].id) || 'review';
   }
 
   async _run(capabilityId, input) {
@@ -208,6 +214,22 @@ class SqApp extends LitElement {
     this._run('import_draft', { text: picked.text, file_name: picked.file_name });
   }
 
+  // Copy the façade-derived staqpaq.yaml preview string — delivery only, same
+  // posture as download; never routed through export_pack.
+  async _onCopyYaml() {
+    const text = (this._m && this._m.yaml) || '';
+    if (!text.trim()) {
+      this._showToast('error', 'Nothing to copy yet — make a decision first.');
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      this._showToast('ok', 'staqpaq.yaml copied to clipboard.', 4000);
+    } catch {
+      this._showToast('error', 'Copy blocked by the browser — use Download instead.');
+    }
+  }
+
   _onNav(to, focusPath) {
     this._pendingFocusPath = focusPath || null;
     if (to === 'configurator') {
@@ -246,7 +268,7 @@ class SqApp extends LitElement {
   }
 
   _step(dir) {
-    const secs = this._m.catalogueView.sections;
+    const secs = this._workableSections();
     const idx = secs.findIndex((s) => s.id === this._active);
     if (dir === 'next') {
       this._active = idx >= 0 && idx < secs.length - 1 ? secs[idx + 1].id : 'review';
@@ -257,8 +279,9 @@ class SqApp extends LitElement {
 
   _ensureActiveValid() {
     if (this._active === 'review') return;
-    const secs = this._m.catalogueView.sections;
-    if (!secs.find((s) => s.id === this._active)) this._active = this._firstSectionId();
+    if (!this._workableSections().find((s) => s.id === this._active)) {
+      this._active = this._firstSectionId();
+    }
   }
 
   _showToast(kind, text, ms) {
@@ -442,6 +465,7 @@ class SqApp extends LitElement {
       id: s.id, number: s.number, title: s.title,
       resolved: s.resolvedCount, total: s.fieldCount,
       done: s.fieldCount > 0 && s.resolvedCount === s.fieldCount,
+      guarded: !!s.guarded, reason: s.guardReason || '',
     }));
     items.push({ id: 'review', number: '→', title: 'Review & Export', done: false });
     const activeSection = m.catalogueView.sections.find((s) => s.id === this._active);

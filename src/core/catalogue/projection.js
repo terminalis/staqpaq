@@ -37,6 +37,11 @@ function isResolved(field, value, customValue) {
  *  catalogue enables bidirectional option gating (a selection elsewhere can rule
  *  an option here out). */
 export function projectField(field, selections, catalogue) {
+  // presentation overrides for the vendor-stack pipeline: a field may carry
+  // `label_profile` / `note_profile` / `placeholder_profile` variants
+  const isProfilePipeline = selections['meta.kind'] === 'profile';
+  const text = (key) =>
+    isProfilePipeline && field[`${key}_profile`] != null ? field[`${key}_profile`] : field[key];
   const value = selections[field.path];
   const customValue = selections[field.path + '.custom'];
   const isMulti = field.kind === 'multi_select';
@@ -60,7 +65,7 @@ export function projectField(field, selections, catalogue) {
   });
   return {
     path: field.path,
-    label: field.label,
+    label: text('label'),
     kind: field.kind,
     severity: field.severity,
     primary: !!field.primary,
@@ -70,8 +75,8 @@ export function projectField(field, selections, catalogue) {
     custom: field.custom
       ? { enabled: customActive, multi: isMulti, value: isMulti ? '' : customValue ?? '', values: customValues }
       : null,
-    note: field.note || '',
-    placeholder: field.placeholder || '',
+    note: text('note') || '',
+    placeholder: text('placeholder') || '',
     value,
     customValue,
     options,
@@ -82,22 +87,44 @@ export function projectField(field, selections, catalogue) {
 
 /** Project the whole catalogue against current selections. A `hidden: true`
  *  field is pipeline state (set by the welcome screen, still serialized) — it
- *  never renders; a section left with nothing to render is omitted entirely. */
+ *  never renders; a section left with nothing to render is omitted entirely.
+ *  EXCEPT: a non-applicable section carrying a `guard_note` stays listed as
+ *  GUARDED (crosshatched with its reason — never hidden), mirroring the
+ *  gated-option treatment at section scale. Its selections still sweep and
+ *  never export (applies_when semantics are unchanged). */
 export function projectCatalogue(catalogue, selections = {}) {
   const sections = [];
   for (const section of catalogue.sections) {
-    if (!sectionApplies(section, selections)) continue;
+    if (!sectionApplies(section, selections)) {
+      if (section.guard_note) {
+        sections.push({
+          id: section.id,
+          number: section.number,
+          title: section.title,
+          blurb: section.blurb || '',
+          guarded: true,
+          guardReason: section.guard_note,
+          fields: [],
+          resolvedCount: 0,
+          fieldCount: 0,
+        });
+      }
+      continue;
+    }
     const fields = [];
     for (const field of section.fields || []) {
       if (field.hidden || !fieldApplies(field, selections)) continue;
       fields.push(projectField(field, selections, catalogue));
     }
     if (fields.length === 0) continue;
+    const profileBlurb = selections['meta.kind'] === 'profile' && section.blurb_profile != null;
     sections.push({
       id: section.id,
       number: section.number,
       title: section.title,
-      blurb: section.blurb || '',
+      blurb: (profileBlurb ? section.blurb_profile : section.blurb) || '',
+      guarded: false,
+      guardReason: '',
       fields,
       resolvedCount: fields.filter((f) => f.resolved).length,
       fieldCount: fields.length,

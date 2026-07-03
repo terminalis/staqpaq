@@ -24,8 +24,8 @@ class SqReviewExport extends LitElement {
     this.dispatchEvent(new CustomEvent('sq-export', { bubbles: true, composed: true, detail: { scope } }));
   }
 
-  _import() {
-    this.dispatchEvent(new CustomEvent('sq-import', { bubbles: true, composed: true }));
+  _copy() {
+    this.dispatchEvent(new CustomEvent('sq-copy', { bubbles: true, composed: true }));
   }
 
   _openRecommendation(m) {
@@ -135,8 +135,8 @@ class SqReviewExport extends LitElement {
           <button class="btn ghost" @click=${() => this._export('pack')}>
             <sq-icon name="solar:archive-down-minimlistic-bold"></sq-icon> Full pack zip
           </button>
-          <button class="btn ghost" @click=${this._import} title="Replace this draft with a previously exported staqpaq.yaml">
-            <sq-icon name="solar:upload-minimalistic-bold"></sq-icon> Import staqpaq.yaml
+          <button class="btn ghost" @click=${this._copy} title="Copy staqpaq.yaml to the clipboard">
+            <sq-icon name="solar:copy-bold"></sq-icon> Copy to clipboard
           </button>
           <div class="sq-toast-region" role="status">
             ${this.toast && this.toast.text
