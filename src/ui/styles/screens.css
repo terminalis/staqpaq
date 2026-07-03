@@ -187,11 +187,12 @@ sq-app { display: block; min-height: 100vh; }
    text, the stack-type chooser that sets the pipeline direction, and the
    import entry point. Reopened from the staqpaq mark at the top of the rail. */
 .welcome {
+  position: relative;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--gut);
+  padding: var(--gut) var(--gut) calc(var(--gut) + 54px);
 }
 .welcome-panel {
   position: relative;
@@ -239,14 +240,17 @@ sq-app { display: block; min-height: 100vh; }
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
-.welcome-actions { display: flex; align-items: center; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+.welcome-actions { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
 .welcome-src {
-  display: inline-block;
-  margin-top: 18px;
+  position: absolute;
+  left: 50%;
+  bottom: calc(18px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
   font-size: 11px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--paper-faint);
+  white-space: nowrap;
 }
 .welcome-src:hover { color: var(--signal); }
 @media (max-width: 640px) {

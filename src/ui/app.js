@@ -394,10 +394,10 @@ class SqApp extends LitElement {
                 </button>`
               : ''}
           </div>
-          <a class="welcome-src" href="https://github.com/terminalis/staqpaq" target="_blank" rel="noopener">
-            view source on GitHub
-          </a>
         </div>
+        <a class="welcome-src" href="https://github.com/terminalis/staqpaq" target="_blank" rel="noopener">
+          view source on GitHub
+        </a>
       </main>
     `;
   }

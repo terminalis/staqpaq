@@ -43,7 +43,7 @@
           "primary": true,
           "placeholder": "e.g. Acme Analytics",
           "label_profile": "Stack name",
-          "placeholder_profile": "e.g. My default stack"
+          "placeholder_profile": "e.g. Default Stack"
         },
         {
           "path": "project.type",
