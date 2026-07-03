@@ -120,15 +120,6 @@ sq-app { display: block; min-height: 100vh; }
 .seclist .navitem.guarded:hover,
 .secsheet-list .navitem.guarded:hover { color: var(--paper-dim); background-color: transparent; }
 .navitem.guarded .sn { color: var(--paper-faint); }
-.navitem .gflag-nav {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--paper-dim);
-  border: 1px solid var(--steel);
-  padding: 1px 5px;
-}
 
 /* --- mobile section navigator (position bar + index sheet) ----------------- */
 /* Hidden on desktop; the @media block below swaps them in under 860px. */

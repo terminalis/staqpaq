@@ -76,7 +76,6 @@ class SqSectionNav extends LitElement {
           >
             <span class="sn vt">${it.number}</span>
             <span class="nm">${it.title}</span>
-            <span class="nn gflag-nav">guarded</span>
           </button>
         </li>
       `;
