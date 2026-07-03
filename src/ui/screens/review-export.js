@@ -82,19 +82,19 @@ class SqReviewExport extends LitElement {
             <div class="block-eyebrow eyebrow">Required brand assets</div>
             ${req.required_assets.length
               ? html`<ul class="dlist">${req.required_assets.map((a) => html`<li><sq-icon name=${a.have ? 'solar:check-circle-bold' : 'solar:gallery-bold'}></sq-icon> ${a.label} <span class="faint">${a.filename_hint}</span> <span class="faint">${a.have ? '· have' : '· need'}</span></li>`)}</ul>`
-              : html`<div class="sq-empty">None implied yet.</div>`}
+              : html`<div class="sq-empty">None yet — implied as you make selections.</div>`}
           </div>
           <div class="derived-col">
             <div class="block-eyebrow eyebrow">Implied env vars</div>
             ${req.implied_env_vars.length
               ? html`<ul class="dlist">${req.implied_env_vars.map((e) => html`<li><code>${e.key}</code> <span class="faint">${e.from_provider}</span></li>`)}</ul>`
-              : html`<div class="sq-empty">None implied yet.</div>`}
+              : html`<div class="sq-empty">None yet — appears as you pick providers.</div>`}
           </div>
           <div class="derived-col">
             <div class="block-eyebrow eyebrow">Provider implications</div>
             ${req.provider_implications.length
               ? html`<ul class="dlist">${req.provider_implications.map((i) => html`<li>${i.note}</li>`)}</ul>`
-              : html`<div class="sq-empty">None yet.</div>`}
+              : html`<div class="sq-empty">None yet — appears as you pick providers.</div>`}
           </div>
         </div>
 

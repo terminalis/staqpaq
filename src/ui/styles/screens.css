@@ -202,7 +202,7 @@ sq-app { display: block; min-height: 100vh; }
 }
 .bp-titleblock .tb-brand:hover .tb-meta { color: var(--signal); }
 .bp-titleblock .tb-mark { font-family: var(--font-display); font-size: 24px; line-height: 1; color: var(--paper); }
-.bp-titleblock .tb-meta { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--paper-faint); }
+.bp-titleblock .tb-meta { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--paper-faint); }
 /* PROJECT spans the full width (row 1); SHEET + READINESS share row 2 */
 .bp-titleblock .tb-grid { display: grid; grid-template-columns: 1fr 1fr; }
 .bp-titleblock .tb-cell { display: flex; flex-direction: column; gap: 4px; padding: 9px 12px; border-right: 1px solid var(--bp-line); min-width: 0; }
@@ -219,7 +219,7 @@ sq-app { display: block; min-height: 100vh; }
   cursor: pointer;
 }
 .bp-titleblock button.tb-cell:hover .tb-v { color: var(--signal); }
-.bp-titleblock .tb-k { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--paper-faint); }
+.bp-titleblock .tb-k { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--paper-faint); }
 .bp-titleblock .tb-v { font-size: 12px; letter-spacing: 0.04em; color: var(--paper); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .crumb { display: flex; align-items: center; gap: 8px; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--paper-faint); margin-bottom: 22px; }
@@ -281,12 +281,26 @@ sq-app { display: block; min-height: 100vh; }
   /* swap the vertical rail list for the compact position bar + index sheet */
   .section-nav { display: none; }
   .seclist { display: none; }
-  .secbar { display: flex; }
+  /* the position bar pins to the viewport bottom (thumb-reachable stepper) so
+     navigation stays available mid-section; below the sheet (z-40) + modal (z-50).
+     During the load reveal the ancestor clip-path hides it until the scanline
+     passes — consistent with the curtain, and the clip reverts after the run. */
+  .secbar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 30;
+    background: var(--ink);
+    border-top: 1px solid var(--bp-line);
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  }
   .secsheet { display: block; }
   .rev-cols, .rev-derived { grid-template-columns: 1fr; }
-  /* tighter sheet on phones */
+  /* tighter sheet on phones; bottom padding clears the pinned position bar */
   .sheet { margin: var(--sp-3); }
-  .cfg-panel, .rev-panel { padding: 24px var(--sp-4) 60px; }
+  .cfg-panel, .rev-panel { padding: 24px var(--sp-4) 130px; }
 }
 
 @media (max-width: 520px) {

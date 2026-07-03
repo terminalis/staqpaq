@@ -12,7 +12,7 @@
   --ink-3: #0a2e9e;        /* surface-inset — selected fill, wells, readiness track */
   --paper: #ced8f7;        /* text — blue-cream body + VT323 headlines (~9.7:1 on ink) */
   --paper-dim: #8e9fd4;    /* text-muted — secondary text, tracked labels */
-  --paper-faint: #5a6cb0;  /* text-faint — hints, disabled, yaml comments (never essential) */
+  --paper-faint: #7d8fc9;  /* text-faint — hints, disabled, yaml comments (never essential; ~5.9:1 on ink, use --paper-dim when meaning-bearing on ink-2) */
   --signal: #3057e1;       /* primary — luminous blue: action, active marker, selection, fill */
   --signal-deep: #1e3fb0;  /* primary-deep — pressed / deep-hover blue */
   --steel: #4a6de5;        /* structure — ticket corners, strokes, stamp borders (blueprint lines) */

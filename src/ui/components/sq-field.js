@@ -245,7 +245,6 @@ class SqField extends LitElement {
         ${f.resolved
           ? html`<button
               class="btn ghost field-clear"
-              style="padding:2px 8px;font-size:10px"
               @click=${this._onClear}
             >
               Clear

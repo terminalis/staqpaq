@@ -61,13 +61,13 @@ sq-option[gated], sq-option[muted] {
   background-image: repeating-linear-gradient(45deg, rgba(214, 224, 255, 0.13) 0 1px, transparent 1px 6px);
 }
 sq-option[gated] { cursor: not-allowed; }
-sq-option[gated]:hover { transform: none; color: var(--paper-faint); border-color: var(--rule); }
+sq-option[gated]:hover { transform: none; color: var(--paper-dim); border-color: var(--rule); }
 sq-option[muted]:hover { transform: none; }
 sq-option .gflag {
   position: absolute;
-  top: -9px;
+  top: -10px;
   right: -1px;
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.14em;
   background: var(--ink);
   border: 1px solid var(--steel);
@@ -123,8 +123,10 @@ sq-field .field-label {
   text-transform: uppercase;
   color: var(--paper);
 }
-sq-field .field-note { color: var(--paper-faint); font-size: 11px; margin: 0 0 12px; letter-spacing: 0.02em; }
+sq-field .field-note { color: var(--paper-faint); font-size: 12px; margin: 0 0 12px; letter-spacing: 0.02em; }
 sq-field .opts { display: flex; flex-wrap: wrap; gap: 8px; }
+/* the compact per-field Clear affordance in the field head */
+sq-field .field-clear { min-height: 0; padding: 2px 8px; font-size: 11px; }
 
 /* --- custom escape-hatch input --------------------------------------------- */
 /* A 'custom'-prefixed mono input for values outside the curated set. */
@@ -154,7 +156,7 @@ sq-field .opts { display: flex; flex-wrap: wrap; gap: 8px; }
   min-width: 0;
 }
 .custom input::placeholder,
-.sq-text-input::placeholder { color: var(--paper-faint); }
+.sq-text-input::placeholder { color: var(--paper-dim); }
 
 /* multi_select custom: a stacked list of free-text rows ("Other", more than one).
    The trailing blank row is the "add another" affordance. */
@@ -271,8 +273,8 @@ sq-yaml-preview pre.yaml .c { color: var(--paper-faint); }
 .filelist .f { display: flex; align-items: center; gap: 11px; padding: 9px 13px; border-bottom: 1px solid var(--rule); font-size: 12.5px; }
 .filelist .f:last-child { border-bottom: 0; }
 .filelist .f .nm { flex: 1; color: var(--paper); }
-.filelist .f .tag { font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--paper-faint); }
-.filelist .f .canon { color: var(--signal); border: 1px solid var(--signal); padding: 1px 5px; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; }
+.filelist .f .tag { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--paper-faint); }
+.filelist .f .canon { color: var(--signal); border: 1px solid var(--signal); padding: 1px 5px; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; }
 
 /* --- surface panels -------------------------------------------------------- */
 .panel { background: var(--ink-2); border: 1px solid var(--bp-line); }
@@ -282,11 +284,10 @@ sq-yaml-preview pre.yaml .c { color: var(--paper-faint); }
 /* Visual-only, consistent with ux-design.yaml :: edge_states (optimistic / no
    spinner; inline errors; modal confirmation shell). No behavior here. */
 .sq-empty {
-  border: 1px solid var(--bp-line);
-  /* a vacant plot — crossed out corner-to-corner */
-  background-image:
-    linear-gradient(to top right, transparent calc(50% - 0.5px), rgba(214, 224, 255, 0.16) calc(50% - 0.5px), rgba(214, 224, 255, 0.16) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
-    linear-gradient(to bottom right, transparent calc(50% - 0.5px), rgba(214, 224, 255, 0.16) calc(50% - 0.5px), rgba(214, 224, 255, 0.16) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+  /* an awaiting plot — dashed reservation, not a struck-out void */
+  border: 1px dashed rgba(214, 224, 255, 0.3);
+  background-image: radial-gradient(circle at center, var(--grid-dot) 1px, transparent 1.5px);
+  background-size: 24px 24px;
   color: var(--paper-faint);
   font-size: 12.5px;
   letter-spacing: 0.04em;
@@ -338,6 +339,6 @@ sq-yaml-preview pre.yaml .c { color: var(--paper-faint); }
 .sq-modal .m-title { font-family: var(--font-display); font-size: 30px; line-height: 0.9; margin: 0 0 10px; }
 .sq-modal .m-body { color: var(--paper-dim); font-size: 13.5px; line-height: 1.55; margin: 0 0 20px; }
 .sq-modal .m-form { display: flex; flex-direction: column; gap: 10px; }
-.sq-modal .m-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--paper-faint); }
+.sq-modal .m-label { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--paper-dim); }
 .sq-modal .sq-modal-input { width: 100%; }
 .sq-modal .m-actions { display: flex; gap: 10px; justify-content: flex-end; }

@@ -98,7 +98,7 @@ expectIssue(
   /unsafe asset label/,
 );
 if (regressionFailures.length) {
-  console.error(`âœ— validate-catalogue regression checks FAILED (${regressionFailures.length}):`);
+  console.error(`✗ validate-catalogue regression checks FAILED (${regressionFailures.length}):`);
   for (const f of regressionFailures) console.error('    - ' + f);
   process.exit(1);
 }
