@@ -120,13 +120,29 @@ check('UNKNOWN_OPTION for non-primitive option key',
 check('UNKNOWN_OPTION for removed literal custom provider',
   recordSelection(ctx({}), { path: 'database.provider', option_key: 'custom' }).error?.code === 'UNKNOWN_OPTION');
 // 13 · payments options are gated (not hidden) until a paid revenue model is set
-check('payments OPTION_GATED without paid model', recordSelection(ctx({ 'business.revenue_model': 'free' }), { path: 'payments.provider', option_key: 'stripe' }).error?.code === 'OPTION_GATED');
-check('payments selectable with paid model', !recordSelection(ctx({ 'business.revenue_model': 'subscription' }), { path: 'payments.provider', option_key: 'stripe' }).error);
+let revenue = recordSelection(ctx({}), { path: 'business.revenue_model', option_key: 'subscription' }).selections;
+revenue = recordSelection(ctx(revenue), { path: 'business.revenue_model', option_key: 'one_time' }).selections;
+check('revenue model supports multiple selections', JSON.stringify(revenue['business.revenue_model']) === JSON.stringify(['subscription', 'one_time']));
+check('payments OPTION_GATED without paid model', recordSelection(ctx({ 'business.revenue_model': ['free'] }), { path: 'payments.provider', option_key: 'stripe' }).error?.code === 'OPTION_GATED');
+let providers = recordSelection(ctx({ 'business.revenue_model': ['subscription'] }), { path: 'payments.provider', option_key: 'stripe' }).selections;
+providers = recordSelection(ctx(providers), { path: 'payments.provider', option_key: 'paypal' }).selections;
+check('payments provider supports multiple selections', JSON.stringify(providers['payments.provider']) === JSON.stringify(['stripe', 'paypal']));
+providers = recordSelection(ctx(providers), { path: 'payments.provider', option_key: 'none' }).selections;
+check('payments provider None is exclusive', JSON.stringify(providers['payments.provider']) === JSON.stringify(['none']));
+providers = recordSelection(ctx(providers), { path: 'payments.provider', option_key: 'stripe' }).selections;
+check('payments provider normal option clears None', JSON.stringify(providers['payments.provider']) === JSON.stringify(['stripe']));
 const addedPaymentFlows = ['embedded_checkout', 'marketplace_payouts', 'payment_links', 'quote_to_invoice', 'subscription_management', 'usage_billing'];
 check('new payment flows are gated under free',
-  addedPaymentFlows.every((key) => recordSelection(ctx({ 'business.revenue_model': 'free' }), { path: 'payments.flows', option_key: key }).error?.code === 'OPTION_GATED'));
+  addedPaymentFlows.every((key) => recordSelection(ctx({ 'business.revenue_model': ['free'] }), { path: 'payments.flows', option_key: key }).error?.code === 'OPTION_GATED'));
 check('new payment flows are selectable with a monetized model',
-  addedPaymentFlows.every((key) => !recordSelection(ctx({ 'business.revenue_model': 'subscription' }), { path: 'payments.flows', option_key: key }).error));
+  addedPaymentFlows.every((key) => !recordSelection(ctx({ 'business.revenue_model': ['subscription'] }), { path: 'payments.flows', option_key: key }).error));
+let ads = recordSelection(ctx({ 'business.revenue_model': ['advertising'] }), { path: 'monetization.ad_platforms', option_key: 'adsense' }).selections;
+ads = recordSelection(ctx(ads), { path: 'monetization.ad_platforms', option_key: 'gumgum' }).selections;
+ads = recordSelection(ctx(ads), { path: 'monetization.ad_platforms', option_key: 'none' }).selections;
+check('ad platforms None is exclusive', JSON.stringify(ads['monetization.ad_platforms']) === JSON.stringify(['none']));
+let affiliates = recordSelection(ctx({ 'business.revenue_model': ['affiliate'] }), { path: 'monetization.affiliate_platforms', option_key: 'partnerstack' }).selections;
+affiliates = recordSelection(ctx(affiliates), { path: 'monetization.affiliate_platforms', option_key: 'rewardful' }).selections;
+check('affiliate platforms support multiple selections', JSON.stringify(affiliates['monetization.affiliate_platforms']) === JSON.stringify(['partnerstack', 'rewardful']));
 
 // 14 · set_custom_value free kind (text → stored at path)
 out = setCustomValue(ctx({}), { path: 'project.name', value: 'Acme Analytics' });
@@ -140,7 +156,7 @@ check('custom hatch stored at .custom', out.selections['database.provider.custom
 check('custom hatch keeps dependent storage (opaque upstream rules nothing out)', out.selections['backend.storage'] === 'supabase_storage');
 check('custom_value_set emitted', out.events.some((e) => e.name === 'custom_value_set' && e.payload.value === 'Convex'));
 
-// 16 · CUSTOM_NOT_ALLOWED (business.revenue_model is single_select, custom:false)
+// 16 · CUSTOM_NOT_ALLOWED (business.revenue_model is curated-only, custom:false)
 check('CUSTOM_NOT_ALLOWED', setCustomValue(ctx({}), { path: 'business.revenue_model', value: 'x' }).error?.code === 'CUSTOM_NOT_ALLOWED');
 
 // 17 · recording a curated value clears an existing custom value (mutual exclusion)
@@ -233,14 +249,14 @@ check('multi custom: a lone value becomes a one-item list (back-compat)', JSON.s
 
 // 26 · upstream → surface.screens suggestions (soft, overridable, one-directional).
 // A field-level `suggests` fires for any concrete vendor pick; option-level per option.
-let su = recordSelection(ctx({ 'business.revenue_model': 'subscription' }), { path: 'payments.provider', option_key: 'stripe' }).selections;
+let su = recordSelection(ctx({ 'business.revenue_model': ['subscription'] }), { path: 'payments.provider', option_key: 'stripe' }).selections;
 check('suggests: Stripe seeds Checkout + Billing', JSON.stringify(su['surface.screens']) === JSON.stringify(['checkout', 'billing']));
 su = recordSelection(ctx(su), { path: 'auth.provider', option_key: 'clerk' }).selections;
 check('suggests: an auth provider then adds Auth (accumulates)', JSON.stringify(su['surface.screens']) === JSON.stringify(['checkout', 'billing', 'auth']));
-check('suggests: one-directional — the upstream picks are untouched', su['payments.provider'] === 'stripe' && su['auth.provider'] === 'clerk');
+check('suggests: one-directional — the upstream picks are untouched', JSON.stringify(su['payments.provider']) === JSON.stringify(['stripe']) && su['auth.provider'] === 'clerk');
 check('suggests: the None sentinel seeds nothing', recordSelection(ctx({}), { path: 'auth.provider', option_key: 'none' }).selections['surface.screens'] === undefined);
 check('suggests: the Other sentinel seeds nothing', recordSelection(ctx({}), { path: 'auth.provider', option_key: 'other' }).selections['surface.screens'] === undefined);
-const pf = recordSelection(ctx({ 'business.revenue_model': 'subscription' }), { path: 'payments.flows', option_key: 'customer_portal' }).selections;
+const pf = recordSelection(ctx({ 'business.revenue_model': ['subscription'] }), { path: 'payments.flows', option_key: 'customer_portal' }).selections;
 check('suggests: the Customer portal flow seeds Billing', (pf['surface.screens'] || []).includes('billing'));
 const flowSuggestionTargets = {
   embedded_checkout: 'checkout',
@@ -252,23 +268,30 @@ const flowSuggestionTargets = {
 };
 check('suggests: added payment flows seed their expected screen',
   Object.entries(flowSuggestionTargets).every(([key, screen]) => {
-    const selections = recordSelection(ctx({ 'business.revenue_model': 'subscription' }), { path: 'payments.flows', option_key: key }).selections;
+    const selections = recordSelection(ctx({ 'business.revenue_model': ['subscription'] }), { path: 'payments.flows', option_key: key }).selections;
     return (selections['surface.screens'] || []).includes(screen);
   }));
 check('suggests: an in-app channel seeds Settings', JSON.stringify(recordSelection(ctx({}), { path: 'notifications.channels', option_key: 'in_app' }).selections['surface.screens']) === JSON.stringify(['settings']));
-const dup = recordSelection(ctx({ 'surface.screens': ['billing'], 'business.revenue_model': 'subscription' }), { path: 'payments.provider', option_key: 'stripe' }).selections;
+const dup = recordSelection(ctx({ 'surface.screens': ['billing'], 'business.revenue_model': ['subscription'] }), { path: 'payments.provider', option_key: 'stripe' }).selections;
 check('suggests: never duplicates an existing screen', JSON.stringify(dup['surface.screens']) === JSON.stringify(['billing', 'checkout']));
 
 // 27 · dismissal memory — manually removing a suggested screen is remembered, so a
 // later upstream change won't re-seed it; the upstream pick is never removed
-let dm = recordSelection(ctx({ 'business.revenue_model': 'subscription' }), { path: 'payments.provider', option_key: 'stripe' }).selections;
+let dm = recordSelection(ctx({ 'business.revenue_model': ['subscription'] }), { path: 'payments.provider', option_key: 'stripe' }).selections;
 dm = recordSelection(ctx(dm), { path: 'surface.screens', option_key: 'billing' }).selections; // user removes Billing
 check('dismissal: removing Billing records it dismissed', JSON.stringify(dm['surface.screens.dismissed']) === JSON.stringify(['billing']) && !(dm['surface.screens'] || []).includes('billing'));
 dm = recordSelection(ctx(dm), { path: 'payments.provider', option_key: 'paddle' }).selections; // re-touch payments
 check('dismissal: re-touching payments does not re-add the dismissed Billing', !(dm['surface.screens'] || []).includes('billing'));
-check('dismissal: the upstream payment provider is unaffected', dm['payments.provider'] === 'paddle');
+check('dismissal: the upstream payment provider is unaffected', JSON.stringify(dm['payments.provider']) === JSON.stringify(['stripe', 'paddle']));
 dm = recordSelection(ctx(dm), { path: 'surface.screens', option_key: 'billing' }).selections; // manual re-add
 check('dismissal: manually re-adding clears the dismissed mark', (dm['surface.screens'] || []).includes('billing') && dm['surface.screens.dismissed'] === undefined);
+
+// 28 · AI None gates the rest of the AI integration stack using existing gated-option presentation
+check('ai features None gates concrete features', recordSelection(ctx({ 'ai.features': ['none'] }), { path: 'ai.features', option_key: 'chat' }).error?.code === 'OPTION_GATED');
+check('ai features None gates Other', recordSelection(ctx({ 'ai.features': ['none'] }), { path: 'ai.features', option_key: 'other' }).error?.code === 'OPTION_GATED');
+check('ai features None gates model providers', recordSelection(ctx({ 'ai.features': ['none'] }), { path: 'ai.providers', option_key: 'openai' }).error?.code === 'OPTION_GATED');
+let ai = recordSelection(ctx({ 'ai.providers': ['openai', 'other'], 'ai.providers.custom': ['Local model'] }), { path: 'ai.features', option_key: 'none' }).selections;
+check('ai features None sweeps providers', ai['ai.providers'] === undefined && ai['ai.providers.custom'] === undefined);
 
 if (failures.length) {
   console.error(`✗ test-capabilities FAILED — ${failures.length} of ${pass + failures.length}:`);

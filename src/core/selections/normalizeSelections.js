@@ -23,6 +23,11 @@ const OPTION_ALIASES = {
   'notifications.sms': { messagebird: 'bird' },
 };
 
+const LEGACY_SCALAR_MULTI_FIELDS = new Set([
+  'business.revenue_model',
+  'payments.provider',
+]);
+
 function optionKeys(field) {
   return new Set((field.options || []).map((o) => o.key));
 }
@@ -114,8 +119,13 @@ export function normalizeSelections(selections = {}, catalogue) {
     }
 
     if (field.kind === 'multi_select') {
-      if (Array.isArray(source[path])) {
-        const picked = cleanStringList(source[path]).filter((key) => keys.has(key));
+      const rawValue = Array.isArray(source[path])
+        ? source[path]
+        : LEGACY_SCALAR_MULTI_FIELDS.has(path) && typeof source[path] === 'string'
+          ? [source[path]]
+          : null;
+      if (rawValue) {
+        const picked = cleanStringList(rawValue).filter((key) => keys.has(key));
         if (picked.length) normal[path] = picked;
       }
       if (field.custom && own(source, customKey)) {

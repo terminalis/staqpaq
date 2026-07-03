@@ -141,7 +141,12 @@ export function recordSelection(ctx, input) {
 
     // adding a curated option may seed suggestions into other fields (e.g. picking
     // a payment flow seeds the Checkout/Billing screens) — overridable, never stomps
-    if (added) applySuggestionList(opt && opt.suggests, selections, catalogue);
+    if (added) {
+      applySuggestionList(opt && opt.suggests, selections, catalogue);
+      if (option_key !== 'none' && option_key !== CUSTOM_SENTINEL) {
+        applySuggestionList(field.suggests, selections, catalogue);
+      }
+    }
   } else if (field.kind === 'boolean') {
     const boolVal = option_key === 'true';
     if (selections[path] === boolVal) delete selections[path]; // re-record → deselect

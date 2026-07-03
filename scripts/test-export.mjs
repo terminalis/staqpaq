@@ -33,7 +33,10 @@ check('starts at project:', yaml.startsWith('project:\n'));
 check('includes project name', /\n {2}name: Acme Analytics\n/.test(yaml));
 check('includes type', /\n {2}type: saas\n/.test(yaml));
 check('platforms nested under project', /\n {2}platforms: \[web, ios\]\n/.test(yaml));
+check('revenue model serializes as array', /\nbusiness:\n {2}revenue_model: \[subscription\]\n/.test(yaml));
 check('nested database.provider', /\ndatabase:\n {2}provider: supabase\n/.test(yaml));
+check('payments provider serializes as array', /\npayments:\n {2}provider: \[stripe\]\n/.test(yaml));
+check('monetization providers serialize', /\nmonetization:\n {2}ad_platforms: \[adsense\]\n {2}affiliate_platforms: \[partnerstack\]\n/.test(yaml));
 // no product field is a boolean anymore (cookie consent moved to surface.policy_pages);
 // cover boolean serialization against a synthetic one-field catalogue
 check('boolean true serialized', /flags:\n {2}test: true/.test(serializeYaml({ 'flags.test': true }, { allFields: [{ path: 'flags.test', kind: 'boolean' }] })));
@@ -66,6 +69,7 @@ const derived = deriveRequirements(sample, catalogue);
 const name = projectName(sample);
 const env = envExample(derived.implied_env_vars, name);
 check('.env from selected providers', /SUPABASE_URL=/.test(env) && /STRIPE_SECRET_KEY=/.test(env));
+check('.env from monetization providers', /GOOGLE_ADSENSE_CLIENT_ID=/.test(env) && /PARTNERSTACK_API_KEY=/.test(env));
 check('.env uses Supabase publishable key', /SUPABASE_PUBLISHABLE_KEY=/.test(env) && !/SUPABASE_ANON_KEY=/.test(env));
 check('.env grouped by provider', /# Supabase\n/.test(env));
 check('.env notes it is a pack output', /not staqpaq's own runtime/.test(env));
@@ -115,6 +119,14 @@ check('normalizeSelections drops stale invalid values before export',
   !/not a string/.test(staleYaml) &&
   Array.isArray(staleSelections['surface.screens.dismissed']) &&
   staleSelections['surface.screens.dismissed'].length === 1);
+
+const legacyMultiSelections = typeof normalise === 'function' ? normalise({
+  'business.revenue_model': 'subscription',
+  'payments.provider': 'stripe',
+}, catalogue) : {};
+check('normalizeSelections migrates scalar revenue/payment selections to arrays',
+  JSON.stringify(legacyMultiSelections['business.revenue_model']) === JSON.stringify(['subscription']) &&
+  JSON.stringify(legacyMultiSelections['payments.provider']) === JSON.stringify(['stripe']));
 
 const removedSelections = typeof normalise === 'function' ? normalise({
   'project.type': 'ai_app',

@@ -40,8 +40,15 @@ check('env: STRIPE_SECRET_KEY present', envKeys.includes('STRIPE_SECRET_KEY'));
 check('env: RESEND_API_KEY present', envKeys.includes('RESEND_API_KEY'));
 check('env: POSTHOG_KEY present', envKeys.includes('POSTHOG_KEY'));
 check('env: SENTRY_DSN present', envKeys.includes('SENTRY_DSN'));
+check('env: ad + affiliate provider keys present', envKeys.includes('GOOGLE_ADSENSE_CLIENT_ID') && envKeys.includes('PARTNERSTACK_API_KEY'));
 check('env: stock provider keys (Unsplash + Pexels)', envKeys.includes('UNSPLASH_ACCESS_KEY') && envKeys.includes('PEXELS_API_KEY'));
 check('env: removed content CMS derivations absent', !Object.keys(derivation.env_vars || {}).some((key) => key.startsWith('content.cms:')));
+const multiPayment = deriveRequirements({ 'business.revenue_model': ['subscription'], 'payments.provider': ['stripe', 'paypal'] }, catalogue);
+const multiPaymentEnv = multiPayment.implied_env_vars.map((e) => e.key);
+check('env: multiple payment providers contribute vars',
+  multiPaymentEnv.includes('STRIPE_SECRET_KEY') &&
+  multiPaymentEnv.includes('PAYPAL_CLIENT_ID') &&
+  multiPaymentEnv.includes('PAYPAL_CLIENT_SECRET'));
 
 // 3 · assets implied by platforms + app_type (design-system choices excluded)
 const assetIds = out.required_assets.map((a) => a.asset_id);
@@ -53,6 +60,7 @@ check('asset: NO app_icon_android (no android)', !assetIds.includes('app_icon_an
 
 // 4 · provider implications
 check('implication: supabase note', out.provider_implications.some((i) => i.provider === 'supabase' && /bundles/i.test(i.note)));
+check('implication: monetization provider notes', out.provider_implications.some((i) => i.provider === 'adsense' && /consent/i.test(i.note)));
 
 // 5 · readiness shape (UI-only)
 check('readiness overall 1..100', out.readiness.overall_pct > 0 && out.readiness.overall_pct <= 100);

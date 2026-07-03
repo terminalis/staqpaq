@@ -12,7 +12,9 @@
       "web",
       "ios"
     ],
-    "business.revenue_model": "subscription",
+    "business.revenue_model": [
+      "subscription"
+    ],
     "business.billing_interval": "both",
     "design.typography.primary": "poppins",
     "design.typography.secondary": "inter",
@@ -29,7 +31,9 @@
       "email_password",
       "oauth"
     ],
-    "payments.provider": "stripe",
+    "payments.provider": [
+      "stripe"
+    ],
     "payments.flows": [
       "checkout",
       "customer_portal"
@@ -58,6 +62,17 @@
       "unsplash",
       "pexels"
     ],
-    "design.icons": "lucide"
+    "design.icons": "lucide",
+    "monetization.ad_platforms": [
+      "adsense"
+    ],
+    "monetization.affiliate_platforms": [
+      "partnerstack"
+    ],
+    "surface.screens": [
+      "not_found",
+      "notification_center",
+      "password_reset"
+    ]
   }
 }
