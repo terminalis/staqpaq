@@ -9,6 +9,7 @@
 //   Step 7 — derive_requirements
 //   Step 8 — export_pack
 //   Step 9 — load_sample, reset_draft
+//   Roadmap — import_draft (the yaml round-trip)
 
 import { registerHandler, sealRegistry } from './registry.js';
 import { recordSelection } from '../capabilities/recordSelection.js';
@@ -17,6 +18,7 @@ import { setCustomValue } from '../capabilities/setCustomValue.js';
 import { deriveRequirementsCapability } from '../capabilities/deriveRequirements.js';
 import { exportPack } from '../capabilities/exportPack.js';
 import { loadSample } from '../capabilities/loadSample.js';
+import { importDraft } from '../capabilities/importDraft.js';
 import { resetDraft } from '../capabilities/resetDraft.js';
 
 registerHandler('record_selection', recordSelection);
@@ -25,5 +27,6 @@ registerHandler('set_custom_value', setCustomValue);
 registerHandler('derive_requirements', deriveRequirementsCapability);
 registerHandler('export_pack', exportPack);
 registerHandler('load_sample', loadSample);
+registerHandler('import_draft', importDraft);
 registerHandler('reset_draft', resetDraft);
 sealRegistry();

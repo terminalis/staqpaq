@@ -8,7 +8,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
 import { serializeYaml, buildSpecTree } from '../src/core/export/serializeYaml.js';
-import { staqpaqMd, assetChecklistMd, envExample, projectName } from '../src/core/export/artifacts.js';
+import { staqpaqMd, agentBriefMd, assetChecklistMd, envExample, projectName } from '../src/core/export/artifacts.js';
 import { deriveRequirements } from '../src/core/derive/deriveRequirements.js';
 const normalizationModule = await import('../src/core/selections/normalizeSelections.js').catch(() => null);
 
@@ -80,6 +80,11 @@ check('asset checklist marks have/need from brand checklist', /\[x\][^\n]*logo\.
 const md = staqpaqMd(buildSpecTree(sample, catalogue), name);
 check('staqpaq.md header + section', /# Acme Analytics/.test(md) && /## Project/.test(md));
 check('staqpaq.md one-way note', /generated one-way/i.test(md));
+const brief = agentBriefMd(buildSpecTree(sample, catalogue), derived, name);
+check('AGENTS.md brief renders with name + read order', /# Agent brief — Acme Analytics/.test(brief) && /staqpaq\.yaml/.test(brief));
+check('AGENTS.md states undecided-is-open rule', /deliberately open/i.test(brief));
+check('AGENTS.md deterministic', agentBriefMd(buildSpecTree(sample, catalogue), derived, name) === brief);
+check('AGENTS.md escapes injected heading text', !/^# Hacked$/m.test(agentBriefMd({}, derived, 'Name\n# Hacked')));
 
 // hardening regressions: companion files must not let catalogue/user text create
 // extra Markdown headings, list items, or env assignments.

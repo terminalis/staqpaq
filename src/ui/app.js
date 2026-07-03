@@ -11,6 +11,7 @@
 import { LitElement, html } from 'lit';
 import * as facade from '../core/orchestrator/facade.js';
 import { downloadPack } from './download.js';
+import { pickStaqpaqYaml } from './upload.js';
 import './components/sq-elements.js';
 import './components/sq-section-nav.js';
 import './components/sq-modal.js';
@@ -27,6 +28,11 @@ const CONFIRM_COPY = {
     title: 'Load the sample?',
     body: 'This replaces your current draft with the curated sample staqpaq. Your existing decisions are cleared.',
     confirmLabel: 'Load sample',
+  },
+  import_draft: {
+    title: 'Import staqpaq.yaml?',
+    body: 'This replaces your current draft with the decisions from the imported file. Your existing decisions are cleared.',
+    confirmLabel: 'Import file',
   },
 };
 
@@ -83,6 +89,7 @@ class SqApp extends LitElement {
     this.addEventListener('sq-nav', (e) => this._onNav(e.detail.to, e.detail.focusPath));
     this.addEventListener('sq-reset', () => this._run('reset_draft', {}));
     this.addEventListener('sq-export', (e) => this._onExport(e.detail.scope));
+    this.addEventListener('sq-import', () => this._onImport());
     this.addEventListener('sq-toast-dismiss', () => {
       window.clearTimeout(this._toastTimer);
       this._toast = null;
@@ -161,12 +168,36 @@ class SqApp extends LitElement {
   }
 
   _afterMutation(capabilityId, res) {
-    if (!res.ok) return;
+    if (!res.ok) {
+      if (capabilityId === 'import_draft' && res.error) {
+        const line = res.error.line ? ` (line ${res.error.line})` : '';
+        this._showToast('error', `Import failed${line} — ${res.error.message || res.error.code}.`);
+      }
+      return;
+    }
     this.refresh();
     if (capabilityId === 'reset_draft') {
       this._active = this._firstSectionId();
     }
+    if (capabilityId === 'import_draft') {
+      const out = res.result || {};
+      const n = out.selection_count || 0;
+      const dropped = (out.dropped_paths || []).length;
+      const base = `Imported ${n} decision${n === 1 ? '' : 's'}`;
+      if (dropped) {
+        // partial adopt: stays visible until dismissed so the drop is never missed
+        this._showToast('ok', `${base} — ${dropped} entr${dropped === 1 ? 'y' : 'ies'} didn't match the current catalogue and ${dropped === 1 ? 'was' : 'were'} dropped.`);
+      } else {
+        this._showToast('ok', `${base}.`, 6000);
+      }
+    }
     this._ensureActiveValid();
+  }
+
+  async _onImport() {
+    const picked = await pickStaqpaqYaml();
+    if (!picked) return; // picker cancelled
+    this._run('import_draft', { text: picked.text, file_name: picked.file_name });
   }
 
   _onNav(to, focusPath) {

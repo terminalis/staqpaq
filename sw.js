@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'staqpaq-shell-v9';
+const CACHE_VERSION = 'staqpaq-shell-v10';
 const SHELL_PATHS = Object.freeze([
   './',
   './index.html',
@@ -18,6 +18,7 @@ const SHELL_PATHS = Object.freeze([
   './src/ui/main.js',
   './src/ui/app.js',
   './src/ui/download.js',
+  './src/ui/upload.js',
   './src/ui/styles/fonts.css',
   './src/ui/styles/tokens.css',
   './src/ui/styles/base.css',
