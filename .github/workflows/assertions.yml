@@ -20,3 +20,6 @@ jobs:
 
       - name: Run repository checks
         run: npm run check
+
+      - name: Run delivery audits
+        run: npm run audit

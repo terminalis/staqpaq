@@ -1,6 +1,6 @@
 {
   "version": "sample-1",
-  "note": "Presentation-only fixture (ui-manifest.yaml :: presentation_fixtures). The 'Acme Analytics' filled BuildSpec — realistic content, never lorem. Every selection is catalogue-valid and ungated under itself (capabilities.yaml :: load_sample.constraints). Loaded ONLY via load_sample; never seeds production canonical state silently. `selections` only — load_sample wraps it into a full build_spec (fresh id + timestamps).",
+  "note": "Node-script test fixture (validate-catalogue + test-derive/export/import). The 'Acme Analytics' filled BuildSpec — realistic content, never lorem. Every selection must stay catalogue-valid and ungated under itself; validate-catalogue enforces this. `selections` only. Never fetched by the app — the load_sample capability was removed with the welcome-screen rework.",
   "selections": {
     "project.name": "Acme Analytics",
     "project.type": "saas",

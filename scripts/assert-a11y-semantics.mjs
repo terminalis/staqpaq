@@ -12,7 +12,9 @@ import { ROOT, finish } from './_lib.mjs';
 const violations = [];
 
 function read(rel) {
-  return readFileSync(join(ROOT, rel), 'utf8');
+  // Normalize CRLF so needles containing '\n' match on autocrlf (Windows)
+  // working trees exactly as they do on LF checkouts (CI).
+  return readFileSync(join(ROOT, rel), 'utf8').replace(/\r\n/g, '\n');
 }
 
 function mustInclude(rel, needle, message) {

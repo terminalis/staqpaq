@@ -1,11 +1,14 @@
-// Read-only catalogue loader (logic layer). Fetches + parses the three static
+// Read-only catalogue loader (logic layer). Fetches + parses the two static
 // data files ONCE, validates them, deep-freezes them, builds lookup indexes,
 // and exposes them read-only to capabilities. No mutation; no business logic
 // beyond loading / parsing / indexing. (build-sequence Step 3)
 //
 // The access path is resolved from import.meta.url so it works regardless of
 // where index.html is served from. Data is fetched as static JSON (the catalogue
-// + compatibility rule map + sample fixture are version-controlled static data).
+// + compatibility rule map are version-controlled static data). The sample
+// fixture (data/sample.json) is NOT fetched at boot: no capability reads it
+// since load_sample was removed, and its catalogue-coherence check runs in
+// scripts/validate-catalogue.mjs (CI), where a bad fixture cannot brick boot.
 
 import { validateCatalogueData } from './validate.js';
 
@@ -27,10 +30,9 @@ function deepFreeze(value) {
   return value;
 }
 
-function buildCatalogue(catalogue, derivation, sample) {
+function buildCatalogue(catalogue, derivation) {
   deepFreeze(catalogue);
   deepFreeze(derivation);
-  deepFreeze(sample);
 
   const fieldByPath = new Map();
   const sectionByFieldPath = new Map();
@@ -47,7 +49,6 @@ function buildCatalogue(catalogue, derivation, sample) {
     version: catalogue.version,
     sections: catalogue.sections,            // frozen
     derivation,                              // frozen { env_vars, implications, assets }
-    sampleSelections: sample ? sample.selections : {},  // frozen
     // indexes (built once; read-only by convention)
     fieldByPath,
     sectionByFieldPath,
@@ -62,16 +63,15 @@ function buildCatalogue(catalogue, derivation, sample) {
 /** Load (once) and cache the catalogue. Idempotent. */
 export async function loadCatalogue() {
   if (_cache) return _cache;
-  const [catalogue, derivation, sample] = await Promise.all([
+  const [catalogue, derivation] = await Promise.all([
     fetchJson('catalogue.json'),
     fetchJson('derivation.json'),
-    fetchJson('sample.json'),
   ]);
-  const issues = validateCatalogueData(catalogue, derivation, sample);
+  const issues = validateCatalogueData(catalogue, derivation);
   if (issues.length) {
     throw new Error('catalogue validation failed:\n  - ' + issues.join('\n  - '));
   }
-  _cache = buildCatalogue(catalogue, derivation, sample);
+  _cache = buildCatalogue(catalogue, derivation);
   return _cache;
 }
 

@@ -99,6 +99,12 @@ if (!existsSync(mainPath)) {
   if (!main.includes('STAQPAQ_CACHE_URLS')) {
     violations.push('src/ui/main.js must warm the delivery cache with loaded same-origin resources');
   }
+  if (!main.includes('controllerchange')) {
+    violations.push('src/ui/main.js must reload the app once an updated service worker takes control');
+  }
+  if (!main.includes('visibilitychange') || !main.includes('.update()')) {
+    violations.push('src/ui/main.js must re-check for a new service worker when the app regains visibility');
+  }
 }
 
 finish('assert-pwa-cache-layer', violations);

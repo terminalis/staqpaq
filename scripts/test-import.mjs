@@ -17,7 +17,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const J = (n) => JSON.parse(readFileSync(join(ROOT, 'data', n), 'utf8'));
 const catalogueJson = J('catalogue.json');
 const derivation = J('derivation.json');
-const sample = J('sample.json').selections;
+const sample = JSON.parse(readFileSync(join(ROOT, 'scripts', 'fixtures', 'sample.json'), 'utf8')).selections;
 
 const fieldByPath = new Map();
 const allFields = [];

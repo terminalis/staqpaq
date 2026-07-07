@@ -7,8 +7,9 @@
   "description": "A client-only build-manifest generator that exports deterministic staqpaq artifacts from structured app-build selections.",
   "scripts": {
     "assert:core": "node scripts/assert-no-ui-logic.mjs && node scripts/assert-single-orchestrator.mjs && node scripts/assert-no-direct-db-access.mjs && node scripts/assert-inert-interactive-surface.mjs",
-    "audit": "node scripts/assert-local-presentation-assets.mjs && node scripts/assert-pwa-cache-layer.mjs && node scripts/assert-a11y-semantics.mjs",
+    "audit": "node scripts/assert-local-presentation-assets.mjs && node scripts/assert-pwa-cache-layer.mjs && node scripts/assert-sw-cache-version.mjs && node scripts/assert-a11y-semantics.mjs",
     "check": "npm run assert:core && npm run validate:catalogue && npm run test:capabilities && npm run test:derive && npm run test:export && npm run test:import && npm run test:orchestrator",
+    "sync:sw": "node scripts/assert-sw-cache-version.mjs --fix",
     "validate:catalogue": "node scripts/validate-catalogue.mjs",
     "test:capabilities": "node scripts/test-capabilities.mjs",
     "test:derive": "node scripts/test-derive.mjs",

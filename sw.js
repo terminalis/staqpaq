@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'staqpaq-shell-v13';
+const CACHE_VERSION = 'staqpaq-shell-v14-06d37b90';
 const SHELL_PATHS = Object.freeze([
   './',
   './index.html',
@@ -39,8 +39,7 @@ const SHELL_PATHS = Object.freeze([
   './vendor/idb-keyval.js',
   './vendor/fflate.js',
   './data/catalogue.json',
-  './data/derivation.json',
-  './data/sample.json'
+  './data/derivation.json'
 ]);
 
 function scopeUrl(path) {

@@ -11,7 +11,8 @@
 //   Step 9 — reset_draft
 //   Roadmap — import_draft (the yaml round-trip)
 // load_sample was removed with the welcome-screen rework: the sample fixture
-// remains load-time validation data, not a user-facing feature.
+// remains a Node-side validation fixture (scripts/validate-catalogue.mjs and
+// the test-* scripts), not a user-facing feature, and is not fetched at boot.
 
 import { registerHandler, sealRegistry } from './registry.js';
 import { recordSelection } from '../capabilities/recordSelection.js';

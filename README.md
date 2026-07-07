@@ -81,10 +81,10 @@ accessibility semantics.
 | `sw.js` | Delivery-only service worker cache |
 | `src/core/**` | Catalogue loading, state, orchestration, capabilities, derivation, export |
 | `src/ui/**` | Lit-based UI components, screens, icons, fonts, styles, downloads |
-| `data/**` | Versioned catalogue, derivation rules, and sample fixture |
+| `data/**` | Versioned catalogue and derivation rules (everything the app fetches) |
 | `vendor/**` | Vendored runtime libraries used by the import map |
 | `assets/**` | App icons, manifest, logo, and social image |
-| `scripts/**` | Public repository verification scripts |
+| `scripts/**` | Public repository verification scripts and their fixtures |
 
 ## Scripts
 
