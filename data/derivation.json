@@ -1535,6 +1535,98 @@
         "key": "REWARDFUL_API_KEY",
         "from_provider": "Rewardful"
       }
+    ],
+    "content.cms:contentful": [
+      {
+        "key": "CONTENTFUL_SPACE_ID",
+        "from_provider": "Contentful"
+      },
+      {
+        "key": "CONTENTFUL_ACCESS_TOKEN",
+        "from_provider": "Contentful"
+      }
+    ],
+    "content.cms:directus": [
+      {
+        "key": "DIRECTUS_URL",
+        "from_provider": "Directus"
+      },
+      {
+        "key": "DIRECTUS_TOKEN",
+        "from_provider": "Directus"
+      }
+    ],
+    "content.cms:ghost": [
+      {
+        "key": "GHOST_API_URL",
+        "from_provider": "Ghost"
+      },
+      {
+        "key": "GHOST_CONTENT_API_KEY",
+        "from_provider": "Ghost"
+      }
+    ],
+    "content.cms:hygraph": [
+      {
+        "key": "HYGRAPH_ENDPOINT",
+        "from_provider": "Hygraph"
+      },
+      {
+        "key": "HYGRAPH_TOKEN",
+        "from_provider": "Hygraph"
+      }
+    ],
+    "content.cms:notion": [
+      {
+        "key": "NOTION_API_KEY",
+        "from_provider": "Notion"
+      },
+      {
+        "key": "NOTION_DATABASE_ID",
+        "from_provider": "Notion"
+      }
+    ],
+    "content.cms:payload": [
+      {
+        "key": "PAYLOAD_SECRET",
+        "from_provider": "Payload"
+      }
+    ],
+    "content.cms:sanity": [
+      {
+        "key": "SANITY_PROJECT_ID",
+        "from_provider": "Sanity"
+      },
+      {
+        "key": "SANITY_DATASET",
+        "from_provider": "Sanity"
+      },
+      {
+        "key": "SANITY_API_TOKEN",
+        "from_provider": "Sanity"
+      }
+    ],
+    "content.cms:storyblok": [
+      {
+        "key": "STORYBLOK_ACCESS_TOKEN",
+        "from_provider": "Storyblok"
+      }
+    ],
+    "content.cms:strapi": [
+      {
+        "key": "STRAPI_API_URL",
+        "from_provider": "Strapi"
+      },
+      {
+        "key": "STRAPI_API_TOKEN",
+        "from_provider": "Strapi"
+      }
+    ],
+    "content.cms:wordpress": [
+      {
+        "key": "WORDPRESS_API_URL",
+        "from_provider": "WordPress"
+      }
     ]
   },
   "implications": {

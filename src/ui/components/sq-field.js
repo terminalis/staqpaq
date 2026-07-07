@@ -39,7 +39,10 @@ const PROVIDER_ICON_PLACEHOLDER_FIELDS = new Set([
   'monitoring.analytics',
   'support.docs',
   'support.provider',
+  'content.cms',
   'design.icons',
+  'design.animation_tools',
+  'design.3d_tools',
   'assets.stock',
 ]);
 const ICON_PLACEHOLDER_EXCLUDED_KEYS = new Set([

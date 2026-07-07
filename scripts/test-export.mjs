@@ -139,14 +139,14 @@ const removedSelections = typeof normalise === 'function' ? normalise({
   'support.docs': 'gitbook',
 }, catalogue) : {};
 const removedYaml = serializeYaml(removedSelections, catalogue);
-check('normalizeSelections drops removed options and content.cms before export',
+check('normalizeSelections drops removed options and keeps content.cms',
   removedSelections['project.type'] === undefined &&
   JSON.stringify(removedSelections['project.audience']) === JSON.stringify(['agencies', 'internal']) &&
-  removedSelections['content.cms'] === undefined &&
+  removedSelections['content.cms'] === 'sanity' &&
   removedSelections['content.cms.custom'] === undefined &&
   /project:\n {2}audience: \[agencies, internal\]/.test(removedYaml) &&
   /support:\n {2}docs: gitbook/.test(removedYaml) &&
-  !/content:\n {2}cms:/.test(removedYaml));
+  /content:\n {2}cms: sanity/.test(removedYaml));
 
 const migratedSelections = typeof normalise === 'function' ? normalise({
   'content.docs': 'gitbook',

@@ -100,7 +100,11 @@ class SqSectionNav extends LitElement {
     const items = this.items || [];
     const idx = items.findIndex((it) => it.id === this.active);
     const cur = idx >= 0 ? items[idx] : items[0];
-    const total = items.length;
+    // Review & Export is a destination, not a sheet — keep it out of the count
+    // so the stepper position matches the rail's "sheet n / total" cell.
+    const sections = items.filter((it) => it.id !== 'review');
+    const total = sections.length;
+    const pos = cur ? sections.indexOf(cur) : -1;
     const isFirst = idx <= 0;
 
     return html`
@@ -130,7 +134,7 @@ class SqSectionNav extends LitElement {
           <span class="sn vt">${cur ? cur.number : ''}</span>
           <span class="secbar-tt">
             <span class="nm">${cur ? cur.title : ''}</span>
-            <span class="cnt">${idx >= 0 ? idx + 1 : 1} / ${total} · tap to jump</span>
+            <span class="cnt">${cur && cur.id === 'review' ? 'review' : `${pos >= 0 ? pos + 1 : 1} / ${total}`} · tap to jump</span>
           </span>
           <sq-icon class="chev" name="solar:alt-arrow-down-linear"></sq-icon>
         </button>

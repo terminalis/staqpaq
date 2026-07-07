@@ -4474,6 +4474,85 @@
     {
       "id": "content",
       "number": "09",
+      "title": "Content",
+      "blurb": "The CMS platform or in-repo model behind the product's content.",
+      "fields": [
+        {
+          "path": "content.cms",
+          "label": "CMS",
+          "kind": "single_select",
+          "severity": "recommended",
+          "custom": true,
+          "note": "Content management / authoring platform.",
+          "options": [
+            {
+              "key": "contentful",
+              "label": "Contentful",
+              "icon": "simple-icons:contentful"
+            },
+            {
+              "key": "directus",
+              "label": "Directus",
+              "icon": "simple-icons:directus"
+            },
+            {
+              "key": "ghost",
+              "label": "Ghost",
+              "icon": "simple-icons:ghost"
+            },
+            {
+              "key": "hygraph",
+              "label": "Hygraph"
+            },
+            {
+              "key": "internal",
+              "label": "Internal / in-repo"
+            },
+            {
+              "key": "notion",
+              "label": "Notion",
+              "icon": "simple-icons:notion"
+            },
+            {
+              "key": "payload",
+              "label": "Payload",
+              "icon": "simple-icons:payloadcms"
+            },
+            {
+              "key": "sanity",
+              "label": "Sanity",
+              "icon": "simple-icons:sanity"
+            },
+            {
+              "key": "storyblok",
+              "label": "Storyblok",
+              "icon": "simple-icons:storyblok"
+            },
+            {
+              "key": "strapi",
+              "label": "Strapi",
+              "icon": "simple-icons:strapi"
+            },
+            {
+              "key": "wordpress",
+              "label": "WordPress",
+              "icon": "simple-icons:wordpress"
+            },
+            {
+              "key": "none",
+              "label": "None"
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "support",
+      "number": "10",
       "title": "Documentation & Support",
       "blurb": "Documentation tooling and the platforms that power customer support.",
       "fields": [
@@ -4483,7 +4562,7 @@
           "kind": "single_select",
           "severity": "recommended",
           "custom": true,
-          "note": "Documentation tooling / site generator. Selecting Other reveals an optional free-text field you don't have to fill in.",
+          "note": "Documentation tooling / site generator.",
           "options": [
             {
               "key": "docusaurus",
@@ -4555,7 +4634,7 @@
               ]
             }
           ],
-          "note": "The customer-support / help-desk platform the product uses. Selecting Other reveals an optional free-text field you don't have to fill in.",
+          "note": "The customer-support / help-desk platform the product uses.",
           "options": [
             {
               "key": "crisp",
@@ -4611,7 +4690,7 @@
     },
     {
       "id": "design",
-      "number": "10",
+      "number": "11",
       "title": "Visual Foundations",
       "blurb": "The static visual foundations: typography, theme, palette, and icons.",
       "fields": [
@@ -4717,6 +4796,102 @@
               "noneOf": [
                 "profile"
               ]
+            }
+          ]
+        },
+        {
+          "path": "design.styles",
+          "label": "UI style",
+          "kind": "single_select",
+          "severity": "optional",
+          "custom": true,
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
+            }
+          ],
+          "note": "The overall UI style paradigm.",
+          "options": [
+            {
+              "key": "brutalism",
+              "label": "Brutalism"
+            },
+            {
+              "key": "claymorphism",
+              "label": "Claymorphism"
+            },
+            {
+              "key": "flat",
+              "label": "Flat"
+            },
+            {
+              "key": "glassmorphism",
+              "label": "Glassmorphism"
+            },
+            {
+              "key": "material",
+              "label": "Material"
+            },
+            {
+              "key": "neumorphism",
+              "label": "Neumorphism"
+            },
+            {
+              "key": "skeuomorphic",
+              "label": "Skeuomorphic"
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "design.shadows",
+          "label": "Shadows",
+          "kind": "single_select",
+          "severity": "optional",
+          "custom": true,
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
+            }
+          ],
+          "note": "The elevation / shadow style.",
+          "options": [
+            {
+              "key": "colored",
+              "label": "Colored shadows"
+            },
+            {
+              "key": "hard",
+              "label": "Hard edge"
+            },
+            {
+              "key": "layered",
+              "label": "Layered elevation"
+            },
+            {
+              "key": "soft",
+              "label": "Soft & diffuse"
+            },
+            {
+              "key": "subtle",
+              "label": "Subtle"
+            },
+            {
+              "key": "none",
+              "label": "None / flat"
+            },
+            {
+              "key": "other",
+              "label": "Other"
             }
           ]
         },
@@ -4854,7 +5029,315 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "id": "effects",
+      "number": "12",
+      "title": "Motion & Effects",
+      "blurb": "The dynamic layer: gradients, motion, animation, and ambient effects.",
+      "fields": [
+        {
+          "path": "design.motion",
+          "label": "Motion level",
+          "kind": "single_select",
+          "severity": "optional",
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
+            }
+          ],
+          "note": "Overall motion intensity across the UI.",
+          "options": [
+            {
+              "key": "none",
+              "label": "None / static"
+            },
+            {
+              "key": "subtle",
+              "label": "Subtle"
+            },
+            {
+              "key": "moderate",
+              "label": "Moderate"
+            },
+            {
+              "key": "expressive",
+              "label": "Expressive"
+            }
+          ]
         },
+        {
+          "path": "design.animation",
+          "label": "Animation",
+          "kind": "multi_select",
+          "severity": "optional",
+          "custom": true,
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
+            }
+          ],
+          "note": "Animation techniques the UI uses.",
+          "options": [
+            {
+              "key": "entrance",
+              "label": "Entrance animations"
+            },
+            {
+              "key": "hover",
+              "label": "Hover effects"
+            },
+            {
+              "key": "loading",
+              "label": "Loading states"
+            },
+            {
+              "key": "micro_interactions",
+              "label": "Micro-interactions"
+            },
+            {
+              "key": "parallax",
+              "label": "Parallax"
+            },
+            {
+              "key": "scroll",
+              "label": "Scroll-triggered"
+            },
+            {
+              "key": "none",
+              "label": "None",
+              "exclusive": true
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "design.transitions",
+          "label": "Transitions",
+          "kind": "multi_select",
+          "severity": "optional",
+          "custom": true,
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
+            }
+          ],
+          "note": "View and element transition techniques.",
+          "options": [
+            {
+              "key": "crossfade",
+              "label": "Crossfade"
+            },
+            {
+              "key": "morph",
+              "label": "Shared element / morph"
+            },
+            {
+              "key": "slide",
+              "label": "Slide"
+            },
+            {
+              "key": "view_transitions",
+              "label": "View Transitions API"
+            },
+            {
+              "key": "wipe",
+              "label": "Wipe / reveal"
+            },
+            {
+              "key": "zoom",
+              "label": "Zoom / scale"
+            },
+            {
+              "key": "none",
+              "label": "None",
+              "exclusive": true
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "design.gradients",
+          "label": "Gradients",
+          "kind": "multi_select",
+          "severity": "optional",
+          "custom": true,
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
+            }
+          ],
+          "note": "Where gradients appear in the UI.",
+          "options": [
+            {
+              "key": "aurora",
+              "label": "Aurora gradient"
+            },
+            {
+              "key": "button",
+              "label": "Button gradient"
+            },
+            {
+              "key": "hero",
+              "label": "Hero gradient"
+            },
+            {
+              "key": "mesh",
+              "label": "Mesh gradient"
+            },
+            {
+              "key": "radial_glow",
+              "label": "Radial glow"
+            },
+            {
+              "key": "subtle_background",
+              "label": "Subtle background gradient"
+            },
+            {
+              "key": "none",
+              "label": "None",
+              "exclusive": true
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "design.glow",
+          "label": "Glow",
+          "kind": "multi_select",
+          "severity": "optional",
+          "custom": true,
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
+            }
+          ],
+          "note": "Where glow effects appear.",
+          "options": [
+            {
+              "key": "ambient",
+              "label": "Ambient glow"
+            },
+            {
+              "key": "border",
+              "label": "Border glow"
+            },
+            {
+              "key": "button",
+              "label": "Button glow"
+            },
+            {
+              "key": "hover",
+              "label": "Hover glow"
+            },
+            {
+              "key": "neon",
+              "label": "Neon accents"
+            },
+            {
+              "key": "text",
+              "label": "Text glow"
+            },
+            {
+              "key": "none",
+              "label": "None",
+              "exclusive": true
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "design.spatial_field",
+          "label": "Spatial field",
+          "kind": "multi_select",
+          "severity": "optional",
+          "custom": true,
+          "applies_when": [
+            {
+              "path": "meta.kind",
+              "noneOf": [
+                "profile"
+              ]
+            }
+          ],
+          "note": "Ambient background depth treatments.",
+          "options": [
+            {
+              "key": "constellation",
+              "label": "Constellation"
+            },
+            {
+              "key": "orbs",
+              "label": "Floating orbs"
+            },
+            {
+              "key": "noise_field",
+              "label": "Noise field"
+            },
+            {
+              "key": "particles",
+              "label": "Particles"
+            },
+            {
+              "key": "grid",
+              "label": "Perspective grid"
+            },
+            {
+              "key": "starfield",
+              "label": "Starfield"
+            },
+            {
+              "key": "waves",
+              "label": "Waves"
+            },
+            {
+              "key": "none",
+              "label": "None",
+              "exclusive": true
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tooling",
+      "number": "13",
+      "title": "Design Tooling",
+      "blurb": "The libraries and tools that build the design layer: icons, animation, and 3D.",
+      "fields": [
         {
           "path": "design.icons",
           "note": "The icon set for interface and product icons. Add your own via Custom.",
@@ -4928,12 +5411,105 @@
               "label": "Custom"
             }
           ]
+        },
+        {
+          "path": "design.animation_tools",
+          "label": "Animation tooling",
+          "kind": "multi_select",
+          "severity": "optional",
+          "custom": true,
+          "note": "Animation and motion-graphics libraries the product uses.",
+          "options": [
+            {
+              "key": "anime_js",
+              "label": "anime.js"
+            },
+            {
+              "key": "gsap",
+              "label": "GSAP",
+              "icon": "simple-icons:greensock"
+            },
+            {
+              "key": "hyperframes",
+              "label": "HyperFrames"
+            },
+            {
+              "key": "lottie",
+              "label": "Lottie",
+              "icon": "simple-icons:lottiefiles"
+            },
+            {
+              "key": "motion",
+              "label": "Motion (Framer Motion)"
+            },
+            {
+              "key": "rive",
+              "label": "Rive",
+              "icon": "simple-icons:rive"
+            },
+            {
+              "key": "none",
+              "label": "None",
+              "exclusive": true
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
+        },
+        {
+          "path": "design.3d_tools",
+          "label": "3D tooling",
+          "kind": "multi_select",
+          "severity": "optional",
+          "custom": true,
+          "note": "3D and spatial rendering tools.",
+          "options": [
+            {
+              "key": "aframe",
+              "label": "A-Frame",
+              "icon": "simple-icons:aframe"
+            },
+            {
+              "key": "babylonjs",
+              "label": "Babylon.js",
+              "icon": "simple-icons:babylondotjs"
+            },
+            {
+              "key": "playcanvas",
+              "label": "PlayCanvas",
+              "icon": "simple-icons:playcanvas"
+            },
+            {
+              "key": "r3f",
+              "label": "React Three Fiber"
+            },
+            {
+              "key": "spline",
+              "label": "Spline"
+            },
+            {
+              "key": "threejs",
+              "label": "Three.js",
+              "icon": "simple-icons:threedotjs"
+            },
+            {
+              "key": "none",
+              "label": "None",
+              "exclusive": true
+            },
+            {
+              "key": "other",
+              "label": "Other"
+            }
+          ]
         }
       ]
     },
     {
       "id": "surface",
-      "number": "11",
+      "number": "14",
       "title": "Surfaces",
       "blurb": "What core screens and flows are part of the proposed product experience.",
       "fields": [
@@ -5102,7 +5678,7 @@
     },
     {
       "id": "assets",
-      "number": "12",
+      "number": "15",
       "title": "Assets",
       "blurb": "Your brand-asset inventory and where the product sources stock media. The brand checklist is tracked only — it never enters staqpaq.yaml; the required-asset list is derived from product type and platforms, and ticking the checklist marks which of those files you already have.",
       "fields": [
@@ -5178,7 +5754,7 @@
           "kind": "multi_select",
           "severity": "optional",
           "custom": true,
-          "note": "Stock photo and video sources the product draws on. Selecting Other reveals an optional free-text field you don't have to fill in.",
+          "note": "Stock photo and video sources the product draws on.",
           "options": [
             {
               "key": "adobe_stock",
