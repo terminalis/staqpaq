@@ -12,12 +12,13 @@ import { validateCatalogueData } from '../src/core/catalogue/validate.js';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const readJson = (name) => JSON.parse(readFileSync(join(ROOT, 'data', name), 'utf8'));
+const readFixture = (name) => JSON.parse(readFileSync(join(ROOT, 'scripts', 'fixtures', name), 'utf8'));
 
 let catalogue, derivation, sample;
 try {
   catalogue = readJson('catalogue.json');
   derivation = readJson('derivation.json');
-  sample = readJson('sample.json');
+  sample = readFixture('sample.json');
 } catch (e) {
   console.error('✗ validate-catalogue: could not read/parse a data file: ' + e.message);
   process.exit(1);
