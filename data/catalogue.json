@@ -4699,15 +4699,7 @@
           "note": "Your brand's primary accent colour — seeds the palette.",
           "label": "Theme color",
           "kind": "color",
-          "severity": "recommended",
-          "applies_when": [
-            {
-              "path": "meta.kind",
-              "noneOf": [
-                "profile"
-              ]
-            }
-          ]
+          "severity": "recommended"
         },
         {
           "path": "design.theme.mode",
@@ -4727,14 +4719,6 @@
             {
               "key": "system",
               "label": "System"
-            }
-          ],
-          "applies_when": [
-            {
-              "path": "meta.kind",
-              "noneOf": [
-                "profile"
-              ]
             }
           ]
         },
@@ -4789,14 +4773,6 @@
               "key": "playful",
               "label": "Playful"
             }
-          ],
-          "applies_when": [
-            {
-              "path": "meta.kind",
-              "noneOf": [
-                "profile"
-              ]
-            }
           ]
         },
         {
@@ -4805,14 +4781,6 @@
           "kind": "single_select",
           "severity": "optional",
           "custom": true,
-          "applies_when": [
-            {
-              "path": "meta.kind",
-              "noneOf": [
-                "profile"
-              ]
-            }
-          ],
           "note": "The overall UI style paradigm.",
           "options": [
             {
@@ -4855,14 +4823,6 @@
           "kind": "single_select",
           "severity": "optional",
           "custom": true,
-          "applies_when": [
-            {
-              "path": "meta.kind",
-              "noneOf": [
-                "profile"
-              ]
-            }
-          ],
           "note": "The elevation / shadow style.",
           "options": [
             {
@@ -4958,14 +4918,6 @@
               "key": "other",
               "label": "Other"
             }
-          ],
-          "applies_when": [
-            {
-              "path": "meta.kind",
-              "noneOf": [
-                "profile"
-              ]
-            }
           ]
         },
         {
@@ -5020,17 +4972,18 @@
               "key": "other",
               "label": "Other"
             }
-          ],
-          "applies_when": [
-            {
-              "path": "meta.kind",
-              "noneOf": [
-                "profile"
-              ]
-            }
           ]
         }
-      ]
+      ],
+      "applies_when": [
+        {
+          "path": "meta.kind",
+          "noneOf": [
+            "profile"
+          ]
+        }
+      ],
+      "guard_note": "Project decisions only — typography, theme, and palette describe a product build, not a vendor stack."
     },
     {
       "id": "effects",
@@ -5043,14 +4996,6 @@
           "label": "Motion level",
           "kind": "single_select",
           "severity": "optional",
-          "applies_when": [
-            {
-              "path": "meta.kind",
-              "noneOf": [
-                "profile"
-              ]
-            }
-          ],
           "note": "Overall motion intensity across the UI.",
           "options": [
             {
@@ -5077,14 +5022,6 @@
           "kind": "multi_select",
           "severity": "optional",
           "custom": true,
-          "applies_when": [
-            {
-              "path": "meta.kind",
-              "noneOf": [
-                "profile"
-              ]
-            }
-          ],
           "note": "Animation techniques the UI uses.",
           "options": [
             {
@@ -5128,14 +5065,6 @@
           "kind": "multi_select",
           "severity": "optional",
           "custom": true,
-          "applies_when": [
-            {
-              "path": "meta.kind",
-              "noneOf": [
-                "profile"
-              ]
-            }
-          ],
           "note": "View and element transition techniques.",
           "options": [
             {
@@ -5179,14 +5108,6 @@
           "kind": "multi_select",
           "severity": "optional",
           "custom": true,
-          "applies_when": [
-            {
-              "path": "meta.kind",
-              "noneOf": [
-                "profile"
-              ]
-            }
-          ],
           "note": "Where gradients appear in the UI.",
           "options": [
             {
@@ -5230,14 +5151,6 @@
           "kind": "multi_select",
           "severity": "optional",
           "custom": true,
-          "applies_when": [
-            {
-              "path": "meta.kind",
-              "noneOf": [
-                "profile"
-              ]
-            }
-          ],
           "note": "Where glow effects appear.",
           "options": [
             {
@@ -5281,14 +5194,6 @@
           "kind": "multi_select",
           "severity": "optional",
           "custom": true,
-          "applies_when": [
-            {
-              "path": "meta.kind",
-              "noneOf": [
-                "profile"
-              ]
-            }
-          ],
           "note": "Ambient background depth treatments.",
           "options": [
             {
@@ -5330,7 +5235,16 @@
             }
           ]
         }
-      ]
+      ],
+      "applies_when": [
+        {
+          "path": "meta.kind",
+          "noneOf": [
+            "profile"
+          ]
+        }
+      ],
+      "guard_note": "Project decisions only — motion and ambient effects describe a product build, not a vendor stack."
     },
     {
       "id": "tooling",

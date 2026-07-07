@@ -87,7 +87,10 @@ sq-app { display: block; min-height: 100vh; }
 .rail-notice .notice-x:hover { color: var(--paper); }
 
 .section-nav { display: flex; flex: 1; min-height: 0; }
-.seclist { list-style: none; margin: 0; padding: 6px 0; overflow-y: auto; flex: 1; }
+.seclist { list-style: none; margin: 0; padding: 6px 0; overflow-y: auto; flex: 1; scrollbar-width: thin; }
+/* Safari twin of scrollbar-width: thin (colors come from the base.css theme) */
+.seclist::-webkit-scrollbar,
+.secsheet-list::-webkit-scrollbar { width: 6px; }
 .seclist .navitem {
   width: 100%; min-height: 44px; border: 0; text-align: left; font-family: var(--font-mono);
   display: flex; align-items: center; gap: 11px; padding: 9px 20px; cursor: pointer;
@@ -160,7 +163,7 @@ sq-app { display: block; min-height: 100vh; }
   min-width: 44px; min-height: 44px; border: 0; background: none; color: var(--paper);
   font-size: 26px; cursor: pointer;
 }
-.secsheet-list { list-style: none; margin: 0; padding: 6px 0; overflow-y: auto; flex: 1; }
+.secsheet-list { list-style: none; margin: 0; padding: 6px 0; overflow-y: auto; flex: 1; scrollbar-width: thin; }
 .secsheet-list .navitem {
   width: 100%; border: 0; text-align: left; font-family: var(--font-mono); background: none;
   display: flex; align-items: center; gap: 14px; min-height: 56px; padding: 12px 18px;
