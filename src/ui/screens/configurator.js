@@ -51,7 +51,8 @@ class SqConfigurator extends LitElement {
         </div>
 
         <div class="req-legend">
-          <abbr class="req-mark" title="Recommended">*</abbr> Recommended — the decisions most builds should lock in
+          <abbr class="req-mark" title="Recommended">*</abbr> Recommended — the decisions most builds should lock in<br />
+          Selecting Other on any field reveals an optional free-text input you don't have to fill in
         </div>
 
         <sq-ticket class="cfg-frame">

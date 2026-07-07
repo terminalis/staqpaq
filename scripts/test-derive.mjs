@@ -42,7 +42,8 @@ check('env: POSTHOG_KEY present', envKeys.includes('POSTHOG_KEY'));
 check('env: SENTRY_DSN present', envKeys.includes('SENTRY_DSN'));
 check('env: ad + affiliate provider keys present', envKeys.includes('GOOGLE_ADSENSE_CLIENT_ID') && envKeys.includes('PARTNERSTACK_API_KEY'));
 check('env: stock provider keys (Unsplash + Pexels)', envKeys.includes('UNSPLASH_ACCESS_KEY') && envKeys.includes('PEXELS_API_KEY'));
-check('env: removed content CMS derivations absent', !Object.keys(derivation.env_vars || {}).some((key) => key.startsWith('content.cms:')));
+const cmsEnv = deriveRequirements({ 'content.cms': 'contentful' }, catalogue).implied_env_vars.map((e) => e.key);
+check('env: content CMS provider contributes vars', cmsEnv.includes('CONTENTFUL_SPACE_ID') && cmsEnv.includes('CONTENTFUL_ACCESS_TOKEN'));
 const multiPayment = deriveRequirements({ 'business.revenue_model': ['subscription'], 'payments.provider': ['stripe', 'paypal'] }, catalogue);
 const multiPaymentEnv = multiPayment.implied_env_vars.map((e) => e.key);
 check('env: multiple payment providers contribute vars',
