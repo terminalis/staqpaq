@@ -240,6 +240,23 @@ sq-beamrule.head-rule[data-complete]::before { border-left-color: var(--sage); }
   .btn:hover { transform: none; }
 }
 
+/* --- themed scrollbars ------------------------------------------------------ */
+/* Standard properties (Firefox, Chromium ≥121): a steel drafting-line thumb on
+   a transparent track; scrollbar-color inherits, so this themes every scroller
+   (page, rail lists, YAML preview) from one place. */
+html { scrollbar-color: var(--steel) transparent; }
+/* WebKit fallback (Safari; engines honouring scrollbar-color ignore these).
+   background-clip keeps the inset look correct over any panel ground. */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--steel);
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover { background-color: var(--signal); }
+::-webkit-scrollbar-corner { background: transparent; }
+
 /* ===========================================================================
    blueprint drafting language — walls, dimension lines, hatch, window boxes.
    Light --bp-line linework on the deep-blue paper. Presentation only; these

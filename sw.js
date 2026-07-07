@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'staqpaq-shell-v14-b8309553';
+const CACHE_VERSION = 'staqpaq-shell-v14-43add5d1';
 const SHELL_PATHS = Object.freeze([
   './',
   './index.html',
