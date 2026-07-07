@@ -8,16 +8,18 @@
 // bump mechanical: CACHE_VERSION must end in an 8-hex digest of the current
 // SHELL_PATHS file contents, so any shell change fails the suite until sw.js
 // is updated — and updating sw.js is itself the byte-diff that ships the
-// update.
+// update. Run with --fix (npm run sync:sw) to write the digest in place;
+// without it (CI) the script only checks.
 //
 // Text files are hashed with CRLF normalized to LF so autocrlf checkouts
 // (Windows working trees) and LF checkouts (CI) agree on the digest.
 
 import { createHash } from 'node:crypto';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ROOT, finish } from './_lib.mjs';
 
+const FIX = process.argv.includes('--fix');
 const violations = [];
 const workerPath = join(ROOT, 'sw.js');
 const TEXT_EXTS = ['.html', '.js', '.mjs', '.css', '.json', '.svg', '.webmanifest'];
@@ -60,10 +62,20 @@ if (!existsSync(workerPath)) {
     const shellPaths = JSON.parse(shellMatch[1].replace(/'/g, '"'));
     const expected = shellDigest(shellPaths);
     if (versionMatch[2] !== expected) {
-      violations.push(
-        `CACHE_VERSION digest is stale (a SHELL_PATHS file changed): set ` +
-        `CACHE_VERSION = '${versionMatch[1]}-${expected}' in sw.js`,
-      );
+      if (FIX && !violations.length) {
+        // Safe to write in place: sw.js is not in SHELL_PATHS, so writing it
+        // does not change the digest it must carry.
+        writeFileSync(
+          workerPath,
+          worker.replace(versionMatch[0], `CACHE_VERSION = '${versionMatch[1]}-${expected}'`),
+        );
+        console.log(`✓ assert-sw-cache-version --fix wrote CACHE_VERSION = '${versionMatch[1]}-${expected}'`);
+      } else {
+        violations.push(
+          `CACHE_VERSION digest is stale (a SHELL_PATHS file changed): run ` +
+          `'npm run sync:sw', or set CACHE_VERSION = '${versionMatch[1]}-${expected}' in sw.js`,
+        );
+      }
     }
   }
 }
